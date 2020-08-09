@@ -6,21 +6,20 @@ protocol Flow {
 }
 
 struct SetupFlow: Flow {
-    let configFilePath: String
+    let configFileUrl: URL
     
     func run() {
-        ensureConfigFileExists(atPath: configFilePath)
-        ensureApiKeyExists(configPath: configFilePath)
+        ensureConfigFileExists(atFileUrl: configFileUrl)
+        ensureIexCloudApiKeyExists(atFileUrl: configFileUrl)
     }
     
-    private func ensureConfigFileExists(atPath path: String) {
-        if !FileManager.default.isReadableFile(atPath: path) {
-            Prompt.confirmContinue(withMessage: "Create config file at '\(path)'?")
+    private func ensureConfigFileExists(atFileUrl fileUrl: URL) {
+        if !FileManager.default.isReadableFile(atPath: fileUrl.path) {
+            Prompt.confirmContinue(withMessage: "Create config file at '\(fileUrl)'?")
             let emptyJson = "{}"
             guard let emptyJsonData = emptyJson.data(using: .utf8) else {
                 Prompt.exitStonks(withMessage: "Couldn't prepare empty JSON data.")
             }
-            let fileUrl = URL(fileURLWithPath: path)
             do {
                 try emptyJsonData.write(to: fileUrl, options: .atomic)
             } catch let writingError {
@@ -29,7 +28,7 @@ struct SetupFlow: Flow {
         }
     }
     
-    private func ensureApiKeyExists(configPath: String) {
+    private func ensureIexCloudApiKeyExists(atFileUrl fileUrl: URL) {
         // FIXME: Implement
     }
 }
