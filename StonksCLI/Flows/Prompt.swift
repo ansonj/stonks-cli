@@ -11,6 +11,13 @@ struct Prompt {
         }
     }
     
+    static func readString(withMessage message: String) -> String {
+        print(message)
+        print("> ", terminator: "")
+        let response = readLine() ?? ""
+        return response
+    }
+    
     static func exitStonks(withMessage message: String, code: Int32 = 1) -> Never {
         print(message)
         exit(code)
