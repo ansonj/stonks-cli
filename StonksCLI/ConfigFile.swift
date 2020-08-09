@@ -1,6 +1,8 @@
 import Foundation
 
 struct ConfigFile {
+    // MARK: Initialization
+    
     let configFileUrl: URL
     
     init(configFileUrl: URL) {
@@ -20,31 +22,39 @@ struct ConfigFile {
         }
     }
     
+    // MARK: Properties
+    
     // FIXME: Use property wrappers instead?
     func iexCloudApiKey() -> String {
-        guard let jsonFileContents = try? Data(contentsOf: configFileUrl) else {
-            Prompt.exitStonks(withMessage: "Couldn't load config file.")
-        }
-        guard let configDictionary = try? JSONDecoder().decode([String: String].self, from: jsonFileContents) else {
-            Prompt.exitStonks(withMessage: "Couldn't parse JSON from config file.")
-        }
+        let configDictionary = readConfigDictionary()
         
         let iexCloudApiKey_key = "iexCloudApiKey"
         return configDictionary[iexCloudApiKey_key] ?? ""
     }
     
     func setIexCloudApiKey(_ newValue: String) {
-        guard let jsonFileContents = try? Data(contentsOf: configFileUrl) else {
-            Prompt.exitStonks(withMessage: "Couldn't load config file.")
-        }
-        guard var configDictionary = try? JSONDecoder().decode([String: String].self, from: jsonFileContents) else {
-            Prompt.exitStonks(withMessage: "Couldn't parse JSON from config file.")
-        }
+        var configDictionary = readConfigDictionary()
         
         let iexCloudApiKey_key = "iexCloudApiKey"
         configDictionary[iexCloudApiKey_key] = newValue
         
-        guard let newData = try? JSONEncoder().encode(configDictionary) else {
+        setConfigDictionary(configDictionary)
+    }
+    
+    // MARK: Utilities
+    
+    func readConfigDictionary() -> [String: String] {
+        guard let jsonFileContents = try? Data(contentsOf: configFileUrl) else {
+            Prompt.exitStonks(withMessage: "Couldn't load config file.")
+        }
+        guard let configDictionary = try? JSONDecoder().decode([String: String].self, from: jsonFileContents) else {
+            Prompt.exitStonks(withMessage: "Couldn't parse JSON from config file.")
+        }
+        return configDictionary
+    }
+    
+    func setConfigDictionary(_ newValue: [String: String]) {
+        guard let newData = try? JSONEncoder().encode(newValue) else {
             Prompt.exitStonks(withMessage: "Couldn't encode updated JSON data.")
         }
         do {
