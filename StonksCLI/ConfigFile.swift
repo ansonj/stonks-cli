@@ -25,6 +25,7 @@ struct ConfigFile {
     // MARK: Properties
     
     // FIXME: Use property wrappers instead?
+    // https://www.swiftbysundell.com/articles/property-wrappers-in-swift/
     func iexCloudApiKey() -> String {
         let configDictionary = readConfigDictionary()
         
