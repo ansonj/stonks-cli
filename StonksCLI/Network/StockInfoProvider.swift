@@ -7,8 +7,6 @@ struct StockInfo {
     let timestamp: Date
 }
 
-typealias StockInfoCompletion = (_ info: [StockInfo]) -> Void
-
 protocol StockInfoProvider {
-    func fetchInfo(forTickers tickers: [String], completion: StockInfoCompletion)
+    func fetchInfoSynchronously(forTickers tickers: [String]) -> [StockInfo]
 }
