@@ -1,30 +1,43 @@
-Establish proof-of-concept
-Use API to fetch prices
+# stonks-cli
 
-Define sqlite format
-Table: transactions
-Table: Data for symbols (name, last price, last update date)
-Table: transfers (amount, date, source)
-Table: splits
-Table: Pending buys
+Stonks is ...
 
-Define processes
-Buy
-Sell
-Deposit
-Dividend
-Withdraw
+- A handy way to save your trades to a sqlite database
+- ...
 
-Define stats view
-sanity-checking buying power
+Stonks is not...
 
-Define main view
+- A historical price tracker
+- A graphing tool
+- 3x leveraged
 
-Seed the database with some past data
+## Todo
 
-Implement main view
-
-Implement processes
-
-LATER
-cache sums?
+1. Create database support
+    1. Embed sqlite library of some kind
+    1. Have the tool create a sqlite at your chosen location, using some kind of versioning, starting at version zero
+    1. Define and implement the transaction table (increment version)
+1. Define flow to record buys
+1. Add some of your data!
+1. Create the main view
+    1. List of holds in a nice tabular format
+    1. Placeholder to print buying power checksum
+1. Implement in-memory caching for prices, with a 5-min refresh threshold
+1. Define flow to record sells
+1. Implement splits table
+1. Define flow to edit splits (or maybe do this later, and require manual database split updates?)
+1. Implement pending buys table
+1. Implement transfers table (amount, date, source)
+1. Define flow to input transfers (Deposit, withdraw, dividend, interest)
+    1. Implement splitting of deposits
+1. Make sure selling is also splitting and sending to pending buys
+1. Print buying power checksum
+1. Implement a stats view
+    1. Fastest to reach 5% (or whatever your sell threshold is)
+    1. Best returns of all time
+    1. Longest holds of all time, including things you haven't sold yet
+1. Implement customizable settings, stored in the database
+    1. Sell threshold, and almost-ready threshold
+    1. Quote data staleness interval
+1. Finish writing this readme
+1. Cache sums of transfers for performance?
