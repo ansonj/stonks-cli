@@ -24,21 +24,18 @@ struct ConfigFile {
     
     // MARK: Properties
     
+    let k_iexCloudApiKey = "iexCloudApiKey"
+    
     // FIXME: Use property wrappers instead?
     // https://www.swiftbysundell.com/articles/property-wrappers-in-swift/
     func iexCloudApiKey() -> String {
         let configDictionary = readConfigDictionary()
-        
-        let iexCloudApiKey_key = "iexCloudApiKey"
-        return configDictionary[iexCloudApiKey_key] ?? ""
+        return configDictionary[k_iexCloudApiKey] ?? ""
     }
     
     func setIexCloudApiKey(_ newValue: String) {
         var configDictionary = readConfigDictionary()
-        
-        let iexCloudApiKey_key = "iexCloudApiKey"
-        configDictionary[iexCloudApiKey_key] = newValue
-        
+        configDictionary[k_iexCloudApiKey] = newValue
         setConfigDictionary(configDictionary)
     }
     
