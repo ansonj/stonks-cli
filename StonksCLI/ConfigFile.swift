@@ -46,6 +46,14 @@ struct ConfigFile {
         setString(newValue, forKey: k_iexCloudApiKey)
     }
     
+    private let k_databasePath = "databasePath"
+    func databasePath() -> String {
+        return getString(forKey: k_databasePath)
+    }
+    func setDatabasePath(_ newValue: String) {
+        setString(newValue, forKey: k_databasePath)
+    }
+    
     // MARK: Utilities
     
     private func readConfigDictionary() -> [String: String] {
@@ -75,6 +83,24 @@ struct ConfigFile {
             print("Create an account if needed: https://iexcloud.io/cloud-login#/register")
             let newKey = Prompt.readString(withMessage: "Enter your API key:")
             setIexCloudApiKey(newKey)
+        }
+    }
+    
+    func ensureDatabasePathExists() {
+        guard databasePath() == "" else {
+            return
+        }
+        print("No database path found.")
+        var weGotAValidPath = false
+        while !weGotAValidPath {
+            let newPath = Prompt.readString(withMessage: "Enter path to new or existing database:")
+            let newPathHomeDirReplaced = newPath.replacingOccurrences(of: "~",
+                                                                      with: FileManager.default.homeDirectoryForCurrentUser.path)
+            print("Does this look correct?")
+            weGotAValidPath = Prompt.readBoolean(withMessage: newPathHomeDirReplaced)
+            if weGotAValidPath {
+                setDatabasePath(newPathHomeDirReplaced)
+            }
         }
     }
 }

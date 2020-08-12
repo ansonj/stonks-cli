@@ -10,5 +10,6 @@ struct SetupFlow: Flow {
     
     func run() {
         configFile.ensureIexCloudApiKeyExists()
+        configFile.ensureDatabasePathExists()
     }
 }
