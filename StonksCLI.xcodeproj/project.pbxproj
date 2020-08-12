@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,7 @@
 		A3FFA0FE24E02419003228BF /* StockInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA0FD24E02419003228BF /* StockInfoProvider.swift */; };
 		A3FFA10024E07895003228BF /* ConfigFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA0FF24E07895003228BF /* ConfigFile.swift */; };
 		A3FFA10224E172DC003228BF /* IEXCloudAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA10124E172DC003228BF /* IEXCloudAPI.swift */; };
+		A3FFA10524E41F8A003228BF /* FMDB in Frameworks */ = {isa = PBXBuildFile; productRef = A3FFA10424E41F8A003228BF /* FMDB */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3FFA10524E41F8A003228BF /* FMDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +111,9 @@
 			dependencies = (
 			);
 			name = StonksCLI;
+			packageProductDependencies = (
+				A3FFA10424E41F8A003228BF /* FMDB */,
+			);
 			productName = StonksCLI;
 			productReference = A3FFA0ED24E022BE003228BF /* StonksCLI */;
 			productType = "com.apple.product-type.tool";
@@ -137,6 +142,9 @@
 				Base,
 			);
 			mainGroup = A3FFA0E424E022BE003228BF;
+			packageReferences = (
+				A3FFA10324E41F8A003228BF /* XCRemoteSwiftPackageReference "fmdb" */,
+			);
 			productRefGroup = A3FFA0EE24E022BE003228BF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -316,6 +324,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A3FFA10324E41F8A003228BF /* XCRemoteSwiftPackageReference "fmdb" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ccgus/fmdb";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 2.7.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A3FFA10424E41F8A003228BF /* FMDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A3FFA10324E41F8A003228BF /* XCRemoteSwiftPackageReference "fmdb" */;
+			productName = FMDB;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A3FFA0E524E022BE003228BF /* Project object */;
 }

@@ -14,7 +14,6 @@ Stonks is not...
 ## Todo
 
 1. Create database support
-    1. Embed sqlite library of some kind
     1. Have the tool create a sqlite at your chosen location, using some kind of versioning, starting at version zero
     1. Define and implement the transaction table (increment version)
 1. Define flow to record buys
