@@ -9,7 +9,7 @@ struct ConfigFile {
         self.configFileUrl = configFileUrl
         
         if !FileManager.default.isReadableFile(atPath: configFileUrl.path) {
-            Prompt.confirmContinue(withMessage: "Create config file at '\(configFileUrl)'?")
+            Prompt.confirmContinueOrAbort(withMessage: "Create config file at '\(configFileUrl)'?")
             let emptyJson = "{}"
             guard let emptyJsonData = emptyJson.data(using: .utf8) else {
                 Prompt.exitStonks(withMessage: "Couldn't prepare empty JSON data.")

@@ -1,14 +1,19 @@
 import Foundation
 
 struct Prompt {
-    static func confirmContinue(withMessage message: String) {
-        print(message)
-        print("Y/n> ", terminator: "")
-        let response = readLine() ?? ""
-        guard !response.starts(with: "n") else {
+    static func confirmContinueOrAbort(withMessage message: String) {
+        let shouldContinue = readBoolean(withMessage: message)
+        guard shouldContinue else {
             print("Aborting.")
             exit(0)
         }
+    }
+    
+    static func readBoolean(withMessage message: String) -> Bool {
+        print(message)
+        print("Y/n> ", terminator: "")
+        let response = readLine() ?? ""
+        return !response.starts(with: "n")
     }
     
     static func readString(withMessage message: String) -> String {
