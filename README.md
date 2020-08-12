@@ -23,7 +23,7 @@ Stonks is not...
     1. List of holds in a nice tabular format
     1. Placeholder to print buying power checksum
 1. Implement in-memory caching for prices, with a 5-min refresh threshold
-1. Define flow to record sells
+1. Define flow to record sells (only sell one whole buy at a time)
 1. Implement splits table
 1. Define flow to edit splits (or maybe do this later, and require manual database split updates?)
 1. Implement pending buys table
@@ -32,6 +32,7 @@ Stonks is not...
     1. Implement splitting of deposits
 1. Make sure selling is also splitting and sending to pending buys
 1. Print buying power checksum
+1. Implement selling portions of buys, if this is even desired
 1. Implement a stats view
     1. Fastest to reach 5% (or whatever your sell threshold is)
     1. Best returns of all time
