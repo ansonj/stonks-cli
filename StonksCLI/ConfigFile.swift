@@ -78,16 +78,17 @@ struct ConfigFile {
     }
     
     func ensureIexCloudApiKeyExists() {
-        if iexCloudApiKey() == "" {
-            print("No IEX Cloud API key found.")
-            print("Create an account if needed: https://iexcloud.io/cloud-login#/register")
-            let newKey = Prompt.readString(withMessage: "Enter your API key:")
-            setIexCloudApiKey(newKey)
+        if iexCloudApiKey() != "" {
+            return
         }
+        print("No IEX Cloud API key found.")
+        print("Create an account if needed: https://iexcloud.io/cloud-login#/register")
+        let newKey = Prompt.readString(withMessage: "Enter your API key:")
+        setIexCloudApiKey(newKey)
     }
     
     func ensureDatabasePathExists() {
-        guard databasePath() == "" else {
+        if databasePath() != "" {
             return
         }
         print("No database path found.")
