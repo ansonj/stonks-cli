@@ -28,6 +28,9 @@ struct IexCloudApi: StockInfoProvider {
         var results = [StockInfo]()
         let semaphore = DispatchSemaphore(value: 0)
         let task = URLSession.shared.dataTask(with: url, completionHandler: { (data: Data?, response: URLResponse?, error: Error?) in
+            defer {
+                semaphore.signal()
+            }
             guard error == nil,
                 let httpResponse = response as? HTTPURLResponse,
                 httpResponse.statusCode == 200,
@@ -53,8 +56,6 @@ struct IexCloudApi: StockInfoProvider {
                                      timestamp: Date(timeIntervalSince1970: timestamp / 1000.0))
                 results.append(info)
             }
-            
-            semaphore.signal()
         })
         
         task.resume()
