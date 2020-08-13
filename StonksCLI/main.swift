@@ -7,6 +7,3 @@ let configFile = ConfigFile(configFileUrl: configFileUrl)
 
 let setup = SetupFlow(configFile: configFile)
 setup.run()
-
-let api = IexCloudApi(apiKey: configFile.iexCloudApiKey())
-print(api.fetchInfoSynchronously(forTickers: ["AAPL", "TSLA"]))
