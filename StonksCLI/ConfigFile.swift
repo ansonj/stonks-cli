@@ -77,6 +77,8 @@ struct ConfigFile {
         }
     }
     
+    // MARK: Public methods
+    
     func ensureIexCloudApiKeyExists() {
         if iexCloudApiKey() != "" {
             return
