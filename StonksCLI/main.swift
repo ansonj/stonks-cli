@@ -7,3 +7,6 @@ let configFile = ConfigFile(configFileUrl: configFileUrl)
 
 let setup = SetupFlow(configFile: configFile)
 setup.run()
+
+let main = MainFlow(configFile: configFile)
+main.run()
