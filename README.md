@@ -13,8 +13,6 @@ Stonks is not...
 
 ## Todo
 
-1. Create database support
-    1. Define and implement the transaction table (increment version)
 1. Define flow to record buys
 1. Add some of your data!
 1. Create the main view
@@ -40,3 +38,4 @@ Stonks is not...
     1. Quote data staleness interval
 1. Finish writing this readme
 1. Cache sums of transfers for performance?
+1. Clean up `TODO`s
