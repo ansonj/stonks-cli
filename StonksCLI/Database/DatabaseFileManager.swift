@@ -9,6 +9,7 @@ struct DatabaseFileManager {
         if FileManager.default.isReadableFile(atPath: path) {
            return
         }
+        Logger.log("Creating database file...")
         let db = FMDatabase(path: path)
         guard db.open() else {
             exitWithError(fromDatabase: db, duringActivity: "opening newly created database")

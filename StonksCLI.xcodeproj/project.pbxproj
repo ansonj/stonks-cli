@@ -15,6 +15,7 @@
 		A3FFA10724E56DD3003228BF /* ConfigFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA0FF24E07895003228BF /* ConfigFile.swift */; };
 		A3FFA10824E56DDE003228BF /* Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA0F924E023FE003228BF /* Prompt.swift */; };
 		A3FFA10B24E56E26003228BF /* DatabaseFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA10A24E56E26003228BF /* DatabaseFileManager.swift */; };
+		A3FFA10D24E85504003228BF /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA10C24E85504003228BF /* Logger.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,6 +39,7 @@
 		A3FFA0FF24E07895003228BF /* ConfigFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigFile.swift; sourceTree = "<group>"; };
 		A3FFA10124E172DC003228BF /* IEXCloudAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IEXCloudAPI.swift; sourceTree = "<group>"; };
 		A3FFA10A24E56E26003228BF /* DatabaseFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseFileManager.swift; sourceTree = "<group>"; };
+		A3FFA10C24E85504003228BF /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				A3FFA0F924E023FE003228BF /* Prompt.swift */,
+				A3FFA10C24E85504003228BF /* Logger.swift */,
 				A3FFA0FB24E02407003228BF /* SetupFlow.swift */,
 			);
 			path = Flows;
@@ -177,6 +180,7 @@
 				A3FFA10224E172DC003228BF /* IEXCloudAPI.swift in Sources */,
 				A3FFA0FC24E02407003228BF /* SetupFlow.swift in Sources */,
 				A3FFA10B24E56E26003228BF /* DatabaseFileManager.swift in Sources */,
+				A3FFA10D24E85504003228BF /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
