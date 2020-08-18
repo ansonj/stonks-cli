@@ -18,6 +18,7 @@
 		A3FFA10D24E85504003228BF /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA10C24E85504003228BF /* Logger.swift */; };
 		A3FFA10F24E8765C003228BF /* MainFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA10E24E8765C003228BF /* MainFlow.swift */; };
 		A3FFA11124E87836003228BF /* BuyFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11024E87836003228BF /* BuyFlow.swift */; };
+		A3FFA11324E8819E003228BF /* DatabaseIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11224E8819E003228BF /* DatabaseIO.swift */; };
 		A3FFA11724EC116D003228BF /* DatabaseUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11624EC116D003228BF /* DatabaseUtilities.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 		A3FFA10C24E85504003228BF /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		A3FFA10E24E8765C003228BF /* MainFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFlow.swift; sourceTree = "<group>"; };
 		A3FFA11024E87836003228BF /* BuyFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyFlow.swift; sourceTree = "<group>"; };
+		A3FFA11224E8819E003228BF /* DatabaseIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseIO.swift; sourceTree = "<group>"; };
 		A3FFA11624EC116D003228BF /* DatabaseUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUtilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				A3FFA10A24E56E26003228BF /* DatabaseFileManager.swift */,
+				A3FFA11224E8819E003228BF /* DatabaseIO.swift */,
 				A3FFA11624EC116D003228BF /* DatabaseUtilities.swift */,
 			);
 			path = Database;
@@ -193,6 +196,7 @@
 				A3FFA0FC24E02407003228BF /* SetupFlow.swift in Sources */,
 				A3FFA10B24E56E26003228BF /* DatabaseFileManager.swift in Sources */,
 				A3FFA10D24E85504003228BF /* Logger.swift in Sources */,
+				A3FFA11324E8819E003228BF /* DatabaseIO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

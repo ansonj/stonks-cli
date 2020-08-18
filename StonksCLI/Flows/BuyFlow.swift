@@ -28,7 +28,13 @@ struct BuyFlow: Flow {
         let confirmationMessage = "Buy \(shares) shares of \(symbol) for \(formatCurrency(investment)) on \(date), for a cost basis of \(formatCurrency(costBasis))?"
         let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
         
-        print(confirmed ? "Confirmed!" : "Cancelled.")
+        if confirmed {
+            DatabaseIO.recordBuy(path: configFile.databasePath(),
+                                 ticker: symbol,
+                                 investment: investment,
+                                 shares: shares,
+                                 date: date)
+        }
     }
     
     private func formatCurrency(_ amount: Double) -> String {

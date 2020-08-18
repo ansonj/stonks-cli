@@ -13,7 +13,6 @@ Stonks is not...
 
 ## Todo
 
-1. Define flow to record buys
 1. Add some of your data!
 1. Create the main view
     1. List of holds in a nice tabular format
