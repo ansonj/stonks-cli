@@ -20,7 +20,7 @@ struct BuyFlow: Flow {
         
         var date = Prompt.readString(withMessage: "What date? Format as YYYY-MM-DD, or leave blank for today.")
         if date == "" {
-            date = todaysDateString()
+            date = DatabaseUtilities.string(fromDate: Date())
         }
         
         let costBasis = investment / shares
@@ -29,12 +29,6 @@ struct BuyFlow: Flow {
         let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
         
         print(confirmed ? "Confirmed!" : "Cancelled.")
-    }
-    
-    private func todaysDateString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: Date())
     }
     
     private func formatCurrency(_ amount: Double) -> String {
