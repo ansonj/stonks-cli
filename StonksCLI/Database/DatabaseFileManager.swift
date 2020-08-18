@@ -82,8 +82,13 @@ private let migrations: [Int : String] = [
                               investment NUMERIC NOT NULL,
                               shares NUMERIC NOT NULL,
                               buy_date TEXT NOT NULL,
+                              cost_basis NUMERIC NOT NULL,
                               sell_date TEXT,
                               sell_price NUMERIC,
+                              revenue NUMERIC,
+                              returnPercentage NUMERIC,
+                              profit NUMERIC,
+                              held_days INTEGER,
                               profit_withdrawn INTEGER);
     """,
 ]
