@@ -22,6 +22,7 @@
 		A3FFA11724EC116D003228BF /* DatabaseUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11624EC116D003228BF /* DatabaseUtilities.swift */; };
 		A3FFA11924EE00DC003228BF /* DatabaseTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11824EE00DC003228BF /* DatabaseTypes.swift */; };
 		A3FFA11B24EE093D003228BF /* PriceCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11A24EE093D003228BF /* PriceCache.swift */; };
+		A3FFA12024EF2D0D003228BF /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11F24EF2D0D003228BF /* Table.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,6 +53,7 @@
 		A3FFA11624EC116D003228BF /* DatabaseUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUtilities.swift; sourceTree = "<group>"; };
 		A3FFA11824EE00DC003228BF /* DatabaseTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseTypes.swift; sourceTree = "<group>"; };
 		A3FFA11A24EE093D003228BF /* PriceCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCache.swift; sourceTree = "<group>"; };
+		A3FFA11F24EF2D0D003228BF /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				A3FFA0FB24E02407003228BF /* SetupFlow.swift */,
 				A3FFA10E24E8765C003228BF /* MainFlow.swift */,
 				A3FFA11024E87836003228BF /* BuyFlow.swift */,
+				A3FFA11F24EF2D0D003228BF /* Table.swift */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -197,6 +200,7 @@
 				A3FFA11124E87836003228BF /* BuyFlow.swift in Sources */,
 				A3FFA10724E56DD3003228BF /* ConfigFile.swift in Sources */,
 				A3FFA0FE24E02419003228BF /* StockInfoProvider.swift in Sources */,
+				A3FFA12024EF2D0D003228BF /* Table.swift in Sources */,
 				A3FFA10224E172DC003228BF /* IEXCloudAPI.swift in Sources */,
 				A3FFA10F24E8765C003228BF /* MainFlow.swift in Sources */,
 				A3FFA0FC24E02407003228BF /* SetupFlow.swift in Sources */,
