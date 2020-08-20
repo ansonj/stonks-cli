@@ -48,7 +48,7 @@ struct DatabaseIO {
                 let newTransaction = ActiveBuyTransaction(ticker: ticker,
                                                           investment: investment,
                                                           shares: shares,
-                                                          date: DatabaseUtilities.date(fromString: date),
+                                                          buyDate: DatabaseUtilities.date(fromString: date),
                                                           costBasis: costBasis)
                 transactions.append(newTransaction)
             }
