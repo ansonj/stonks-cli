@@ -2,6 +2,7 @@ import Foundation
 
 struct MainFlow: Flow {
     let configFile: ConfigFile
+    let priceCache: PriceCache
     
     func run() {
         var lastInputErrorMessage: String? = nil
@@ -39,6 +40,8 @@ struct MainFlow: Flow {
         
         let activeTransactions = DatabaseIO.activeTransactions(fromPath: configFile.databasePath())
         print(activeTransactions)
+        
+        priceCache.primeCache(forTickers: Set<String>(activeTransactions.map({ $0.ticker })))
         
         print()
     }

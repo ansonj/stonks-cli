@@ -21,6 +21,7 @@
 		A3FFA11324E8819E003228BF /* DatabaseIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11224E8819E003228BF /* DatabaseIO.swift */; };
 		A3FFA11724EC116D003228BF /* DatabaseUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11624EC116D003228BF /* DatabaseUtilities.swift */; };
 		A3FFA11924EE00DC003228BF /* DatabaseTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11824EE00DC003228BF /* DatabaseTypes.swift */; };
+		A3FFA11B24EE093D003228BF /* PriceCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11A24EE093D003228BF /* PriceCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +51,7 @@
 		A3FFA11224E8819E003228BF /* DatabaseIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseIO.swift; sourceTree = "<group>"; };
 		A3FFA11624EC116D003228BF /* DatabaseUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseUtilities.swift; sourceTree = "<group>"; };
 		A3FFA11824EE00DC003228BF /* DatabaseTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseTypes.swift; sourceTree = "<group>"; };
+		A3FFA11A24EE093D003228BF /* PriceCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 			children = (
 				A3FFA0FD24E02419003228BF /* StockInfoProvider.swift */,
 				A3FFA10124E172DC003228BF /* IEXCloudAPI.swift */,
+				A3FFA11A24EE093D003228BF /* PriceCache.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				A3FFA10F24E8765C003228BF /* MainFlow.swift in Sources */,
 				A3FFA0FC24E02407003228BF /* SetupFlow.swift in Sources */,
 				A3FFA10B24E56E26003228BF /* DatabaseFileManager.swift in Sources */,
+				A3FFA11B24EE093D003228BF /* PriceCache.swift in Sources */,
 				A3FFA10D24E85504003228BF /* Logger.swift in Sources */,
 				A3FFA11324E8819E003228BF /* DatabaseIO.swift in Sources */,
 				A3FFA11924EE00DC003228BF /* DatabaseTypes.swift in Sources */,

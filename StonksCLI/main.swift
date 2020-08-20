@@ -8,5 +8,9 @@ let configFile = ConfigFile(configFileUrl: configFileUrl)
 let setup = SetupFlow(configFile: configFile)
 setup.run()
 
-let main = MainFlow(configFile: configFile)
+let iexCloudApi = IexCloudApi(apiKey: configFile.iexCloudApiKey())
+let priceCache = InMemoryPriceCache(stockInfoProvider: iexCloudApi)
+
+let main = MainFlow(configFile: configFile,
+                    priceCache: priceCache)
 main.run()

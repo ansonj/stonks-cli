@@ -17,7 +17,6 @@ Stonks is not...
 1. Create the main view
     1. List of holds in a nice tabular format
     1. Placeholder to print buying power checksum
-1. Implement in-memory caching for prices, with a 5-min refresh threshold
 1. Define flow to record sells (only sell one whole buy at a time)
 1. Implement splits table
 1. Define flow to edit splits (or maybe do this later, and require manual database split updates?)
@@ -36,5 +35,6 @@ Stonks is not...
     1. Sell threshold, and almost-ready threshold
     1. Quote data staleness interval
 1. Finish writing this readme
+1. Implement database caching of prices?
 1. Cache sums of transfers for performance?
 1. Clean up `TODO`s
