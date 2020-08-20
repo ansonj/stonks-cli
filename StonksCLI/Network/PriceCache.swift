@@ -32,6 +32,7 @@ class InMemoryPriceCache: PriceCache {
         freshData.forEach { info in
             storage[info.ticker] = info
         }
+        print()
     }
     
     func info(forTicker ticker: String) -> StockInfo {
