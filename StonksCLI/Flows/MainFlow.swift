@@ -1,3 +1,5 @@
+import Foundation
+
 struct MainFlow: Flow {
     let configFile: ConfigFile
     
@@ -24,6 +26,8 @@ struct MainFlow: Flow {
             case "b":
                 let buy = BuyFlow(configFile: configFile)
                 buy.run()
+            case "q":
+                exit(0)
             default:
                 lastInputErrorMessage = "'\(selection)' is not an option"
             }
@@ -42,6 +46,7 @@ struct MainFlow: Flow {
     private func printMainMenu() {
         print("Main menu")
         print("    (b)uy")
+        print("    (q)uit")
         print()
     }
 }
