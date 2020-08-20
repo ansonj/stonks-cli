@@ -18,6 +18,9 @@ struct MainFlow: Flow {
             // TODO: Gracefully handle input of Ctrl+D
             let selection = Prompt.readString(withMessage: promptString)
             switch selection.first {
+            case nil:
+                // Allow pressing enter to refresh table
+                break
             case "b":
                 let buy = BuyFlow(configFile: configFile)
                 buy.run()
