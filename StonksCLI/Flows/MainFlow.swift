@@ -43,6 +43,19 @@ struct MainFlow: Flow {
         
         priceCache.primeCache(forTickers: Set<String>(activeTransactions.map({ $0.ticker })))
         
+        let displayRows = activeTransactions.map {
+            ActiveDisplayRow(activeBuyTransaction: $0, priceSource: priceCache)
+        }
+        // Fill in averageReturnPercentage, which we can't calculate individually
+        displayRows.forEach { row in
+            let matchingTrxns = displayRows.filter { $0.ticker == row.ticker }
+            let totalInvestment = matchingTrxns.reduce(into: 0, { $0 += $1.investment })
+            let totalValue = matchingTrxns.reduce(into: 0, { $0 += $1.currentValue })
+            row.averageReturnPercentage = (totalValue - totalInvestment) / totalInvestment
+        }
+        
+        print(displayRows.debugDescription)
+        
         print()
     }
     
@@ -51,5 +64,31 @@ struct MainFlow: Flow {
         print("    (b)uy")
         print("    (q)uit")
         print()
+    }
+}
+
+private class ActiveDisplayRow {
+    let ticker: String
+    let companyName: String
+    let investment: Double
+    let currentPrice: Double
+    let currentValue: Double // No need to display this one
+    let currentReturnPercentage: Double
+    let profit: Double
+    let age: Int
+    var averageReturnPercentage: Double?
+    
+    init(activeBuyTransaction trxn: ActiveBuyTransaction, priceSource: PriceCache) {
+        let info = priceSource.info(forTicker: trxn.ticker)
+        
+        self.ticker = trxn.ticker
+        self.companyName = info.companyName
+        self.investment = trxn.investment
+        self.currentPrice = info.price
+        self.currentValue = currentPrice * trxn.shares
+        self.currentReturnPercentage = (currentValue - investment) / investment
+        self.profit = currentValue - investment
+        self.age = Calendar.current.dateComponents([.day], from: trxn.buyDate, to: Date()).day ?? -1
+        self.averageReturnPercentage = nil // Will be filled in later
     }
 }
