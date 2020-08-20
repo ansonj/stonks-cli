@@ -24,8 +24,7 @@ class InMemoryPriceCache: PriceCache {
             let ageOfData_min = existingData.timestamp.timeIntervalSinceNow * -1.0 / 60.0
             return ageOfData_min >= cacheInterval_min
         }
-        // TODO: Maybe have StockInfoProvider also take a set as an argument
-        let freshData = stockInfoProvider.fetchInfoSynchronously(forTickers: Array(tickersToFetch))
+        let freshData = stockInfoProvider.fetchInfoSynchronously(forTickers: tickersToFetch)
         freshData.forEach { info in
             storage[info.ticker] = info
         }

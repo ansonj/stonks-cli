@@ -8,5 +8,5 @@ struct StockInfo {
 }
 
 protocol StockInfoProvider {
-    func fetchInfoSynchronously(forTickers tickers: [String]) -> [StockInfo]
+    func fetchInfoSynchronously(forTickers tickers: Set<String>) -> [StockInfo]
 }
