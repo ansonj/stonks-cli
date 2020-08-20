@@ -34,6 +34,7 @@ Stonks is not...
 1. Implement customizable settings, stored in the database
     1. Sell threshold, and almost-ready threshold
     1. Quote data staleness interval
+1. Don't forget to use your actual API key before you use it yourself
 1. Finish writing this readme
 1. Implement database caching of prices?
 1. Cache sums of transfers for performance?
