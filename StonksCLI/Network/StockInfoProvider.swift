@@ -2,7 +2,7 @@ import Foundation
 
 struct StockInfo {
     let ticker: String
-    let name: String
+    let companyName: String
     let price: Double
     let timestamp: Date
 }

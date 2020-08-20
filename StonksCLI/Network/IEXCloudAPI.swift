@@ -51,7 +51,7 @@ struct IexCloudApi: StockInfoProvider {
                 guard let price = quoteDict["latestPrice"] as? Double else { continue }
                 guard let timestamp = quoteDict["latestUpdate"] as? Double else { continue }
                 let info = StockInfo(ticker: ticker,
-                                     name: name,
+                                     companyName: name,
                                      price: price,
                                      timestamp: Date(timeIntervalSince1970: timestamp / 1000.0))
                 results.append(info)
