@@ -32,7 +32,10 @@ struct MainFlow: Flow {
     
     private func printActiveTable() {
         // TODO: Implement this!
-        print("[Active table WIP]")
+        
+        let activeTransactions = DatabaseIO.activeTransactions(fromPath: configFile.databasePath())
+        print(activeTransactions)
+        
         print()
     }
     

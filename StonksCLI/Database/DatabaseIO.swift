@@ -30,4 +30,31 @@ struct DatabaseIO {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording buy")
         }
     }
+    
+    static func activeTransactions(fromPath path: String) -> [ActiveBuyTransaction] {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to list active transactions")
+        }
+        var transactions = [ActiveBuyTransaction]()
+        do {
+            let results = try db.executeQuery("SELECT ticker, investment, shares, buy_date, cost_basis FROM transactions WHERE sell_date IS NULL", values: nil)
+            while results.next() {
+                let ticker = results.string(forColumn: "ticker") ?? "ERROR"
+                let investment = results.double(forColumn: "investment")
+                let shares = results.double(forColumn: "shares")
+                let date = results.string(forColumn: "buy_date") ?? "ERROR"
+                let costBasis = results.double(forColumn: "cost_basis")
+                let newTransaction = ActiveBuyTransaction(ticker: ticker,
+                                                          investment: investment,
+                                                          shares: shares,
+                                                          date: DatabaseUtilities.date(fromString: date),
+                                                          costBasis: costBasis)
+                transactions.append(newTransaction)
+            }
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "selecting active transactions")
+        }
+        return transactions
+    }
 }
