@@ -36,10 +36,7 @@ struct MainFlow: Flow {
     }
     
     private func printActiveTable() {
-        // TODO: Implement this!
-        
         let activeTransactions = DatabaseIO.activeTransactions(fromPath: configFile.databasePath())
-        print(activeTransactions)
         
         priceCache.primeCache(forTickers: Set<String>(activeTransactions.map({ $0.ticker })))
         
@@ -54,8 +51,50 @@ struct MainFlow: Flow {
             row.averageReturnPercentage = (totalValue - totalInvestment) / totalInvestment
         }
         
-        print(displayRows.debugDescription)
+        let currencyFormatter: NumberFormatter = {
+            let fmt = NumberFormatter()
+            fmt.numberStyle = .currency
+            return fmt
+        }()
+        let fc /* format currency */ = { (n: Double) -> String in
+            currencyFormatter.string(from: NSNumber(value: n)) ?? "$?.??"
+        }
+        let percentageFormatter: NumberFormatter = {
+            let fmt = NumberFormatter()
+            fmt.numberStyle = .percent
+            fmt.minimumFractionDigits = 2
+            fmt.maximumFractionDigits = 2
+            return fmt
+        }()
+        let fp /* format percentage */ = { (p: Double) -> String in
+            percentageFormatter.string(from: NSNumber(value: p)) ?? "?.??%"
+        }
         
+        let headers = [
+            HeaderCell("Symbol", alignment: .left),
+            HeaderCell("Company Name", alignment: .left),
+            HeaderCell("Investment", alignment: .right),
+            HeaderCell("Current Price", alignment: .right),
+            HeaderCell("Current Return", alignment: .right),
+            HeaderCell("Current Profit", alignment: .right),
+            HeaderCell("Age", alignment: .right),
+            HeaderCell("Avg. Return", alignment: .right),
+        ]
+        let rows = displayRows.map { row in
+            [
+                TableCell(row.ticker),
+                TableCell(row.companyName),
+                TableCell(fc(row.investment)),
+                TableCell(fc(row.currentPrice)),
+                TableCell(fp(row.currentReturnPercentage)),
+                TableCell(fc(row.profit)),
+                TableCell(row.age.description),
+                TableCell(fp(row.averageReturnPercentage ?? 0))
+            ]
+        }
+        let table = Table.renderTable(withHeaders: headers,
+                                      rows: rows)
+        print(table)
         print()
     }
     
