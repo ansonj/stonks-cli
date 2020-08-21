@@ -22,10 +22,15 @@ struct BuyFlow: Flow {
         if date == "" {
             date = DatabaseUtilities.string(fromDate: Date())
         }
+        let dateStringForConfirmation = { () -> String in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMMM dd, yyyy"
+            return dateFormatter.string(from: DatabaseUtilities.date(fromString: date))
+        }()
         
         let costBasis = investment / shares
         
-        let confirmationMessage = "Buy \(shares) shares of \(symbol) for \(formatCurrency(investment)) on \(date), for a cost basis of \(formatCurrency(costBasis))?"
+        let confirmationMessage = "Buy \(shares) shares of \(symbol) for \(formatCurrency(investment)) on \(dateStringForConfirmation), for a cost basis of \(formatCurrency(costBasis))?"
         let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
         
         if confirmed {
