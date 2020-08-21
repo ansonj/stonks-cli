@@ -153,6 +153,7 @@ private class ActiveDisplayRow {
         self.currentValue = currentPrice * trxn.shares
         self.currentReturnPercentage = (currentValue - investment) / investment
         self.profit = currentValue - investment
+        // FIXME: There is a bug here; need to ensure these dates have the same time
         self.age = Calendar.current.dateComponents([.day], from: trxn.buyDate, to: Date()).day ?? -1
         self.averageReturnPercentage = nil // Will be filled in later
     }

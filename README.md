@@ -36,4 +36,4 @@ Stonks is not...
 1. Finish writing this readme
 1. Implement database caching of prices?
 1. Cache sums of transfers for performance?
-1. Clean up `TODO`s
+1. Clean up `TODO`s and `FIXME`s
