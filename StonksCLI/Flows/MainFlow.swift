@@ -40,7 +40,7 @@ struct MainFlow: Flow {
         
         priceCache.primeCache(forTickers: Set<String>(activeTransactions.map({ $0.ticker })))
         
-        let displayRows = activeTransactions.map {
+        var displayRows = activeTransactions.map {
             ActiveDisplayRow(activeBuyTransaction: $0, priceSource: priceCache)
         }
         // Fill in averageReturnPercentage, which we can't calculate individually
@@ -49,6 +49,20 @@ struct MainFlow: Flow {
             let totalInvestment = matchingTrxns.reduce(into: 0, { $0 += $1.investment })
             let totalValue = matchingTrxns.reduce(into: 0, { $0 += $1.currentValue })
             row.averageReturnPercentage = (totalValue - totalInvestment) / totalInvestment
+        }
+        displayRows.sort { (lhs: ActiveDisplayRow, rhs: ActiveDisplayRow) -> Bool in
+            // return true if lhs should come before rhs
+            if lhs.averageReturnPercentage > rhs.averageReturnPercentage {
+                return true
+            } else if lhs.averageReturnPercentage < rhs.averageReturnPercentage {
+                return false
+            }
+            if lhs.ticker < rhs.ticker {
+                return true
+            } else if lhs.ticker > rhs.ticker {
+                return false
+            }
+            return lhs.age > rhs.age
         }
         
         let currencyFormatter: NumberFormatter = {
