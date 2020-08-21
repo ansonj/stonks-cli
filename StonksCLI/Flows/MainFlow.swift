@@ -69,6 +69,28 @@ struct MainFlow: Flow {
         let fp /* format percentage */ = { (p: Double) -> String in
             percentageFormatter.string(from: NSNumber(value: p)) ?? "?.??%"
         }
+        let colorPercentage = { (p: Double) -> TerminalTextColor in
+            // TODO: These will become settings someday
+            let almostReadyToSellThreshold = 3.5 / 100.0
+            let sellThreshold = 5 / 100.0
+            if p < 0 {
+                return .red
+            } else if 0 <= p && p < almostReadyToSellThreshold {
+                return .black
+            } else if almostReadyToSellThreshold <= p && p < sellThreshold {
+                return .yellow
+            } else {
+                assert(sellThreshold <= p, "Developer or floating point error")
+                return .green
+            }
+        }
+        let colorProfit = { (n: Double) -> TerminalTextColor in
+            if n < 0 {
+                return .red
+            } else {
+                return .black
+            }
+        }
         
         let headers = [
             HeaderCell("Symbol", alignment: .left),
@@ -80,16 +102,20 @@ struct MainFlow: Flow {
             HeaderCell("Age", alignment: .right),
             HeaderCell("Avg. Return", alignment: .right),
         ]
-        let rows = displayRows.map { row in
-            [
-                TableCell(row.ticker),
+        let rows = displayRows.map { row -> [TableCell] in
+            let currentReturnColor = colorPercentage(row.currentReturnPercentage)
+            let currentProfitColor = colorProfit(row.profit)
+            let avgReturnPercentage = row.averageReturnPercentage ?? 0
+            let avgReturnColor = colorPercentage(avgReturnPercentage)
+            return [
+                TableCell(row.ticker, color: currentReturnColor),
                 TableCell(row.companyName),
                 TableCell(fc(row.investment)),
                 TableCell(fc(row.currentPrice)),
-                TableCell(fp(row.currentReturnPercentage)),
-                TableCell(fc(row.profit)),
+                TableCell(fp(row.currentReturnPercentage), color: currentReturnColor),
+                TableCell(fc(row.profit), color: currentProfitColor),
                 TableCell(row.age.description),
-                TableCell(fp(row.averageReturnPercentage ?? 0))
+                TableCell(fp(avgReturnPercentage), color: avgReturnColor)
             ]
         }
         let table = Table.renderTable(withHeaders: headers,
