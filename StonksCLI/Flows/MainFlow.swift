@@ -150,7 +150,7 @@ private class ActiveDisplayRow {
     let companyName: String
     let investment: Double
     let currentPrice: Double
-    let currentValue: Double // No need to display this one
+    let currentValue: Double // No need to display this one, but it's helpful for math
     let currentReturnPercentage: Double
     let profit: Double
     let age: Int
