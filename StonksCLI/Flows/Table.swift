@@ -70,12 +70,15 @@ struct Table {
                 let cell = row[columnIndex]
                 let paddingWidthToAdd = width - cell.text.count
                 let padding = String(repeating: " ", count: paddingWidthToAdd)
-                let newText: String
+                var newText: String
                 switch alignment {
                 case .left:
-                    newText = cell.color.codeString + cell.text + padding + TerminalTextColor.black.codeString
+                    newText = cell.text + padding
                 case .right:
-                    newText = cell.color.codeString + padding + cell.text + TerminalTextColor.black.codeString
+                    newText = padding + cell.text
+                }
+                if cell.color != .black {
+                    newText = cell.color.codeString + newText + TerminalTextColor.black.codeString
                 }
                 spacedRow.append(TableCell(newText, color: cell.color))
             }
@@ -88,8 +91,9 @@ struct Table {
             finalLines.append(row.map({ $0.text }).joined(separator: columnDivider))
         }
         
-        let lengthOfLongestLine = finalLines.map({ $0.count }).max() ?? 0
-        finalLines.insert(String(repeating: "-", count: lengthOfLongestLine), at: 1)
+        // The header line won't have any colors, so we can get an accurate length from it
+        let lengthOfSeparatorLine = finalLines[0].count
+        finalLines.insert(String(repeating: "-", count: lengthOfSeparatorLine), at: 1)
         
         return finalLines.joined(separator: "\n")
     }
