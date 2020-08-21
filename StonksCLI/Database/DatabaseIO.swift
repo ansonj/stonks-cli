@@ -61,19 +61,77 @@ struct DatabaseIO {
     // MARK: - Checksum
     
     static func transferBalance(fromPath path: String) -> Double {
-        return 0
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get transfer balance")
+        }
+        let balance: Double
+        do {
+            let results = try db.executeQuery("SELECT SUM(amount) AS amount FROM transfers;", values: nil)
+            guard results.next() else {
+                Prompt.exitStonks(withMessage: "Couldn't get next row in transferBalance()")
+            }
+            balance = results.double(forColumn: "amount")
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "fetching transfer balance")
+        }
+        return balance
     }
     
     static func totalInvestmentAndRevenue(fromPath path: String) -> (investment: Double, revenue: Double) {
-        return (investment: 0, revenue: 0)
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get total investment and revenue")
+        }
+        let investment: Double
+        let revenue: Double
+        do {
+            let results = try db.executeQuery("SELECT SUM(investment) AS investment, SUM(revenue) AS revenue FROM transactions;", values: nil)
+            guard results.next() else {
+                Prompt.exitStonks(withMessage: "Couldn't get next row in totalInvestmentAndRevenue()")
+            }
+            investment = results.double(forColumn: "investment")
+            revenue = results.double(forColumn: "revenue")
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "fetching total investment and revenue")
+        }
+        return (investment: investment, revenue: revenue)
     }
     
     static func totalProfitNotTransferred(fromPath path: String) -> Double {
-        return 0
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get total profit not transferred")
+        }
+        let totalProfit: Double
+        do {
+            let results = try db.executeQuery("SELECT SUM(profit) AS profit FROM transactions WHERE profit_withdrawn = ?;", values: [0])
+            guard results.next() else {
+                Prompt.exitStonks(withMessage: "Couldnt' get next row in totalProfitNotTransferred()")
+            }
+            totalProfit = results.double(forColumn: "profit")
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "fetching total profit not transferred")
+        }
+        return totalProfit
     }
     
     static func totalPendingBuys(fromPath path: String) -> Double {
-        return 0
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get total pending buys")
+        }
+        let pendingBuyTotal: Double
+        do {
+            let results = try db.executeQuery("SELECT SUM(amount) AS amount FROM pending_buys;", values: nil)
+            guard results.next() else {
+                Prompt.exitStonks(withMessage: "Couldn't get next row in totalPendingBuys()")
+            }
+            pendingBuyTotal = results.double(forColumn: "amount")
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "fetching total pending buys")
+        }
+        return pendingBuyTotal
     }
     
     // MARK: -
