@@ -90,6 +90,7 @@
 				A3FFA0F024E022BE003228BF /* main.swift */,
 				A3FFA0FF24E07895003228BF /* ConfigFile.swift */,
 				A3FFA0F724E023E8003228BF /* Flows */,
+				A3FFA12124F03B84003228BF /* UI */,
 				A3FFA0F824E023EF003228BF /* Network */,
 				A3FFA10924E56DF7003228BF /* Database */,
 			);
@@ -99,12 +100,9 @@
 		A3FFA0F724E023E8003228BF /* Flows */ = {
 			isa = PBXGroup;
 			children = (
-				A3FFA0F924E023FE003228BF /* Prompt.swift */,
-				A3FFA10C24E85504003228BF /* Logger.swift */,
 				A3FFA0FB24E02407003228BF /* SetupFlow.swift */,
 				A3FFA10E24E8765C003228BF /* MainFlow.swift */,
 				A3FFA11024E87836003228BF /* BuyFlow.swift */,
-				A3FFA11F24EF2D0D003228BF /* Table.swift */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -128,6 +126,16 @@
 				A3FFA11624EC116D003228BF /* DatabaseUtilities.swift */,
 			);
 			path = Database;
+			sourceTree = "<group>";
+		};
+		A3FFA12124F03B84003228BF /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A3FFA0F924E023FE003228BF /* Prompt.swift */,
+				A3FFA10C24E85504003228BF /* Logger.swift */,
+				A3FFA11F24EF2D0D003228BF /* Table.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
