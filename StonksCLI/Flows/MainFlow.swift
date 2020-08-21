@@ -65,24 +65,6 @@ struct MainFlow: Flow {
             return lhs.age > rhs.age
         }
         
-        let currencyFormatter: NumberFormatter = {
-            let fmt = NumberFormatter()
-            fmt.numberStyle = .currency
-            return fmt
-        }()
-        let fc /* format currency */ = { (n: Double) -> String in
-            currencyFormatter.string(from: NSNumber(value: n)) ?? "$?.??"
-        }
-        let percentageFormatter: NumberFormatter = {
-            let fmt = NumberFormatter()
-            fmt.numberStyle = .percent
-            fmt.minimumFractionDigits = 2
-            fmt.maximumFractionDigits = 2
-            return fmt
-        }()
-        let fp /* format percentage */ = { (p: Double) -> String in
-            percentageFormatter.string(from: NSNumber(value: p)) ?? "?.??%"
-        }
         let colorPercentage = { (p: Double) -> TerminalTextColor in
             // TODO: These will become settings someday
             let almostReadyToSellThreshold = 3.5 / 100.0
@@ -123,12 +105,12 @@ struct MainFlow: Flow {
             return [
                 TableCell(row.ticker, color: currentReturnColor),
                 TableCell(row.companyName),
-                TableCell(fc(row.investment)),
-                TableCell(fc(row.currentPrice)),
-                TableCell(fp(row.currentReturnPercentage), color: currentReturnColor),
-                TableCell(fc(row.profit), color: currentProfitColor),
+                TableCell(Formatting.string(forCurrency: row.investment)),
+                TableCell(Formatting.string(forCurrency: row.currentPrice)),
+                TableCell(Formatting.string(forPercentage: row.currentReturnPercentage), color: currentReturnColor),
+                TableCell(Formatting.string(forCurrency: row.profit), color: currentProfitColor),
                 TableCell(row.age.description),
-                TableCell(fp(row.averageReturnPercentage), color: avgReturnColor)
+                TableCell(Formatting.string(forPercentage: row.averageReturnPercentage), color: avgReturnColor)
             ]
         }
         let table = Table.renderTable(withHeaders: headers,
