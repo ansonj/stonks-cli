@@ -77,6 +77,7 @@ struct DatabaseFileManager {
 }
 
 private let migrations: [Int : String] = [
+    // Must be only one statement per migration.
     1: """
     CREATE TABLE transactions(ticker TEXT NOT NULL,
                               investment NUMERIC NOT NULL,
@@ -90,5 +91,18 @@ private let migrations: [Int : String] = [
                               profit NUMERIC,
                               held_days INTEGER,
                               profit_withdrawn INTEGER);
+    """,
+    2: """
+    CREATE TABLE reinvestment_splits(ticker TEXT NOT NULL,
+                                     weight NUMERIC NOT NULL);
+    """,
+    3: """
+    CREATE TABLE pending_buys(ticker TEXT NOT NULL,
+                              amount NUMERIC NOT NULL);
+    """,
+    4: """
+    CREATE TABLE transfers(date TEXT NOT NULL,
+                           amount NUMERIC NOT NULL,
+                           source TEXT NOT NULL);
     """,
 ]
