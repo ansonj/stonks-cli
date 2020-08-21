@@ -8,7 +8,7 @@ struct MainFlow: Flow {
         var lastInputErrorMessage: String? = nil
         while true {
             printActiveTable()
-            // TODO: Print buying power checksum
+            printBuyingPowerChecksum()
             // TODO: Print pending buys list
             printMainMenu()
             let promptString: String
@@ -116,6 +116,29 @@ struct MainFlow: Flow {
         let table = Table.renderTable(withHeaders: headers,
                                       rows: rows)
         print(table)
+        print()
+    }
+    
+    private func printBuyingPowerChecksum() {
+        let databasePath = configFile.databasePath()
+        let transferBalance = DatabaseIO.transferBalance(fromPath: databasePath)
+        let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: databasePath)
+        let deducedBuyingPower = transferBalance - totalInvestment + totalRevenue
+        let profitNotTransferred = DatabaseIO.totalProfitNotTransferred(fromPath: databasePath)
+        let totalPendingBuys = DatabaseIO.totalPendingBuys(fromPath: databasePath)
+        let shouldBeZero = deducedBuyingPower - profitNotTransferred - totalPendingBuys
+        
+        let transferBalance_string = Formatting.string(forCurrency: transferBalance)
+        let totalInvestment_string = Formatting.string(forCurrency: totalInvestment)
+        let totalRevenue_string = Formatting.string(forCurrency: totalRevenue)
+        let buyingPower_string = Formatting.string(forCurrency: deducedBuyingPower)
+        print("Transfer balance - buys + revenue = buying power")
+        print("\t", transferBalance_string, "-", totalInvestment_string, "+", totalRevenue_string, "=", buyingPower_string)
+        let profitNotTransferred_string = Formatting.string(forCurrency: profitNotTransferred)
+        let totalPendingBuys_string = Formatting.string(forCurrency: totalPendingBuys)
+        let shouldBeZero_string = Formatting.string(forCurrency: shouldBeZero)
+        print("Buying power - profit not transferred - pending buys = zero")
+        print("\t", buyingPower_string, "-", profitNotTransferred_string, "-", totalPendingBuys_string, "=", shouldBeZero_string)
         print()
     }
     

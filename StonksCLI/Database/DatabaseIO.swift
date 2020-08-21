@@ -57,4 +57,24 @@ struct DatabaseIO {
         }
         return transactions
     }
+    
+    // MARK: - Checksum
+    
+    static func transferBalance(fromPath path: String) -> Double {
+        return 0
+    }
+    
+    static func totalInvestmentAndRevenue(fromPath path: String) -> (investment: Double, revenue: Double) {
+        return (investment: 0, revenue: 0)
+    }
+    
+    static func totalProfitNotTransferred(fromPath path: String) -> Double {
+        return 0
+    }
+    
+    static func totalPendingBuys(fromPath path: String) -> Double {
+        return 0
+    }
+    
+    // MARK: -
 }
