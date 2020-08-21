@@ -14,7 +14,11 @@ enum TerminalTextColor: Int {
     case blue = 34
 
     var codeString: String {
-        return "\u{001B}[\(self.rawValue)m"
+        #if DEBUG
+            return ""
+        #else
+            return "\u{001B}[\(self.rawValue)m"
+        #endif
     }
 }
 
