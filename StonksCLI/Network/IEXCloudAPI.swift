@@ -5,7 +5,7 @@ struct IexCloudApi: StockInfoProvider {
     
     init(apiKey: String) {
         self.apiKey = apiKey
-        print("Data provided by IEX Cloud (https://iexcloud.io)")
+        Logger.log("Data provided by IEX Cloud (https://iexcloud.io)")
     }
     
     func fetchInfoSynchronously(forTickers tickers: Set<String>) -> [StockInfo] {
