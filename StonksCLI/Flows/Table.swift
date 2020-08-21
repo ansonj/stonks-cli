@@ -69,9 +69,9 @@ struct Table {
                 let newText: String
                 switch alignment {
                 case .left:
-                    newText = cell.text + padding
+                    newText = cell.color.codeString + cell.text + padding + TerminalTextColor.black.codeString
                 case .right:
-                    newText = padding + cell.text
+                    newText = cell.color.codeString + padding + cell.text + TerminalTextColor.black.codeString
                 }
                 spacedRow.append(TableCell(newText, color: cell.color))
             }
