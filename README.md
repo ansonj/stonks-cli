@@ -13,9 +13,7 @@ Stonks is not...
 
 ## Todo
 
-1. Add some of your data!
 1. Create the main view
-    1. List of holds in a nice tabular format
     1. Placeholder to print buying power checksum
 1. Define flow to record sells (only sell one whole buy at a time)
 1. Implement splits table
