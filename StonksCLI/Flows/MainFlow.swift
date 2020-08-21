@@ -105,8 +105,7 @@ struct MainFlow: Flow {
         let rows = displayRows.map { row -> [TableCell] in
             let currentReturnColor = colorPercentage(row.currentReturnPercentage)
             let currentProfitColor = colorProfit(row.profit)
-            let avgReturnPercentage = row.averageReturnPercentage ?? 0
-            let avgReturnColor = colorPercentage(avgReturnPercentage)
+            let avgReturnColor = colorPercentage(row.averageReturnPercentage)
             return [
                 TableCell(row.ticker, color: currentReturnColor),
                 TableCell(row.companyName),
@@ -115,7 +114,7 @@ struct MainFlow: Flow {
                 TableCell(fp(row.currentReturnPercentage), color: currentReturnColor),
                 TableCell(fc(row.profit), color: currentProfitColor),
                 TableCell(row.age.description),
-                TableCell(fp(avgReturnPercentage), color: avgReturnColor)
+                TableCell(fp(row.averageReturnPercentage), color: avgReturnColor)
             ]
         }
         let table = Table.renderTable(withHeaders: headers,
@@ -141,7 +140,7 @@ private class ActiveDisplayRow {
     let currentReturnPercentage: Double
     let profit: Double
     let age: Int
-    var averageReturnPercentage: Double?
+    var averageReturnPercentage: Double
     
     init(activeBuyTransaction trxn: ActiveBuyTransaction, priceSource: PriceCache) {
         let info = priceSource.info(forTicker: trxn.ticker)
@@ -155,6 +154,6 @@ private class ActiveDisplayRow {
         self.profit = currentValue - investment
         // FIXME: There is a bug here; need to ensure these dates have the same time
         self.age = Calendar.current.dateComponents([.day], from: trxn.buyDate, to: Date()).day ?? -1
-        self.averageReturnPercentage = nil // Will be filled in later
+        self.averageReturnPercentage = 0 // Will be filled in later
     }
 }
