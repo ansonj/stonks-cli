@@ -78,7 +78,7 @@ struct DatabaseFileManager {
     
     private static func verifySplitsExist(atPath path: String) {
         // TODO: If/when we support editing splits, replace this code.
-        if DatabaseIO.splits(fromPath: path).count > 0 {
+        if DatabaseIO.reinvestmentSplits(fromPath: path).count > 0 {
             return
         } else {
             Logger.log("Before continuing, you need to define some reinvestment splits.")

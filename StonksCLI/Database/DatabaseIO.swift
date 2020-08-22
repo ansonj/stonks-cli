@@ -161,15 +161,15 @@ struct DatabaseIO {
         return buys
     }
     
-    static func splits(fromPath path: String) -> [Split] {
+    static func reinvestmentSplits(fromPath path: String) -> [Split] {
         let db = FMDatabase(path: path)
         guard db.open() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to fetch splits")
         }
-        return splits(fromDatabase: db)
+        return reinvestmentSplits(fromDatabase: db)
     }
     
-    private static func splits(fromDatabase db: FMDatabase) -> [Split] {
+    private static func reinvestmentSplits(fromDatabase db: FMDatabase) -> [Split] {
         var databaseSplits = [String : Double]()
         var rowCount = 0
         do {

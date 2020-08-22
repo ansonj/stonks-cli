@@ -10,7 +10,7 @@ struct SplitsFlow: Flow {
     }
     
     private func dumpSplits() {
-        let splits = DatabaseIO.splits(fromPath: configFile.databasePath())
+        let splits = DatabaseIO.reinvestmentSplits(fromPath: configFile.databasePath())
         guard splits.count > 0 else {
             Prompt.exitStonks(withMessage: "Somehow, we snuck through to SplitsFlow with no splits defined.")
         }
