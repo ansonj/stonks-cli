@@ -135,4 +135,23 @@ struct DatabaseIO {
     }
     
     // MARK: -
+    
+    static func pendingBuys(fromPath path: String) -> [PendingBuy] {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to fetch pending buys")
+        }
+        var buys = [PendingBuy]()
+        do {
+            let results = try db.executeQuery("SELECT ticker, amount FROM pending_buys;", values: nil)
+            while results.next() {
+                let ticker = results.string(forColumn: "ticker") ?? "ERROR"
+                let amount = results.double(forColumn: "amount")
+                buys.append(PendingBuy(ticker: ticker, amount: amount))
+            }
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "fetching pending buys")
+        }
+        return buys
+    }
 }

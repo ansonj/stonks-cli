@@ -9,7 +9,7 @@ struct MainFlow: Flow {
         while true {
             printActiveTable()
             printBuyingPowerChecksum()
-            // TODO: Print pending buys list
+            printPendingBuys()
             printMainMenu()
             let promptString: String
             if lastInputErrorMessage != nil {
@@ -142,6 +142,34 @@ struct MainFlow: Flow {
         print()
     }
     
+    private func printPendingBuys() {
+        let pendingBuys = DatabaseIO.pendingBuys(fromPath: configFile.databasePath())
+        guard pendingBuys.count > 0 else {
+            print("No pending buys.")
+            print()
+            return
+        }
+        priceCache.primeCache(forTickers: Set<String>(pendingBuys.map({ $0.ticker })))
+        let displayRows = pendingBuys.map { PendingBuyDisplayRow(pendingBuy: $0,
+                                                                 priceSource: priceCache) }
+                                     .sorted(by: { $0.amount < $1.amount })
+        
+        let headers = [
+            HeaderCell("Symbol", alignment: .left),
+            HeaderCell("Amount", alignment: .right),
+            HeaderCell("Company Name", alignment: .left)
+        ]
+        let rows = displayRows.map {
+            [
+                TableCell($0.ticker),
+                TableCell(Formatting.string(forCurrency: $0.amount)),
+                TableCell($0.companyName)
+            ]
+        }
+        print(Table.renderTable(withHeaders: headers, rows: rows))
+        print()
+    }
+    
     private func printMainMenu() {
         print("Main menu")
         print("    (b)uy")
@@ -174,5 +202,17 @@ private class ActiveDisplayRow {
         // FIXME: There is a bug here; need to ensure these dates have the same time
         self.age = Calendar.current.dateComponents([.day], from: trxn.buyDate, to: Date()).day ?? -1
         self.averageReturnPercentage = 0 // Will be filled in later
+    }
+}
+
+private struct PendingBuyDisplayRow {
+    let ticker: String
+    let amount: Double
+    let companyName: String
+    
+    init(pendingBuy: PendingBuy, priceSource: PriceCache) {
+        self.ticker = pendingBuy.ticker
+        self.amount = pendingBuy.amount
+        self.companyName = priceSource.info(forTicker: pendingBuy.ticker).companyName
     }
 }

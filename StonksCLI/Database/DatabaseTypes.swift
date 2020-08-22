@@ -7,3 +7,8 @@ struct ActiveBuyTransaction {
     let buyDate: Date
     let costBasis: Double
 }
+
+struct PendingBuy {
+    let ticker: String
+    let amount: Double
+}
