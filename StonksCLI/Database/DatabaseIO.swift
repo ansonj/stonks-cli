@@ -171,6 +171,7 @@ struct DatabaseIO {
         return pendingBuys(fromDatabase: db)
     }
     
+    // TODO: This should really return a [String : Double].
     private static func pendingBuys(fromDatabase db: FMDatabase) -> [PendingBuy] {
         var buys = [PendingBuy]()
         do {
