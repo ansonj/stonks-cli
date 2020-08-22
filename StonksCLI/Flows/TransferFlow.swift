@@ -15,6 +15,7 @@ struct TransferFlow: Flow {
         switch selection.first {
         case "d":
             runDepositFlow()
+            return
         case "w":
             // TODO: Implement
             print("Withdrawal flow goes here.")
