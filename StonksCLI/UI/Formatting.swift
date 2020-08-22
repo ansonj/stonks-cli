@@ -31,4 +31,14 @@ struct Formatting {
     static func string(forDouble d: Double) -> String {
         return doubleFormatter.string(from: NSNumber(value: d)) ?? "?.??????"
     }
+    
+    private static let friendlyDateFormatter = { () -> DateFormatter in
+        let fmt = DateFormatter()
+        fmt.dateFormat = "MMMM dd, yyyy"
+        return fmt
+    }()
+    static func friendlyDateString(forDatabaseDateString dbDateString: String) -> String {
+        let actualDate = DatabaseUtilities.date(fromString: dbDateString)
+        return friendlyDateFormatter.string(from: actualDate)
+    }
 }

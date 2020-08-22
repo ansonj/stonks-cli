@@ -19,11 +19,7 @@ struct BuyFlow: Flow {
         }
         
         let date = Prompt.readDateString()
-        let dateStringForConfirmation = { () -> String in
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MMMM dd, yyyy"
-            return dateFormatter.string(from: DatabaseUtilities.date(fromString: date))
-        }()
+        let dateStringForConfirmation = Formatting.friendlyDateString(forDatabaseDateString: date)
         
         let costBasis = investment / shares
         
