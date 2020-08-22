@@ -23,8 +23,10 @@ struct Prompt {
         return response
     }
     
-    static func exitStonks(withMessage message: String, code: Int32 = 1) -> Never {
-        Logger.log(message)
+    static func exitStonks(withMessage message: String?, code: Int32 = 1) -> Never {
+        if let message = message {
+            Logger.log(message)
+        }
         exit(code)
     }
 }

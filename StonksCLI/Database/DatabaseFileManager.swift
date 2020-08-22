@@ -88,7 +88,7 @@ struct DatabaseFileManager {
             print("   Every deposit into your investment account will be allocated between the splits according to the weights.")
             print("   Then run StonksCLI again.")
             print()
-            Prompt.exitStonks(withMessage: "")
+            Prompt.exitStonks(withMessage: nil)
         }
     }
 }
