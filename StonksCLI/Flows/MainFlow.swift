@@ -177,7 +177,7 @@ struct MainFlow: Flow {
     private func printMainMenu() {
         print("Main menu")
         print("    (b)uy")
-        print("    (r)einvestment splits")
+        print("    view (r)einvestment splits")
         print("    (q)uit")
         print()
     }
