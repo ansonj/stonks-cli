@@ -4,7 +4,7 @@ struct Prompt {
     static func confirmContinueOrAbort(withMessage message: String) {
         let shouldContinue = readBoolean(withMessage: message)
         guard shouldContinue else {
-            print("Aborting.")
+            Logger.log("Aborting.")
             exit(0)
         }
     }
@@ -24,7 +24,7 @@ struct Prompt {
     }
     
     static func exitStonks(withMessage message: String, code: Int32 = 1) -> Never {
-        print(message)
+        Logger.log(message)
         exit(code)
     }
 }
