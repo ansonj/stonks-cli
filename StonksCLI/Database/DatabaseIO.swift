@@ -1,6 +1,7 @@
 import FMDB
 
 struct DatabaseKeys {
+    static let settings_version = "version"
     static let profitNotTransferred = "profit_not_transferred"
 }
 

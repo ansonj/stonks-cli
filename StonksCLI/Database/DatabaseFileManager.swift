@@ -22,7 +22,7 @@ struct DatabaseFileManager {
         }
         do {
             try db.executeUpdate("CREATE TABLE settings(key TEXT PRIMARY KEY, value TEXT);", values: nil)
-            try db.executeUpdate("INSERT INTO settings (key, value) VALUES (?, ?)", values: ["version", 0])
+            try db.executeUpdate("INSERT INTO settings (key, value) VALUES (?, ?)", values: [DatabaseKeys.settings_version, 0])
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "creating settings table")
         }
@@ -38,7 +38,7 @@ struct DatabaseFileManager {
         }
         func currentVersion() -> Int {
             do {
-                let resultSet = try db.executeQuery("SELECT value FROM settings WHERE key = 'version'", values: nil)
+                let resultSet = try db.executeQuery("SELECT value FROM settings WHERE key = ?", values: [DatabaseKeys.settings_version])
                 resultSet.next()
                 let version = resultSet.int(forColumn: "value")
                 return Int(version)
@@ -66,7 +66,7 @@ struct DatabaseFileManager {
             }
             do {
                 try db.executeUpdate(nextMigrationScript, values: nil)
-                try db.executeUpdate("UPDATE settings SET value = ? WHERE key = 'version'", values: [nextVersion])
+                try db.executeUpdate("UPDATE settings SET value = ? WHERE key = ?", values: [nextVersion, DatabaseKeys.settings_version])
             } catch let error {
                 DatabaseUtilities.exitWithError(error, duringActivity: "migrating to version \(nextVersion)")
             }
