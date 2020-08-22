@@ -157,8 +157,9 @@ struct MainFlow: Flow {
         let profitNotTransferred_string = Formatting.string(forCurrency: profitNotTransferred)
         let totalPendingBuys_string = Formatting.string(forCurrency: totalPendingBuys)
         let shouldBeZero_string = Formatting.string(forCurrency: shouldBeZero)
+        let indicator = shouldBeZero == 0 ? "\u{2705}" : "\u{274C}"
         print("Buying power - profit not transferred - pending buys = zero")
-        print("\t", buyingPower_string, "-", profitNotTransferred_string, "-", totalPendingBuys_string, "=", shouldBeZero_string)
+        print("\t", buyingPower_string, "-", profitNotTransferred_string, "-", totalPendingBuys_string, "=", shouldBeZero_string, indicator)
         print()
     }
     
