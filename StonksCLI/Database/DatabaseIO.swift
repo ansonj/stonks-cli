@@ -187,6 +187,30 @@ struct DatabaseIO {
         return buys
     }
     
+    static func resetPendingBuys(inPath path: String) {
+        let transferBalance = DatabaseIO.transferBalance(fromPath: path)
+        let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: path)
+        let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: path)
+        let availableBuyingPower = max(0, transferBalance - totalInvestment + totalRevenue - profitNotTransferred)
+        
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to reset pending buys")
+        }
+        guard db.beginTransaction() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while resetting pending buys")
+        }
+        do {
+            try db.executeUpdate("DELETE FROM pending_buys;", values: nil)
+            try executeReinvestmentSplit(inDatabase: db, amount: availableBuyingPower)
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "resetting pending buys")
+        }
+        guard db.commit() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while resetting pending buys")
+        }
+    }
+    
     static func reinvestmentSplits(fromPath path: String) -> [Split] {
         let db = FMDatabase(path: path)
         guard db.open() else {
