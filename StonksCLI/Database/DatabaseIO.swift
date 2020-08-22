@@ -2,6 +2,7 @@ import FMDB
 
 struct DatabaseKeys {
     static let settings_version = "version"
+    static let transfers_source_deposit = "deposit"
     static let stats_profitNotTransferred = "profit_not_transferred"
 }
 
@@ -189,5 +190,31 @@ struct DatabaseIO {
             Prompt.exitStonks(withMessage: "Double-check your splits. You may have duplicate symbols.")
         }
         return completedSplits
+    }
+    
+    static func recordDeposit(path: String,
+                              amount: Double,
+                              date: String)
+    {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record a deposit")
+        }
+        guard db.beginTransaction() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while recording deposit")
+        }
+        do {
+            let values: [Any] = [
+                date,
+                amount,
+                DatabaseKeys.transfers_source_deposit
+            ]
+            try db.executeUpdate("INSERT INTO transfers (date, amount, source) VALUES (?, ?, ?)", values: values)
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "recording deposit")
+        }
+        guard db.commit() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording deposit")
+        }
     }
 }

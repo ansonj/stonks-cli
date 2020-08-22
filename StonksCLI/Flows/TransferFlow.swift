@@ -14,8 +14,7 @@ struct TransferFlow: Flow {
         let selection = Prompt.readString(withMessage: "Choose action:")
         switch selection.first {
         case "d":
-            // TODO: Implement
-            print("Deposit flow goes here.")
+            runDepositFlow()
         case "w":
             // TODO: Implement
             print("Withdrawal flow goes here.")
@@ -29,6 +28,26 @@ struct TransferFlow: Flow {
             return
         }
         _ = Prompt.readString(withMessage: "Continue?")
+        print()
+    }
+    
+    private func runDepositFlow() {
+        let amount_string = Prompt.readString(withMessage: "How much?")
+        guard let amount = Double(amount_string) else {
+            print("Couldn't convert '\(amount_string)' to a double.")
+            return
+        }
+        
+        let date = Prompt.readDateString()
+        let dateStringForConfirmation = Formatting.friendlyDateString(forDatabaseDateString: date)
+        
+        let confirmationMessage = "Deposit \(Formatting.string(forCurrency: amount)) on \(dateStringForConfirmation)?"
+        let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
+        if confirmed {
+            DatabaseIO.recordDeposit(path: configFile.databasePath(),
+                                     amount: amount,
+                                     date: date)
+        }
         print()
     }
 }
