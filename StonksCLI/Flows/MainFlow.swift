@@ -178,6 +178,7 @@ struct MainFlow: Flow {
                 TableCell($0.companyName)
             ]
         }
+        print("Pending buys:")
         print(Table.renderTable(withHeaders: headers, rows: rows))
         print()
     }
