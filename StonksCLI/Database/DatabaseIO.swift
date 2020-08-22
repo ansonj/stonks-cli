@@ -39,7 +39,7 @@ struct DatabaseIO {
                 if investment > pendingAmount {
                     print("You bought \(Formatting.string(forCurrency: investment)), but only \(Formatting.string(forCurrency: pendingAmount)) was pending.")
                     print("This will invalidate your checksum.")
-                    print("It's up to you to fix this manually by editing your pending buys.")
+                    print("Use the reset option from the main menu, or edit your pending buys manually.")
                     Prompt.pauseThenContinue()
                 }
                 let updatedPendingAmount = max(0, pendingAmount - investment)
@@ -47,7 +47,7 @@ struct DatabaseIO {
             } else {
                 print("You bought something that wasn't in your pending buys.")
                 print("This will invalidate your checksum.")
-                print("It's up to you to fix this manually by editing your pending buys.")
+                print("Use the reset option from the main menu, or edit your pending buys manually.")
                 Prompt.pauseThenContinue()
             }
         } catch let error {

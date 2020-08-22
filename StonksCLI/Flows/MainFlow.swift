@@ -15,6 +15,7 @@ struct MainFlow: Flow {
             print("    (s)ell")
             print("    (t)ransfer")
             print("    view (r)einvestment splits")
+            print("    reset (p)ending buys")
             print("    (q)uit")
             print()
             let promptString: String
@@ -43,6 +44,9 @@ struct MainFlow: Flow {
             case "r":
                 let splits = SplitsFlow(configFile: configFile)
                 splits.run()
+            case "p":
+                let reset = ResetPendingBuysFlow(configFile: configFile)
+                reset.run()
             case "q":
                 exit(0)
             default:
