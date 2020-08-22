@@ -147,6 +147,10 @@ struct DatabaseIO {
         guard db.open() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to fetch pending buys")
         }
+        return pendingBuys(fromDatabase: db)
+    }
+    
+    private static func pendingBuys(fromDatabase db: FMDatabase) -> [PendingBuy] {
         var buys = [PendingBuy]()
         do {
             let results = try db.executeQuery("SELECT ticker, amount FROM pending_buys;", values: nil)
