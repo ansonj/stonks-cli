@@ -10,7 +10,11 @@ struct MainFlow: Flow {
             printActiveTable()
             printBuyingPowerChecksum()
             printPendingBuys()
-            printMainMenu()
+            print("Main menu")
+            print("    (b)uy")
+            print("    view (r)einvestment splits")
+            print("    (q)uit")
+            print()
             let promptString: String
             if lastInputErrorMessage != nil {
                 promptString = "Choose action (\(lastInputErrorMessage!)):"
@@ -171,14 +175,6 @@ struct MainFlow: Flow {
             ]
         }
         print(Table.renderTable(withHeaders: headers, rows: rows))
-        print()
-    }
-    
-    private func printMainMenu() {
-        print("Main menu")
-        print("    (b)uy")
-        print("    view (r)einvestment splits")
-        print("    (q)uit")
         print()
     }
 }
