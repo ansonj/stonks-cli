@@ -106,8 +106,7 @@ private let migrations: [Int : String] = [
                               revenue NUMERIC,
                               returnPercentage NUMERIC,
                               profit NUMERIC,
-                              held_days INTEGER,
-                              profit_withdrawn INTEGER);
+                              held_days INTEGER);
     """,
     2: """
     CREATE TABLE reinvestment_splits(ticker TEXT NOT NULL,
@@ -121,5 +120,12 @@ private let migrations: [Int : String] = [
     CREATE TABLE transfers(date TEXT NOT NULL,
                            amount NUMERIC NOT NULL,
                            source TEXT NOT NULL);
+    """,
+    5: """
+    CREATE TABLE stats_and_totals(key TEXT NOT NULL,
+                                  value NUMERIC NOT NULL);
+    """,
+    6: """
+    INSERT INTO stats_and_totals VALUES ("\(DatabaseKeys.profitNotTransferred)", 0);
     """,
 ]

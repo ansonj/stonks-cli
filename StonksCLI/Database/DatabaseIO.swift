@@ -1,5 +1,9 @@
 import FMDB
 
+struct DatabaseKeys {
+    static let profitNotTransferred = "profit_not_transferred"
+}
+
 struct DatabaseIO {
     static func recordBuy(path: String,
                           ticker: String,
@@ -98,22 +102,22 @@ struct DatabaseIO {
         return (investment: investment, revenue: revenue)
     }
     
-    static func totalProfitNotTransferred(fromPath path: String) -> Double {
+    static func profitNotTransferred(fromPath path: String) -> Double {
         let db = FMDatabase(path: path)
         guard db.open() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get total profit not transferred")
         }
-        let totalProfit: Double
+        let profit: Double
         do {
-            let results = try db.executeQuery("SELECT SUM(profit) AS profit FROM transactions WHERE profit_withdrawn = ?;", values: [0])
+            let results = try db.executeQuery("SELECT value FROM stats_and_totals WHERE key = ?;", values: [DatabaseKeys.profitNotTransferred])
             guard results.next() else {
-                Prompt.exitStonks(withMessage: "Couldnt' get next row in totalProfitNotTransferred()")
+                Prompt.exitStonks(withMessage: "Couldn't get next row in totalProfitNotTransferred()")
             }
-            totalProfit = results.double(forColumn: "profit")
+            profit = results.double(forColumn: "value")
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "fetching total profit not transferred")
         }
-        return totalProfit
+        return profit
     }
     
     static func totalPendingBuys(fromPath path: String) -> Double {

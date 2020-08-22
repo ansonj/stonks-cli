@@ -128,7 +128,7 @@ struct MainFlow: Flow {
         let transferBalance = DatabaseIO.transferBalance(fromPath: databasePath)
         let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: databasePath)
         let deducedBuyingPower = transferBalance - totalInvestment + totalRevenue
-        let profitNotTransferred = DatabaseIO.totalProfitNotTransferred(fromPath: databasePath)
+        let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: databasePath)
         let totalPendingBuys = DatabaseIO.totalPendingBuys(fromPath: databasePath)
         let shouldBeZero = deducedBuyingPower - profitNotTransferred - totalPendingBuys
         
