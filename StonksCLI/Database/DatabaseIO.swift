@@ -154,4 +154,35 @@ struct DatabaseIO {
         }
         return buys
     }
+    
+    static func splits(fromPath path: String) -> [Split] {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to fetch splits")
+        }
+        var databaseSplits = [String : Double]()
+        var rowCount = 0
+        do {
+            let results = try db.executeQuery("SELECT ticker, weight FROM reinvestment_splits;", values: nil)
+            while results.next() {
+                rowCount += 1
+                let ticker = results.string(forColumn: "ticker") ?? "ERROR"
+                let weight = results.double(forColumn: "weight")
+                databaseSplits[ticker] = weight
+            }
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "fetching splits")
+        }
+        let totalWeight = databaseSplits.values.reduce(0, +)
+        var completedSplits = [Split]()
+        databaseSplits.forEach { (ticker: String, weight: Double) in
+            completedSplits.append(Split(ticker: ticker,
+                                         weight: weight,
+                                         percentage: weight / totalWeight))
+        }
+        guard completedSplits.count == rowCount else {
+            Prompt.exitStonks(withMessage: "Double-check your splits. You may have duplicate symbols.")
+        }
+        return completedSplits
+    }
 }

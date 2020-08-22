@@ -12,3 +12,9 @@ struct PendingBuy {
     let ticker: String
     let amount: Double
 }
+
+struct Split {
+    let ticker: String
+    let weight: Double
+    let percentage: Double
+}
