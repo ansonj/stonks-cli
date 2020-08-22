@@ -21,6 +21,7 @@ struct DatabaseIO {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while recording buy")
         }
         do {
+            // Record the buy transaction
             let values: [Any] = [
                 ticker,
                 investment,
@@ -29,6 +30,26 @@ struct DatabaseIO {
                 investment / shares
             ]
             try db.executeUpdate("INSERT INTO transactions (ticker, investment, shares, buy_date, cost_basis) VALUES (?, ?, ?, ?, ?)", values: values)
+            
+            // Update the pending buys to account for the buy
+            let currentPendingBuys = pendingBuys(fromDatabase: db)
+            // TODO: Maybe later, auto-update pending buys by pulling out the spent amount evenly by percentage from the other pending buys
+            if currentPendingBuys.map({ $0.ticker }).contains(ticker) {
+                let pendingAmount = currentPendingBuys.filter({ $0.ticker == ticker }).first!.amount
+                if investment > pendingAmount {
+                    print("You bought \(Formatting.string(forCurrency: investment)), but only \(Formatting.string(forCurrency: pendingAmount)) was pending.")
+                    print("This will invalidate your checksum.")
+                    print("It's up to you to fix this manually by editing your pending buys.")
+                    Prompt.pauseThenContinue()
+                }
+                let updatedPendingAmount = max(0, pendingAmount - investment)
+                try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [updatedPendingAmount, ticker])
+            } else {
+                print("You bought something that wasn't in your pending buys.")
+                print("This will invalidate your checksum.")
+                print("It's up to you to fix this manually by editing your pending buys.")
+                Prompt.pauseThenContinue()
+            }
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "recording buy")
         }
