@@ -20,4 +20,15 @@ struct Formatting {
     static func string(forPercentage p: Double) -> String {
         return percentageFormatter.string(from: NSNumber(value: p)) ?? "?.??%"
     }
+    
+    private static let doubleFormatter = { () -> NumberFormatter in
+        let fmt = NumberFormatter()
+        fmt.numberStyle = .decimal
+        fmt.minimumFractionDigits = 6
+        fmt.maximumFractionDigits = 6
+        return fmt
+    }()
+    static func string(forDouble d: Double) -> String {
+        return doubleFormatter.string(from: NSNumber(value: d)) ?? "?.??????"
+    }
 }
