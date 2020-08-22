@@ -18,10 +18,7 @@ struct BuyFlow: Flow {
             return
         }
         
-        var date = Prompt.readString(withMessage: "What date? Format as YYYY-MM-DD, or leave blank for today.")
-        if date == "" {
-            date = DatabaseUtilities.string(fromDate: Date())
-        }
+        let date = Prompt.readDateString()
         let dateStringForConfirmation = { () -> String in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMMM dd, yyyy"

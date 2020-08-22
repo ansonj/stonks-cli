@@ -23,6 +23,15 @@ struct Prompt {
         return response
     }
     
+    static func readDateString() -> String {
+        var date = Prompt.readString(withMessage: "What date? Format as YYYY-MM-DD, or leave blank for today.")
+        // TODO: Validate date input
+        if date == "" {
+            date = DatabaseUtilities.string(fromDate: Date())
+        }
+        return date
+    }
+    
     static func exitStonks(withMessage message: String?, code: Int32 = 1) -> Never {
         if let message = message {
             Logger.log(message)
