@@ -9,6 +9,10 @@ struct Prompt {
         }
     }
     
+    static func pauseThenContinue() {
+        _ = Prompt.readString(withMessage: "Continue?")
+    }
+    
     static func readBoolean(withMessage message: String) -> Bool {
         print(message)
         print("Y/n> ", terminator: "")

@@ -28,7 +28,7 @@ struct TransferFlow: Flow {
         default:
             return
         }
-        _ = Prompt.readString(withMessage: "Continue?")
+        Prompt.pauseThenContinue()
         print()
     }
     

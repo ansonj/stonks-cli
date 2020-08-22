@@ -5,7 +5,7 @@ struct SplitsFlow: Flow {
         // At some point, this flow might support editing splits. Maybe.
         dumpSplits()
         print("Edit these by modifying the reinvestment_splits table in your database.")
-        _ = Prompt.readString(withMessage: "Continue?")
+        Prompt.pauseThenContinue()
         print()
     }
     
