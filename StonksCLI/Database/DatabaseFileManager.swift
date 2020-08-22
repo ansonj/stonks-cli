@@ -5,6 +5,7 @@ struct DatabaseFileManager {
         // TODO: It would be nice to reuse a single database connection here, if that makes sense
         createDatabaseIfNeeded(atPath: path)
         runDatabaseMigrationsIfNeeded(atPath: path)
+        verifySplitsExist(atPath: path)
     }
     
     private static func createDatabaseIfNeeded(atPath path: String) {
@@ -72,6 +73,22 @@ struct DatabaseFileManager {
             guard db.commit() else {
                 DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while migrating to version \(nextVersion)")
             }
+        }
+    }
+    
+    private static func verifySplitsExist(atPath path: String) {
+        // TODO: If/when we support editing splits, replace this code.
+        if DatabaseIO.splits(fromPath: path).count > 0 {
+            return
+        } else {
+            Logger.log("Before continuing, you need to define some reinvestment splits.")
+            print("   In your database, add some rows to the reinvestment_splits table.")
+            print("   Pick what stocks you want to invest in and give them weights.")
+            print("   The weights don't have to add up to 100.")
+            print("   Every deposit into your investment account will be allocated between the splits according to the weights.")
+            print("   Then run StonksCLI again.")
+            print()
+            Prompt.exitStonks(withMessage: "")
         }
     }
 }
