@@ -218,11 +218,37 @@ struct DatabaseIO {
                 DatabaseKeys.transfers_source_deposit
             ]
             try db.executeUpdate("INSERT INTO transfers (date, amount, source) VALUES (?, ?, ?)", values: values)
+            try executeReinvestmentSplit(inDatabase: db, amount: amount)
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "recording deposit")
         }
         guard db.commit() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording deposit")
+        }
+    }
+    
+    private static func executeReinvestmentSplit(inDatabase db: FMDatabase, amount: Double) throws {
+        let splits = reinvestmentSplits(fromDatabase: db)
+        
+        // TODO: There is probably a cleaner and Swift-ier way to write all this, but this will do for now.
+        let currentPendingBuys = pendingBuys(fromDatabase: db)
+        var pendingBuyDictionary = [String : Double]()
+        currentPendingBuys.forEach { buy in
+            pendingBuyDictionary[buy.ticker] = buy.amount
+        }
+        guard pendingBuyDictionary.count == currentPendingBuys.count else {
+            Prompt.exitStonks(withMessage: "Your pending buys have duplicate symbols. Please resolve this manually.")
+        }
+        
+        try splits.forEach { split in
+            let symbol = split.ticker
+            let amountToAdd = amount * split.percentage
+            if pendingBuyDictionary.keys.contains(symbol) {
+                let newAmount = pendingBuyDictionary[symbol, default: 0] + amountToAdd
+                try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [newAmount, symbol])
+            } else {
+                try db.executeUpdate("INSERT INTO pending_buys (ticker, amount) VALUES (?, ?);", values: [symbol, amountToAdd])
+            }
         }
     }
 }
