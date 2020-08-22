@@ -20,6 +20,7 @@ struct MainFlow: Flow {
             }
             // TODO: Gracefully handle input of Ctrl+D
             let selection = Prompt.readString(withMessage: promptString)
+            print()
             switch selection.first {
             case nil:
                 // Allow pressing enter to refresh table

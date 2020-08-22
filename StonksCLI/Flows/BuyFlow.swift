@@ -40,6 +40,7 @@ struct BuyFlow: Flow {
                                  shares: shares,
                                  date: date)
         }
+        print()
     }
     
     private func formatCurrency(_ amount: Double) -> String {
