@@ -296,5 +296,6 @@ struct DatabaseIO {
                 try db.executeUpdate("INSERT INTO pending_buys (ticker, amount) VALUES (?, ?);", values: [symbol, amountToAdd])
             }
         }
+        try db.executeUpdate("DELETE FROM pending_buys WHERE amount = ?", values: [0])
     }
 }
