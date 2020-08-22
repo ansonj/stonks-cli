@@ -126,6 +126,6 @@ private let migrations: [Int : String] = [
                                   value NUMERIC NOT NULL);
     """,
     6: """
-    INSERT INTO stats_and_totals VALUES ("\(DatabaseKeys.profitNotTransferred)", 0);
+    INSERT INTO stats_and_totals VALUES ("\(DatabaseKeys.stats_profitNotTransferred)", 0);
     """,
 ]

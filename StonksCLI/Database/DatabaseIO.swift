@@ -2,7 +2,7 @@ import FMDB
 
 struct DatabaseKeys {
     static let settings_version = "version"
-    static let profitNotTransferred = "profit_not_transferred"
+    static let stats_profitNotTransferred = "profit_not_transferred"
 }
 
 struct DatabaseIO {
@@ -110,7 +110,7 @@ struct DatabaseIO {
         }
         let profit: Double
         do {
-            let results = try db.executeQuery("SELECT value FROM stats_and_totals WHERE key = ?;", values: [DatabaseKeys.profitNotTransferred])
+            let results = try db.executeQuery("SELECT value FROM stats_and_totals WHERE key = ?;", values: [DatabaseKeys.stats_profitNotTransferred])
             guard results.next() else {
                 Prompt.exitStonks(withMessage: "Couldn't get next row in totalProfitNotTransferred()")
             }
