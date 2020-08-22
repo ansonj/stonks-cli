@@ -12,6 +12,7 @@ struct MainFlow: Flow {
             printPendingBuys()
             print("Main menu")
             print("    (b)uy")
+            print("    (t)ransfer")
             print("    view (r)einvestment splits")
             print("    (q)uit")
             print()
@@ -32,6 +33,9 @@ struct MainFlow: Flow {
             case "b":
                 let buy = BuyFlow(configFile: configFile)
                 buy.run()
+            case "t":
+                let transfer = TransferFlow(configFile: configFile)
+                transfer.run()
             case "r":
                 let splits = SplitsFlow(configFile: configFile)
                 splits.run()
