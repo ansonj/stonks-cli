@@ -164,7 +164,7 @@ struct MainFlow: Flow {
         priceCache.primeCache(forTickers: Set<String>(pendingBuys.map({ $0.ticker })))
         let displayRows = pendingBuys.map { PendingBuyDisplayRow(pendingBuy: $0,
                                                                  priceSource: priceCache) }
-                                     .sorted(by: { $0.amount < $1.amount })
+                                     .sorted(by: { $0.amount > $1.amount })
         
         let headers = [
             HeaderCell("Symbol", alignment: .left),
