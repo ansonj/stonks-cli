@@ -24,6 +24,7 @@
 		A3FFA11B24EE093D003228BF /* PriceCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11A24EE093D003228BF /* PriceCache.swift */; };
 		A3FFA12024EF2D0D003228BF /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA11F24EF2D0D003228BF /* Table.swift */; };
 		A3FFA12324F03BE1003228BF /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12224F03BE1003228BF /* Formatting.swift */; };
+		A3FFA12524F0D475003228BF /* SplitsFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12424F0D475003228BF /* SplitsFlow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,6 +57,7 @@
 		A3FFA11A24EE093D003228BF /* PriceCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCache.swift; sourceTree = "<group>"; };
 		A3FFA11F24EF2D0D003228BF /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 		A3FFA12224F03BE1003228BF /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
+		A3FFA12424F0D475003228BF /* SplitsFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsFlow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				A3FFA0FB24E02407003228BF /* SetupFlow.swift */,
 				A3FFA10E24E8765C003228BF /* MainFlow.swift */,
 				A3FFA11024E87836003228BF /* BuyFlow.swift */,
+				A3FFA12424F0D475003228BF /* SplitsFlow.swift */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 				A3FFA10824E56DDE003228BF /* Prompt.swift in Sources */,
 				A3FFA11724EC116D003228BF /* DatabaseUtilities.swift in Sources */,
 				A3FFA11124E87836003228BF /* BuyFlow.swift in Sources */,
+				A3FFA12524F0D475003228BF /* SplitsFlow.swift in Sources */,
 				A3FFA10724E56DD3003228BF /* ConfigFile.swift in Sources */,
 				A3FFA0FE24E02419003228BF /* StockInfoProvider.swift in Sources */,
 				A3FFA12324F03BE1003228BF /* Formatting.swift in Sources */,

@@ -27,6 +27,9 @@ struct MainFlow: Flow {
             case "b":
                 let buy = BuyFlow(configFile: configFile)
                 buy.run()
+            case "r":
+                let splits = SplitsFlow(configFile: configFile)
+                splits.run()
             case "q":
                 exit(0)
             default:
@@ -173,6 +176,7 @@ struct MainFlow: Flow {
     private func printMainMenu() {
         print("Main menu")
         print("    (b)uy")
+        print("    (r)einvestment splits")
         print("    (q)uit")
         print()
     }
