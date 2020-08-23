@@ -9,7 +9,10 @@ struct Prompt {
         }
     }
     
-    static func pauseThenContinue() {
+    static func pauseThenContinue(withMessage message: String? = nil) {
+        if let message = message {
+            print(message)
+        }
         _ = Prompt.readString(withMessage: "Continue?")
     }
     

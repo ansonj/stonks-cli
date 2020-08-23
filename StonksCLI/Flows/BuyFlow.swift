@@ -8,13 +8,13 @@ struct BuyFlow: Flow {
         
         let investment_string = Prompt.readString(withMessage: "How much ($)?")
         guard let investment = Double(investment_string) else {
-            print("Couldn't convert '\(investment_string)' to a double.")
+            Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(investment_string)' to a double.")
             return
         }
         
         let shares_string = Prompt.readString(withMessage: "How many shares?")
         guard let shares = Double(shares_string) else {
-            print("Couldn't convert '\(shares_string)' to a double.")
+            Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(shares_string)' to a double.")
             return
         }
         

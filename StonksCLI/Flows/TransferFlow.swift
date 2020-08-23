@@ -35,7 +35,7 @@ struct TransferFlow: Flow {
     private func runDepositFlow() {
         let amount_string = Prompt.readString(withMessage: "How much?")
         guard let amount = Double(amount_string) else {
-            print("Couldn't convert '\(amount_string)' to a double.")
+            Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(amount_string)' to a double.")
             return
         }
         
