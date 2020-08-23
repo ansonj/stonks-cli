@@ -14,6 +14,7 @@ struct IexCloudApi: StockInfoProvider {
             Prompt.exitStonks(withMessage: "Couldn't build URLComponents")
         }
         
+        // TODO: Enforce limit of 100 symbols per request
         let symbols = tickers.joined(separator: ",")
         urlBuilder.queryItems = [
             URLQueryItem(name: "symbols", value: symbols),
