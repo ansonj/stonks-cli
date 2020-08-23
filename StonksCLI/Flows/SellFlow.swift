@@ -10,7 +10,9 @@ struct SellFlow: Flow {
             return
         }
         
-        guard let transaction = DatabaseIO.activeTransaction(withId: trxnId) else {
+        guard let transaction = DatabaseIO.activeTransaction(fromPath: configFile.databasePath(),
+                                                             withId: trxnId)
+        else {
             Prompt.pauseThenContinue(withMessage: "Transaction \(trxnId) is not active.")
             return
         }
@@ -26,6 +28,7 @@ struct SellFlow: Flow {
             Prompt.pauseThenContinue(withMessage: "Sell date \(Formatting.friendlyDateString(forDate: sellDate)) is not after buy date \(Formatting.friendlyDateString(forDate: transaction.buyDate)).")
             return
         }
+        let heldDays = Utilities.daysBetween(transaction.buyDate, and: sellDate)
         
         let sellPrice_string = Prompt.readString(withMessage: "What was the selling price per share?")
         guard let sellPrice = Double(sellPrice_string) else {
@@ -43,11 +46,14 @@ struct SellFlow: Flow {
         if confirmed {
             DatabaseIO.recordSell(path: configFile.databasePath(),
                                   trxnId: trxnId,
+                                  ticker: transaction.ticker,
+                                  investment: transaction.investment,
                                   sellDate: sellDate_string,
                                   sellPrice: sellPrice,
                                   revenue: revenue,
                                   profit: profit,
-                                  returnPercentage: returnPercentage)
+                                  returnPercentage: returnPercentage,
+                                  heldDays: heldDays)
         }
         print()
     }

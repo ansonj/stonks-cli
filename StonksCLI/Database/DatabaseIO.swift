@@ -77,9 +77,23 @@ struct DatabaseIO {
         return transactions
     }
     
-    static func activeTransaction(withId id: Int) -> ActiveBuyTransaction? {
-        // TODO: Implement
-        return nil
+    static func activeTransaction(fromPath path: String, withId queryTrxnId: Int) -> ActiveBuyTransaction? {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to find active transaction with ID")
+        }
+        let transaction: ActiveBuyTransaction?
+        do {
+            let results = try db.executeQuery("SELECT trxn_id, ticker, investment, shares, buy_date, cost_basis FROM transactions WHERE sell_date IS NULL AND trxn_id = ?;", values: [queryTrxnId])
+            if results.next() {
+                transaction = activeTransaction(fromResultSet: results)
+            } else {
+                transaction = nil
+            }
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "finding active transaction with ID")
+        }
+        return transaction
     }
     
     private static func activeTransaction(fromResultSet results: FMResultSet) -> ActiveBuyTransaction {
@@ -100,19 +114,52 @@ struct DatabaseIO {
     
     static func recordSell(path: String,
                            trxnId: Int,
+                           ticker: String,
+                           investment: Double,
                            sellDate: String,
                            sellPrice: Double,
                            revenue: Double,
                            profit: Double,
-                           returnPercentage: Double)
+                           returnPercentage: Double,
+                           heldDays: Int)
     {
-        // TODO: Implement
-        
-        // Update the transaction with the sale details.
-        
-        // Redistribute investment.
-        // If it's in the splits table, just add it
-        // If it's not in the splits, distribute
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record sell")
+        }
+        guard db.beginTransaction() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while recording sell")
+        }
+        do {
+            // Update the transaction with the sale details.
+            let values: [Any] = [
+                sellDate,
+                sellPrice,
+                revenue,
+                returnPercentage,
+                profit,
+                heldDays,
+                trxnId
+            ]
+            try db.executeUpdate("UPDATE transactions SET sell_date = ?, sell_price = ?, revenue = ?, return_percentage = ?, profit = ?, held_days = ? WHERE trxn_id = ?;", values: values)
+            // Redistribute investment
+            let splits = reinvestmentSplits(fromDatabase: db)
+            if splits.map({ $0.ticker }).contains(ticker) {
+                // If the sell was of a stock that we are actively investing in, just carry over the amount directly
+                let pending = pendingBuys(fromDatabase: db)
+                let existingPendingAmount = pending.filter({ $0.ticker == ticker }).first!.amount
+                let newPendingAmount = existingPendingAmount + investment
+                try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [newPendingAmount, ticker])
+            } else {
+                // If the sell was of something that's not in our splits, redistribute the amount evenly
+                try executeReinvestmentSplit(inDatabase: db, amount: investment)
+            }
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "recording sell")
+        }
+        guard db.commit() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording sell")
+        }
     }
     
     // MARK: - Checksum
