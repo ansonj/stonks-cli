@@ -105,7 +105,7 @@ private let migrations: [Int : String] = [
                               sell_date TEXT,
                               sell_price NUMERIC,
                               revenue NUMERIC,
-                              returnPercentage NUMERIC,
+                              return_percentage NUMERIC,
                               profit NUMERIC,
                               held_days INTEGER);
     """,
