@@ -167,6 +167,7 @@ struct MainFlow: Flow {
         let indicator = shouldBeZero == 0 ? "\u{2705}" : "\u{274C}"
         print("Buying power - profit not transferred - pending buys = zero")
         print("\t", buyingPower_string, "-", profitNotTransferred_string, "-", totalPendingBuys_string, "=", shouldBeZero_string, indicator)
+        // TODO: Once per execution, print an explanation of a red indicator means, and what to do about it (and pause before continuing)
         print()
     }
     

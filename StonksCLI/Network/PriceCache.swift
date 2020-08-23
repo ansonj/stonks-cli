@@ -21,6 +21,9 @@ class InMemoryPriceCache: PriceCache {
             guard let existingData = storage[$0] else {
                 return true
             }
+            // TODO: If markets are closed, return false... but we might need to be smarter than that if there is still a fresher value we can get
+            // Maybe if we get the same timestamp twice in a row, give up?
+            // Or, just leave it as-is, and don't worry about it
             let ageOfData_min = existingData.timestamp.timeIntervalSinceNow * -1.0 / 60.0
             return ageOfData_min >= cacheInterval_min
         }
