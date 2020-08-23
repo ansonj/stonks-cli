@@ -142,6 +142,10 @@ struct DatabaseIO {
                 trxnId
             ]
             try db.executeUpdate("UPDATE transactions SET sell_date = ?, sell_price = ?, revenue = ?, return_percentage = ?, profit = ?, held_days = ? WHERE trxn_id = ?;", values: values)
+            // Record profit
+            let currentProfitNotTransferred = profitNotTransferred(fromDatabase: db)
+            let newProfit = currentProfitNotTransferred + profit
+            try db.executeUpdate("UPDATE stats_and_totals SET value = ? WHERE key = ?;", values: [newProfit, DatabaseKeys.stats_profitNotTransferred])
             // Redistribute investment
             let splits = reinvestmentSplits(fromDatabase: db)
             if splits.map({ $0.ticker }).contains(ticker) {
