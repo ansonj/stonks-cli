@@ -375,4 +375,29 @@ struct DatabaseIO {
         }
         try db.executeUpdate("DELETE FROM pending_buys WHERE amount = ?", values: [0])
     }
+    
+    static func addDefaultSplits(toPath path: String) {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to add default splits")
+        }
+        guard db.beginTransaction() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while adding default splits")
+        }
+        do {
+            let samples: [String : Double] = [
+                "AAPL" : 5,
+                "MSFT" : 3,
+                "TSLA" : 2
+            ]
+            try samples.forEach { (ticker, weight) in
+                try db.executeUpdate("INSERT INTO reinvestment_splits (ticker, weight) VALUES (?, ?)", values: [ticker, weight])
+            }
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "adding default splits")
+        }
+        guard db.commit() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while adding default splits")
+        }
+    }
 }

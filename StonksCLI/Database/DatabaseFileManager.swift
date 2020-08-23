@@ -81,14 +81,15 @@ struct DatabaseFileManager {
         if DatabaseIO.reinvestmentSplits(fromPath: path).count > 0 {
             return
         } else {
-            Logger.log("Before continuing, you need to define some reinvestment splits.")
-            print("   In your database, add some rows to the reinvestment_splits table.")
+            DatabaseIO.addDefaultSplits(toPath: path)
+            Logger.log("Adding sample splits...")
+            print("   I've added some sample splits to the reinvestment_splits table in your database.")
+            print("   Replace these with the investments of your choice.")
             print("   Pick what stocks you want to invest in and give them weights.")
             print("   The weights don't have to add up to 100.")
             print("   Every deposit into your investment account will be allocated between the splits according to the weights.")
-            print("   Then run StonksCLI again.")
+            Prompt.pauseThenContinue()
             print()
-            Prompt.exitStonks(withMessage: nil)
         }
     }
 }
