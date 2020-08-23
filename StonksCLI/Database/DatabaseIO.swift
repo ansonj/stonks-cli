@@ -204,6 +204,10 @@ struct DatabaseIO {
     
     static func profitNotTransferred(fromPath path: String) -> Double {
         let db = FMDatabase(path: path)
+        return profitNotTransferred(fromDatabase: db)
+    }
+    
+    private static func profitNotTransferred(fromDatabase db: FMDatabase) -> Double {
         guard db.open() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get total profit not transferred")
         }
