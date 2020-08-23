@@ -41,4 +41,7 @@ struct Formatting {
         let actualDate = DatabaseUtilities.date(fromString: dbDateString)
         return friendlyDateFormatter.string(from: actualDate)
     }
+    static func friendlyDateString(forDate date: Date) -> String {
+        return friendlyDateFormatter.string(from: date)
+    }
 }
