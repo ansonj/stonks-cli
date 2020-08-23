@@ -140,6 +140,9 @@ struct MainFlow: Flow {
         let table = Table.renderTable(withHeaders: headers,
                                       rows: rows)
         print(table)
+        if activeTransactions.count == 0 {
+            print("No active buys.")
+        }
         print()
     }
     
