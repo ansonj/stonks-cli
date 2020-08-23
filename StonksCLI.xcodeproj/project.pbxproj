@@ -28,6 +28,7 @@
 		A3FFA12724F1A0BB003228BF /* TransferFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12624F1A0BB003228BF /* TransferFlow.swift */; };
 		A3FFA12924F1B75B003228BF /* SellFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12824F1B75B003228BF /* SellFlow.swift */; };
 		A3FFA12B24F1C1D0003228BF /* ResetPendingBuysFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12A24F1C1D0003228BF /* ResetPendingBuysFlow.swift */; };
+		A3FFA12D24F204C4003228BF /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12C24F204C4003228BF /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,6 +65,7 @@
 		A3FFA12624F1A0BB003228BF /* TransferFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferFlow.swift; sourceTree = "<group>"; };
 		A3FFA12824F1B75B003228BF /* SellFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellFlow.swift; sourceTree = "<group>"; };
 		A3FFA12A24F1C1D0003228BF /* ResetPendingBuysFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPendingBuysFlow.swift; sourceTree = "<group>"; };
+		A3FFA12C24F204C4003228BF /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				A3FFA0F024E022BE003228BF /* main.swift */,
 				A3FFA0FF24E07895003228BF /* ConfigFile.swift */,
+				A3FFA12C24F204C4003228BF /* Utilities.swift */,
 				A3FFA0F724E023E8003228BF /* Flows */,
 				A3FFA12124F03B84003228BF /* UI */,
 				A3FFA0F824E023EF003228BF /* Network */,
@@ -226,6 +229,7 @@
 				A3FFA10724E56DD3003228BF /* ConfigFile.swift in Sources */,
 				A3FFA0FE24E02419003228BF /* StockInfoProvider.swift in Sources */,
 				A3FFA12324F03BE1003228BF /* Formatting.swift in Sources */,
+				A3FFA12D24F204C4003228BF /* Utilities.swift in Sources */,
 				A3FFA12024EF2D0D003228BF /* Table.swift in Sources */,
 				A3FFA10224E172DC003228BF /* IEXCloudAPI.swift in Sources */,
 				A3FFA10F24E8765C003228BF /* MainFlow.swift in Sources */,
