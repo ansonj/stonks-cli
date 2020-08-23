@@ -13,7 +13,7 @@ struct Prompt {
         if let message = message {
             print(message)
         }
-        _ = Prompt.readString(withMessage: "Continue?")
+        _ = Prompt.readString(withMessage: "Press Enter to continue...")
     }
     
     static func readBoolean(withMessage message: String) -> Bool {
