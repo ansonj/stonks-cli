@@ -7,6 +7,7 @@ struct DatabaseKeys {
 }
 
 struct DatabaseIO {
+    // TODO: Would be nice to organize the functions in this file a bit more, if you can
     static func recordBuy(path: String,
                           ticker: String,
                           investment: Double,
@@ -85,6 +86,28 @@ struct DatabaseIO {
             DatabaseUtilities.exitWithError(error, duringActivity: "selecting active transactions")
         }
         return transactions
+    }
+    
+    static func activeTransaction(withId id: Int) -> ActiveBuyTransaction? {
+        // TODO: Implement
+        return nil
+    }
+    
+    static func recordSell(path: String,
+                           trxnId: Int,
+                           sellDate: String,
+                           sellPrice: Double,
+                           revenue: Double,
+                           profit: Double,
+                           returnPercentage: Double)
+    {
+        // TODO: Implement
+        
+        // Update the transaction with the sale details.
+        
+        // Redistribute investment.
+        // If it's in the splits table, just add it
+        // If it's not in the splits, distribute
     }
     
     // MARK: - Checksum
