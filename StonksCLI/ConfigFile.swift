@@ -35,7 +35,7 @@ struct ConfigFile {
         setConfigDictionary(configDictionary)
     }
     
-    // FIXME: Use property wrappers instead?
+    // TODO: Use property wrappers instead?
     // https://www.swiftbysundell.com/articles/property-wrappers-in-swift/
     
     private let k_iexCloudApiKey = "iexCloudApiKey"
