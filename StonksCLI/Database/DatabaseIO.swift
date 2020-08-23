@@ -65,14 +65,16 @@ struct DatabaseIO {
         }
         var transactions = [ActiveBuyTransaction]()
         do {
-            let results = try db.executeQuery("SELECT ticker, investment, shares, buy_date, cost_basis FROM transactions WHERE sell_date IS NULL", values: nil)
+            let results = try db.executeQuery("SELECT trxn_id, ticker, investment, shares, buy_date, cost_basis FROM transactions WHERE sell_date IS NULL", values: nil)
             while results.next() {
+                let trxnId = results.long(forColumn: "trxn_id")
                 let ticker = results.string(forColumn: "ticker") ?? "ERROR"
                 let investment = results.double(forColumn: "investment")
                 let shares = results.double(forColumn: "shares")
                 let date = results.string(forColumn: "buy_date") ?? "ERROR"
                 let costBasis = results.double(forColumn: "cost_basis")
-                let newTransaction = ActiveBuyTransaction(ticker: ticker,
+                let newTransaction = ActiveBuyTransaction(trxnId: trxnId,
+                                                          ticker: ticker,
                                                           investment: investment,
                                                           shares: shares,
                                                           buyDate: DatabaseUtilities.date(fromString: date),

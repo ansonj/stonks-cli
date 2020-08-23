@@ -1,6 +1,7 @@
 import Foundation
 
 struct ActiveBuyTransaction {
+    let trxnId: Int
     let ticker: String
     let investment: Double
     let shares: Double

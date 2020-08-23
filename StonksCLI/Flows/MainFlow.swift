@@ -114,6 +114,7 @@ struct MainFlow: Flow {
             HeaderCell("Investment", alignment: .right),
             HeaderCell("Current Price", alignment: .right),
             HeaderCell("Current Return", alignment: .right),
+            HeaderCell("ID #", alignment: .right),
             HeaderCell("Current Profit", alignment: .right),
             HeaderCell("Age", alignment: .right),
             HeaderCell("Avg. Return", alignment: .right),
@@ -128,6 +129,7 @@ struct MainFlow: Flow {
                 TableCell(Formatting.string(forCurrency: row.investment)),
                 TableCell(Formatting.string(forCurrency: row.currentPrice)),
                 TableCell(Formatting.string(forPercentage: row.currentReturnPercentage), color: currentReturnColor),
+                TableCell(row.trxnId.description),
                 TableCell(Formatting.string(forCurrency: row.profit), color: currentProfitColor),
                 TableCell(row.age.description),
                 TableCell(Formatting.string(forPercentage: row.averageReturnPercentage), color: avgReturnColor)
@@ -194,6 +196,7 @@ struct MainFlow: Flow {
 }
 
 private class ActiveDisplayRow {
+    let trxnId: Int
     let ticker: String
     let companyName: String
     let investment: Double
@@ -207,6 +210,7 @@ private class ActiveDisplayRow {
     init(activeBuyTransaction trxn: ActiveBuyTransaction, priceSource: PriceCache) {
         let info = priceSource.info(forTicker: trxn.ticker)
         
+        self.trxnId = trxn.trxnId
         self.ticker = trxn.ticker
         self.companyName = info.companyName
         self.investment = trxn.investment
