@@ -30,7 +30,7 @@ struct SellFlow: Flow {
         }
         let heldDays = Utilities.daysBetween(transaction.buyDate, and: sellDate)
         
-        let sellPrice_string = Prompt.readString(withMessage: "What was the selling price per share?")
+        let sellPrice_string = Prompt.readString(withMessage: "What was the average selling price per share?")
         guard let sellPrice = Double(sellPrice_string) else {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(sellPrice_string)' to a double.")
             return
