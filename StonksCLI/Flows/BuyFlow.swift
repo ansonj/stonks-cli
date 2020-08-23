@@ -11,6 +11,10 @@ struct BuyFlow: Flow {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(investment_string)' to a double.")
             return
         }
+        guard investment > 0 else {
+            Prompt.pauseThenContinue(withMessage: "You can't invest $0.")
+            return
+        }
         
         let shares_string = Prompt.readString(withMessage: "How many shares?")
         guard let shares = Double(shares_string) else {
