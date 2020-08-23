@@ -45,6 +45,7 @@ struct DatabaseIO {
                 }
                 let updatedPendingAmount = max(0, pendingAmount - investment)
                 try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [updatedPendingAmount, ticker])
+                try db.executeUpdate("DELETE FROM pending_buys WHERE amount = ?", values: [0])
             } else {
                 print("You bought something that wasn't in your pending buys.")
                 print("This will invalidate your checksum.")
