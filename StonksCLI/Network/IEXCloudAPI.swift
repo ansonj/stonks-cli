@@ -37,6 +37,7 @@ struct IexCloudApi: StockInfoProvider {
                 httpResponse.statusCode == 200,
                 let data = data
                 else {
+                    // TODO: Print the error, maybe? (also below), any early return
                     return
             }
 
