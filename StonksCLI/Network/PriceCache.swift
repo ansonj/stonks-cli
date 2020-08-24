@@ -46,6 +46,7 @@ class InMemoryPriceCache: PriceCache {
         let errorInfo = StockInfo(ticker: "ERROR",
                                   companyName: "Error",
                                   price: 0,
+                                  todaysChangePercentage: 0,
                                   timestamp: Date(timeIntervalSince1970: 0))
         return storage[ticker] ?? errorInfo
     }

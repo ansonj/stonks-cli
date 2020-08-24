@@ -4,6 +4,7 @@ struct StockInfo {
     let ticker: String
     let companyName: String
     let price: Double
+    let todaysChangePercentage: Double
     let timestamp: Date
 }
 

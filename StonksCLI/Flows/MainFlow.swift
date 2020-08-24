@@ -181,18 +181,21 @@ struct MainFlow: Flow {
         priceCache.primeCache(forTickers: Set<String>(pendingBuys.map({ $0.ticker })))
         let displayRows = pendingBuys.map { PendingBuyDisplayRow(pendingBuy: $0,
                                                                  priceSource: priceCache) }
-                                     .sorted(by: { $0.amount > $1.amount })
+                                     .sorted(by: { $0.changeToday < $1.changeToday })
         
         let headers = [
             HeaderCell("Symbol", alignment: .left),
             HeaderCell("Amount", alignment: .right),
+            HeaderCell("∆ Today", alignment: .right),
             HeaderCell("Company Name", alignment: .left)
         ]
-        let rows = displayRows.map {
-            [
-                TableCell($0.ticker),
-                TableCell(Formatting.string(forCurrency: $0.amount)),
-                TableCell($0.companyName)
+        let rows = displayRows.map { row -> [TableCell] in
+            let deltaColor: TerminalTextColor = row.changeToday < 0 ? .red : .black
+            return [
+                TableCell(row.ticker),
+                TableCell(Formatting.string(forCurrency: row.amount)),
+                TableCell(Formatting.string(forPercentage: row.changeToday), color: deltaColor),
+                TableCell(row.companyName)
             ]
         }
         print("Pending buys:")
@@ -234,11 +237,14 @@ private class ActiveDisplayRow {
 private struct PendingBuyDisplayRow {
     let ticker: String
     let amount: Double
+    let changeToday: Double
     let companyName: String
     
     init(pendingBuy: PendingBuy, priceSource: PriceCache) {
         self.ticker = pendingBuy.ticker
         self.amount = pendingBuy.amount
-        self.companyName = priceSource.info(forTicker: pendingBuy.ticker).companyName
+        let info = priceSource.info(forTicker: pendingBuy.ticker)
+        self.changeToday = info.todaysChangePercentage
+        self.companyName = info.companyName
     }
 }
