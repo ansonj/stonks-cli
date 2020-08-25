@@ -18,8 +18,19 @@ Join Robinhood, etc.
 ## Possible future features
 
 - A completed `README.md` with usage instructions
+- Clean up `TODO`s
+- Make sure you can't sell out of order
+- Implement caching of prices/names in the database
+- Implement a stats view
+    - Fastest to reach 5% (or whatever your sell threshold is)
+    - Best returns of all time, not including things you haven't sold
+    - Longest holds of all time (including things you haven't sold yet?)
+- Implement transfer > withdraw to withdraw your total profit
+- Implement transfer > dividend (split into pending buys)
+- Implement transfer > interest (split into pending buys)
 - Implement customizable settings, stored in the database
     - Sell threshold, and almost-ready threshold
-    - Quote data staleness interval
+    - Quote data staleness interval (maybe)
+- Edit splits from the CLI
 - Implement selling portions of buys, if this is even desired
-- Cache sums of transfers for performance?
+- Cache the sum of transfers table (or any other stats) for performance?
