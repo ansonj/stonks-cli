@@ -52,7 +52,8 @@ struct IexCloudApi: StockInfoProvider {
                 guard let ticker = quoteDict["symbol"] as? String else { continue }
                 guard let name = quoteDict["companyName"] as? String else { continue }
                 guard let price = quoteDict["latestPrice"] as? Double else { continue }
-                guard let changePercent = quoteDict["changePercent"] as? Double else { continue }
+                // changePercent may be null
+                let changePercent = (quoteDict["changePercent"] as? Double) ?? 0
                 // The response also includes a `latestUpdate`, but depending on market hours, etc., this could be a day or two old.
                 // We'll assume that the API is doing the best it can to get us a fresh value,
                 // and cache with a timestamp of now.
