@@ -10,6 +10,7 @@ struct IexCloudApi: StockInfoProvider {
     
     func fetchInfoSynchronously(forTickers tickers: Set<String>) -> [StockInfo] {
         let domain = apiKey.starts(with: "T") ? "sandbox" : "cloud"
+        // https://iexcloud.io/docs/api/#quote
         guard var urlBuilder = URLComponents(string: "https://\(domain).iexapis.com/stable/stock/market/batch") else {
             Prompt.exitStonks(withMessage: "Couldn't build URLComponents")
         }
