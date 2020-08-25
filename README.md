@@ -23,6 +23,7 @@ Join Robinhood, etc.
 - Implement caching of prices/names in the database
 - Implement a stats view
     - Fastest to reach 5% (or whatever your sell threshold is)
+        - Or, just fastest returns in general?
     - Best returns of all time, not including things you haven't sold
     - Longest holds of all time (including things you haven't sold yet?)
 - Implement transfer > withdraw to withdraw your total profit
