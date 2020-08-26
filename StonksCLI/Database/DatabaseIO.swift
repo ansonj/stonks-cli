@@ -37,7 +37,7 @@ struct DatabaseIO {
             // TODO: Maybe later, auto-update pending buys by pulling out the spent amount evenly by percentage from the other pending buys
             if currentPendingBuys.map({ $0.ticker }).contains(ticker) {
                 let pendingAmount = currentPendingBuys.filter({ $0.ticker == ticker }).first!.amount
-                if investment > pendingAmount {
+                if investment > pendingAmount && !((investment - pendingAmount).isBasicallyZero) {
                     print("You bought \(Formatting.string(forCurrency: investment)), but only \(Formatting.string(forCurrency: pendingAmount)) was pending.")
                     print("This will invalidate your checksum.")
                     print("Use the reset option from the main menu, or edit your pending buys manually.")

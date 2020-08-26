@@ -13,3 +13,9 @@ struct Utilities {
         return cal.dateComponents([.day], from: noonStart, to: noonEnd).day ?? -1
     }
 }
+
+extension Double {
+    var isBasicallyZero: Bool {
+        abs(self) < 0.01
+    }
+}

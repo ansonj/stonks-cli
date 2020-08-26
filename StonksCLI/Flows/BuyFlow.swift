@@ -11,7 +11,7 @@ struct BuyFlow: Flow {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(investment_string)' to a double.")
             return
         }
-        guard investment > 0 else {
+        guard investment > 0 && !investment.isBasicallyZero else {
             Prompt.pauseThenContinue(withMessage: "You can't invest $0.")
             return
         }
