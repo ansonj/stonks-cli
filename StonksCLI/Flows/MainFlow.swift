@@ -1,5 +1,9 @@
 import Foundation
 
+// TODO: These will become settings someday
+private let almostReadyToSellThreshold = 3.5 / 100.0
+private let sellThreshold = 5 / 100.0
+
 struct MainFlow: Flow {
     let configFile: ConfigFile
     let priceCache: PriceCache
@@ -86,9 +90,6 @@ struct MainFlow: Flow {
         }
         
         let colorPercentage = { (p: Double) -> TerminalTextColor in
-            // TODO: These will become settings someday
-            let almostReadyToSellThreshold = 3.5 / 100.0
-            let sellThreshold = 5 / 100.0
             if p < 0 {
                 return .red
             } else if 0 <= p && p < almostReadyToSellThreshold {
