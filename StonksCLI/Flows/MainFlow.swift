@@ -115,6 +115,7 @@ struct MainFlow: Flow {
             HeaderCell("Investment", alignment: .right),
             HeaderCell("Shares", alignment: .right),
             HeaderCell("Current Price", alignment: .right),
+            HeaderCell("Target Price", alignment: .right),
             HeaderCell("Current Return", alignment: .right),
             HeaderCell("ID #", alignment: .right),
             HeaderCell("Current Profit", alignment: .right),
@@ -131,6 +132,7 @@ struct MainFlow: Flow {
                 TableCell(Formatting.string(forCurrency: row.investment)),
                 TableCell(Formatting.string(forDouble: row.shares)),
                 TableCell(Formatting.string(forCurrency: row.currentPrice)),
+                TableCell(Formatting.string(forCurrency: row.targetPrice), color: currentReturnColor),
                 TableCell(Formatting.string(forPercentage: row.currentReturnPercentage), color: currentReturnColor),
                 TableCell(row.trxnId.description),
                 TableCell(Formatting.string(forCurrency: row.profit), color: currentProfitColor),
@@ -212,6 +214,7 @@ private class ActiveDisplayRow {
     let investment: Double
     let shares: Double
     let currentPrice: Double
+    let targetPrice: Double
     let currentValue: Double // No need to display this one, but it's helpful for math
     let currentReturnPercentage: Double
     let profit: Double
@@ -227,6 +230,7 @@ private class ActiveDisplayRow {
         self.investment = trxn.investment
         self.shares = trxn.shares
         self.currentPrice = info.price
+        self.targetPrice = trxn.costBasis * (1 + sellThreshold)
         self.currentValue = currentPrice * trxn.shares
         self.currentReturnPercentage = (currentValue - investment) / investment
         self.profit = currentValue - investment
