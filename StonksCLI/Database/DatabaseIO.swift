@@ -45,7 +45,7 @@ struct DatabaseIO {
                 }
                 let updatedPendingAmount = max(0, pendingAmount - investment)
                 try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [updatedPendingAmount, ticker])
-                try db.executeUpdate("DELETE FROM pending_buys WHERE amount = ?", values: [0])
+                try deleteEmptyPendingBuys(fromDatabase: db)
             } else {
                 print("You bought something that wasn't in your pending buys.")
                 print("This will invalidate your checksum.")
@@ -382,7 +382,11 @@ struct DatabaseIO {
                 try db.executeUpdate("INSERT INTO pending_buys (ticker, amount) VALUES (?, ?);", values: [symbol, amountToAdd])
             }
         }
-        try db.executeUpdate("DELETE FROM pending_buys WHERE amount = ?", values: [0])
+        try deleteEmptyPendingBuys(fromDatabase: db)
+    }
+    
+    private static func deleteEmptyPendingBuys(fromDatabase db: FMDatabase) throws {
+        try db.executeUpdate("DELETE FROM pending_buys WHERE amount < ?", values: [0.01])
     }
     
     static func addDefaultSplits(toPath path: String) {
