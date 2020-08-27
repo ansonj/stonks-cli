@@ -43,7 +43,7 @@ struct DatabaseIO {
                     print("Use the reset option from the main menu, or edit your pending buys manually.")
                     Prompt.pauseThenContinue()
                 }
-                let updatedPendingAmount = max(0, pendingAmount - investment)
+                let updatedPendingAmount = (pendingAmount - investment).roundToZeroIfLessThanOneCent
                 try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [updatedPendingAmount, ticker])
                 try deleteEmptyPendingBuys(fromDatabase: db)
             } else {
@@ -277,7 +277,7 @@ struct DatabaseIO {
         let transferBalance = DatabaseIO.transferBalance(fromPath: path)
         let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: path)
         let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: path)
-        let availableBuyingPower = max(0, transferBalance - totalInvestment + totalRevenue - profitNotTransferred)
+        let availableBuyingPower = (transferBalance - totalInvestment + totalRevenue - profitNotTransferred).roundToZeroIfLessThanOneCent
         
         let db = FMDatabase(path: path)
         guard db.open() else {
