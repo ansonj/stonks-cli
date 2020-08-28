@@ -13,7 +13,7 @@ Stonks is not...
 
 ## How to use
 
-Join Robinhood, etc.
+Join [Robinhood](https://join.robinhood.com/ansonj14), etc.
 
 ## Possible future features
 
