@@ -134,7 +134,7 @@ struct MainFlow: Flow {
                 TableCell(Formatting.string(forCurrency: row.currentPrice)),
                 TableCell(Formatting.string(forCurrency: row.targetPrice), color: currentReturnColor),
                 TableCell(Formatting.string(forPercentage: row.currentReturnPercentage), color: currentReturnColor),
-                TableCell(row.trxnId.description),
+                TableCell(row.trxnId.description, color: currentReturnColor),
                 TableCell(Formatting.string(forCurrency: row.profit), color: currentProfitColor),
                 TableCell(row.age.description),
                 TableCell(Formatting.string(forPercentage: row.averageReturnPercentage), color: avgReturnColor)
