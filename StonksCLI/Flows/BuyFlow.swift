@@ -6,10 +6,29 @@ struct BuyFlow: Flow {
     func run() {
         let symbol = Prompt.readString(withMessage: "What ticker symbol?")
         
-        let investment_string = Prompt.readString(withMessage: "How much ($)?")
-        guard let investment = Double(investment_string) else {
-            Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(investment_string)' to a double.")
-            return
+        let pendingBuys = DatabaseIO.pendingBuys(fromPath: configFile.databasePath())
+        let pendingAmountForThisSymbol = pendingBuys.first(where: { $0.ticker == symbol })?.amount
+        
+        let investment: Double
+        if let pendingAmountForThisSymbol = pendingAmountForThisSymbol {
+            let investment_string = Prompt.readString(withMessage: "How much to invest ($)? Leave blank for \(Formatting.string(forCurrency: pendingAmountForThisSymbol)).")
+            if investment_string == "" {
+                let pendingAmountRounded = (pendingAmountForThisSymbol * 100).rounded() / 100
+                investment = pendingAmountRounded
+            } else if let parsedInvestment = Double(investment_string) {
+                investment = parsedInvestment
+            } else {
+                Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(investment_string)' to a double.")
+                return
+            }
+        } else {
+            let investment_string = Prompt.readString(withMessage: "How much to invest ($)?")
+            if let parsedInvestment = Double(investment_string) {
+                investment = parsedInvestment
+            } else {
+                Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(investment_string)' to a double.")
+                return
+            }
         }
         guard investment > 0 && !investment.isBasicallyZero else {
             Prompt.pauseThenContinue(withMessage: "You can't invest $0.")
