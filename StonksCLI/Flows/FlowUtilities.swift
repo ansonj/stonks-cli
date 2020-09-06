@@ -32,7 +32,12 @@ struct FlowUtilities {
             } else if lhs.ticker > rhs.ticker {
                 return false
             }
-            return lhs.age > rhs.age
+            if lhs.age > rhs.age {
+                return true
+            } else if lhs.age < rhs.age {
+                return false
+            }
+            return lhs.trxnId < rhs.trxnId
         }
         
         return displayRows
