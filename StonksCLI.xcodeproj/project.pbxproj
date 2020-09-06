@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A387DB232505543600183BC5 /* FlowUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A387DB222505543600183BC5 /* FlowUtilities.swift */; };
 		A3FFA0F124E022BE003228BF /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA0F024E022BE003228BF /* main.swift */; };
 		A3FFA0FC24E02407003228BF /* SetupFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA0FB24E02407003228BF /* SetupFlow.swift */; };
 		A3FFA0FE24E02419003228BF /* StockInfoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA0FD24E02419003228BF /* StockInfoProvider.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A387DB222505543600183BC5 /* FlowUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowUtilities.swift; sourceTree = "<group>"; };
 		A3FFA0ED24E022BE003228BF /* StonksCLI */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = StonksCLI; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3FFA0F024E022BE003228BF /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A3FFA0F924E023FE003228BF /* Prompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prompt.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 		A3FFA0F724E023E8003228BF /* Flows */ = {
 			isa = PBXGroup;
 			children = (
+				A387DB222505543600183BC5 /* FlowUtilities.swift */,
 				A3FFA0FB24E02407003228BF /* SetupFlow.swift */,
 				A3FFA10E24E8765C003228BF /* MainFlow.swift */,
 				A3FFA11024E87836003228BF /* BuyFlow.swift */,
@@ -222,6 +225,7 @@
 			files = (
 				A3FFA12724F1A0BB003228BF /* TransferFlow.swift in Sources */,
 				A3FFA0F124E022BE003228BF /* main.swift in Sources */,
+				A387DB232505543600183BC5 /* FlowUtilities.swift in Sources */,
 				A3FFA10824E56DDE003228BF /* Prompt.swift in Sources */,
 				A3FFA11724EC116D003228BF /* DatabaseUtilities.swift in Sources */,
 				A3FFA11124E87836003228BF /* BuyFlow.swift in Sources */,

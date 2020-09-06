@@ -1,0 +1,3 @@
+protocol Flow {
+    func run()
+}
