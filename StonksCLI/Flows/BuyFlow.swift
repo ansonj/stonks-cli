@@ -38,7 +38,7 @@ struct BuyFlow: Flow {
         let date = Prompt.readDateString()
         let dateStringForConfirmation = Formatting.friendlyDateString(forDatabaseDateString: date)
         
-        let shares_string = Prompt.readString(withMessage: "How many shares?")
+        let shares_string = Prompt.readString(withMessage: "How many shares did you purchase?")
         guard let shares = Double(shares_string) else {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(shares_string)' to a double.")
             return
@@ -46,7 +46,7 @@ struct BuyFlow: Flow {
         
         let costBasis = investment / shares
         
-        let confirmationMessage = "Buy \(shares) shares of \(symbol) for \(formatCurrency(investment)) on \(dateStringForConfirmation), for a cost basis of \(formatCurrency(costBasis))?"
+        let confirmationMessage = "Record buy of \(shares) shares of \(symbol) for \(formatCurrency(investment)) on \(dateStringForConfirmation), for a cost basis of \(formatCurrency(costBasis))?"
         let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
         
         if confirmed {
