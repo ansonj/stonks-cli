@@ -2,14 +2,30 @@ import Foundation
 
 struct SellFlow: Flow {
     let configFile: ConfigFile
+    let priceCache: PriceCache
     
     func run() {
+        let allActiveTransactions = FlowUtilities.activeTransactionDisplayRows(fromPath: configFile.databasePath(), usingPriceCache: priceCache)
+        var oldestActiveTransactions = [ActiveDisplayRow]()
+        allActiveTransactions.forEach { trxn in
+            let existingSymbols = oldestActiveTransactions.map { $0.ticker }
+            if !existingSymbols.contains(trxn.ticker) {
+                oldestActiveTransactions.append(trxn)
+            }
+        }
+        let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: oldestActiveTransactions)
+        let table = Table.renderTable(withHeaders: headers, rows: rows)
+        print(table)
+        
         let trxnId_string = Prompt.readString(withMessage: "Which ID #?")
         guard let trxnId = Int(trxnId_string) else {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(trxnId_string)' to an integer.")
             return
         }
         
+        // We should have the transaction already in oldestActiveTransactions as an ActiveDisplayRow,
+        // but the rest of this code takes an ActiveBuyTransaction and I don't want to rewrite it.
+        // Fetching the raw transaction from the database is a helpful consistency check anyway.
         guard let transaction = DatabaseIO.activeTransaction(fromPath: configFile.databasePath(),
                                                              withId: trxnId)
         else {

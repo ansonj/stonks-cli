@@ -36,7 +36,7 @@ struct MainFlow: Flow {
                 let buy = BuyFlow(configFile: configFile)
                 buy.run()
             case "s":
-                let sell = SellFlow(configFile: configFile)
+                let sell = SellFlow(configFile: configFile, priceCache: priceCache)
                 sell.run()
             case "t":
                 let transfer = TransferFlow(configFile: configFile)
