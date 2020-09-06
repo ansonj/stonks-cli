@@ -58,59 +58,7 @@ struct MainFlow: Flow {
     private func printActiveTable() {
         let displayRows = FlowUtilities.activeTransactionDisplayRows(fromPath: configFile.databasePath(), usingPriceCache: priceCache)
         
-        let colorPercentage = { (p: Double) -> TerminalTextColor in
-            if p < 0 {
-                return .red
-            } else if 0 <= p && p < almostReadyToSellThreshold {
-                return .black
-            } else if almostReadyToSellThreshold <= p && p < sellThreshold {
-                return .yellow
-            } else {
-                assert(sellThreshold <= p, "Developer or floating point error")
-                return .green
-            }
-        }
-        let colorProfit = { (n: Double) -> TerminalTextColor in
-            if n < 0 {
-                return .red
-            } else {
-                return .black
-            }
-        }
-        
-        let headers = [
-            HeaderCell("Symbol", alignment: .left),
-            HeaderCell("Company Name", alignment: .left),
-            HeaderCell("Investment", alignment: .right),
-            HeaderCell("Shares", alignment: .right),
-            HeaderCell("Cost Basis", alignment: .right),
-            HeaderCell("Price Now", alignment: .right),
-            HeaderCell("Target", alignment: .right),
-            HeaderCell("Return", alignment: .right),
-            HeaderCell("ID #", alignment: .right),
-            HeaderCell("Profit", alignment: .right),
-            HeaderCell("Age", alignment: .right),
-            HeaderCell("Avg. Return", alignment: .right),
-        ]
-        let rows = displayRows.map { row -> [TableCell] in
-            let currentReturnColor = colorPercentage(row.currentReturnPercentage)
-            let currentProfitColor = colorProfit(row.profit)
-            let avgReturnColor = colorPercentage(row.averageReturnPercentage)
-            return [
-                TableCell(row.ticker, color: currentReturnColor),
-                TableCell(row.companyName),
-                TableCell(Formatting.string(forCurrency: row.investment)),
-                TableCell(Formatting.string(forDouble: row.shares)),
-                TableCell(Formatting.string(forCurrency: row.costBasis)),
-                TableCell(Formatting.string(forCurrency: row.currentPrice)),
-                TableCell(Formatting.string(forCurrency: row.targetPrice), color: currentReturnColor),
-                TableCell(Formatting.string(forPercentage: row.currentReturnPercentage), color: currentReturnColor),
-                TableCell(row.trxnId.description, color: currentReturnColor),
-                TableCell(Formatting.string(forCurrency: row.profit), color: currentProfitColor),
-                TableCell(row.age.description),
-                TableCell(Formatting.string(forPercentage: row.averageReturnPercentage), color: avgReturnColor)
-            ]
-        }
+        let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: displayRows)
         let table = Table.renderTable(withHeaders: headers,
                                       rows: rows)
         print(table)
