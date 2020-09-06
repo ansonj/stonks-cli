@@ -16,14 +16,14 @@ struct BuyFlow: Flow {
             return
         }
         
+        let date = Prompt.readDateString()
+        let dateStringForConfirmation = Formatting.friendlyDateString(forDatabaseDateString: date)
+        
         let shares_string = Prompt.readString(withMessage: "How many shares?")
         guard let shares = Double(shares_string) else {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(shares_string)' to a double.")
             return
         }
-        
-        let date = Prompt.readDateString()
-        let dateStringForConfirmation = Formatting.friendlyDateString(forDatabaseDateString: date)
         
         let costBasis = investment / shares
         
