@@ -46,7 +46,7 @@ struct BuyFlow: Flow {
         
         let costBasis = investment / shares
         
-        let confirmationMessage = "Record buy of \(shares) shares of \(symbol) for \(formatCurrency(investment)) on \(dateStringForConfirmation), for a cost basis of \(formatCurrency(costBasis))?"
+        let confirmationMessage = "Record buy of \(shares) shares of \(symbol) for \(Formatting.string(forCurrency: investment)) on \(dateStringForConfirmation), for a cost basis of \(Formatting.string(forCurrency: costBasis))?"
         let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
         
         if confirmed {
@@ -57,12 +57,5 @@ struct BuyFlow: Flow {
                                  date: date)
         }
         print()
-    }
-    
-    private func formatCurrency(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        let number = NSNumber(value: amount)
-        return formatter.string(from: number) ?? "$?.??"
     }
 }
