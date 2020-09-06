@@ -1,5 +1,9 @@
 import Foundation
 
+// TODO: Make these settings in ConfigFile
+let almostReadyToSellThreshold = 3.5 / 100.0
+let sellThreshold = 5 / 100.0
+
 let configFileUrl = FileManager.default.homeDirectoryForCurrentUser
     .appendingPathComponent(".config", isDirectory: true)
     .appendingPathComponent("stonks-cli.json")

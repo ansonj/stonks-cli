@@ -1,9 +1,5 @@
 import Foundation
 
-// TODO: These will become settings someday
-private let almostReadyToSellThreshold = 3.5 / 100.0
-private let sellThreshold = 5 / 100.0
-
 struct MainFlow: Flow {
     let configFile: ConfigFile
     let priceCache: PriceCache
