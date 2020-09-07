@@ -22,6 +22,13 @@ struct SellFlow: Flow {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(trxnId_string)' to an integer.")
             return
         }
+        guard oldestActiveTransactions.map({ $0.trxnId }).contains(trxnId) else {
+            let matchingTransactions = allActiveTransactions.filter { $0.trxnId == trxnId }
+            assert(matchingTransactions.count > 0)
+            let symbol = matchingTransactions.first?.ticker ?? "ERROR"
+            Prompt.pauseThenContinue(withMessage: "You can't sell #\(trxnId) yet. There is an older \(symbol) that you need to sell first.")
+            return
+        }
         
         // We should have the transaction already in oldestActiveTransactions as an ActiveDisplayRow,
         // but the rest of this code takes an ActiveBuyTransaction and I don't want to rewrite it.

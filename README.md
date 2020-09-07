@@ -22,7 +22,6 @@ Join [Robinhood](https://join.robinhood.com/ansonj14), etc.
     - If this is ever going to be public-facing, people need a way to know what version they're running.
 - A completed `README.md` with usage instructions
 - Clean up `TODO`s
-- Make sure you can't sell out of order
 - Implement caching of prices/names in the database
 - Implement a stats view
     - Fastest to reach 5% (or whatever your sell threshold is)
