@@ -29,6 +29,8 @@ Join [Robinhood](https://join.robinhood.com/ansonj14), etc.
     - Best returns of all time, not including things you haven't sold
     - Longest holds of all time (including things you haven't sold yet?)
     - Average hold length
+    - Lifetime return percentage
+    - Are you beating the market? (pick a symbol like SPY, show if your lifetime return beats it)
 - Support for buying for $0
 - Implement transfer > withdraw to withdraw your total profit
 - Implement transfer > dividend (split into pending buys)
