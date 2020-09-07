@@ -1,6 +1,8 @@
 import Foundation
 
 struct Utilities {
+    static let errorString = "\(Logger.stonksGlyph)ERROR"
+    
     static func daysBetween(_ start: Date, and end: Date) -> Int {
         // https://stackoverflow.com/questions/24723431/#comment58538259_28163560
         let cal = Calendar.current

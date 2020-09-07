@@ -25,7 +25,7 @@ struct SellFlow: Flow {
         guard oldestActiveTransactions.map({ $0.trxnId }).contains(trxnId) else {
             let matchingTransactions = allActiveTransactions.filter { $0.trxnId == trxnId }
             assert(matchingTransactions.count > 0)
-            let symbol = matchingTransactions.first?.ticker ?? "ERROR"
+            let symbol = matchingTransactions.first?.ticker ?? Utilities.errorString
             Prompt.pauseThenContinue(withMessage: "You can't sell #\(trxnId) yet. There is an older \(symbol) that you need to sell first.")
             return
         }

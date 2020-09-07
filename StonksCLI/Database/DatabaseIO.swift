@@ -99,10 +99,10 @@ struct DatabaseIO {
     
     private static func activeTransaction(fromResultSet results: FMResultSet) -> ActiveBuyTransaction {
         let trxnId = results.long(forColumn: "trxn_id")
-        let ticker = results.string(forColumn: "ticker") ?? "ERROR"
+        let ticker = results.string(forColumn: "ticker") ?? Utilities.errorString
         let investment = results.double(forColumn: "investment")
         let shares = results.double(forColumn: "shares")
-        let date = results.string(forColumn: "buy_date") ?? "ERROR"
+        let date = results.string(forColumn: "buy_date") ?? Utilities.errorString
         let costBasis = results.double(forColumn: "cost_basis")
         let newTransaction = ActiveBuyTransaction(trxnId: trxnId,
                                                   ticker: ticker,
@@ -263,7 +263,7 @@ struct DatabaseIO {
         do {
             let results = try db.executeQuery("SELECT ticker, amount FROM pending_buys;", values: nil)
             while results.next() {
-                let ticker = results.string(forColumn: "ticker") ?? "ERROR"
+                let ticker = results.string(forColumn: "ticker") ?? Utilities.errorString
                 let amount = results.double(forColumn: "amount")
                 buys.append(PendingBuy(ticker: ticker, amount: amount))
             }
@@ -312,7 +312,7 @@ struct DatabaseIO {
             let results = try db.executeQuery("SELECT ticker, weight FROM reinvestment_splits;", values: nil)
             while results.next() {
                 rowCount += 1
-                let ticker = results.string(forColumn: "ticker") ?? "ERROR"
+                let ticker = results.string(forColumn: "ticker") ?? Utilities.errorString
                 let weight = results.double(forColumn: "weight")
                 databaseSplits[ticker] = weight
             }
