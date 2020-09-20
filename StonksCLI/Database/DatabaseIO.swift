@@ -251,7 +251,7 @@ struct DatabaseIO {
         return pendingBuyTotal
     }
     
-    // MARK: -
+    // MARK: - Pending buys and splits
     
     static func pendingBuys(fromPath path: String) -> [PendingBuy] {
         let db = FMDatabase(path: path)
@@ -336,33 +336,6 @@ struct DatabaseIO {
         return completedSplits
     }
     
-    static func recordDeposit(path: String,
-                              amount: Double,
-                              date: String)
-    {
-        let db = FMDatabase(path: path)
-        guard db.open() else {
-            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record a deposit")
-        }
-        guard db.beginTransaction() else {
-            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while recording deposit")
-        }
-        do {
-            let values: [Any] = [
-                date,
-                amount,
-                DatabaseKeys.transfers_type_deposit
-            ]
-            try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?)", values: values)
-            try executeReinvestmentSplit(inDatabase: db, amount: amount)
-        } catch let error {
-            DatabaseUtilities.exitWithError(error, duringActivity: "recording deposit")
-        }
-        guard db.commit() else {
-            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording deposit")
-        }
-    }
-    
     private static func executeReinvestmentSplit(inDatabase db: FMDatabase, amount: Double) throws {
         let splits = reinvestmentSplits(fromDatabase: db)
         
@@ -415,6 +388,35 @@ struct DatabaseIO {
         }
         guard db.commit() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while adding default splits")
+        }
+    }
+    
+    // MARK: - Transfers
+    
+    static func recordDeposit(path: String,
+                              amount: Double,
+                              date: String)
+    {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record a deposit")
+        }
+        guard db.beginTransaction() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while recording deposit")
+        }
+        do {
+            let values: [Any] = [
+                date,
+                amount,
+                DatabaseKeys.transfers_type_deposit
+            ]
+            try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?)", values: values)
+            try executeReinvestmentSplit(inDatabase: db, amount: amount)
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "recording deposit")
+        }
+        guard db.commit() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording deposit")
         }
     }
 }
