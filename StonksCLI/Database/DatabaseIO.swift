@@ -145,9 +145,7 @@ struct DatabaseIO {
             try db.executeUpdate("UPDATE transactions SET sell_date = ?, sell_price = ?, revenue = ?, return_percentage = ?, profit = ?, held_days = ? WHERE trxn_id = ?;", values: values)
             
             // Record profit
-            let currentProfitNotTransferred = try profitNotTransferred(fromOpenDatabase: db)
-            let newProfit = currentProfitNotTransferred + profit
-            try db.executeUpdate("UPDATE stats_and_totals SET value = ? WHERE key = ?;", values: [newProfit, DatabaseKeys.stats_profitNotTransferred])
+            try addToProfitNotTransferred(profit, inOpenDatabase: db)
             
             // Redistribute investment
             let splits = reinvestmentSplits(fromDatabase: db)
@@ -169,6 +167,14 @@ struct DatabaseIO {
         guard db.commit() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording sell")
         }
+    }
+    
+    private static func addToProfitNotTransferred(_ amount: Double,
+                                                  inOpenDatabase db: FMDatabase) throws
+    {
+        let currentProfitNotTransferred = try profitNotTransferred(fromOpenDatabase: db)
+        let newProfit = currentProfitNotTransferred + amount
+        try db.executeUpdate("UPDATE stats_and_totals SET value = ? WHERE key = ?;", values: [newProfit, DatabaseKeys.stats_profitNotTransferred])
     }
     
     // MARK: - Checksum
