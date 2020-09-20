@@ -33,8 +33,7 @@ Join [Robinhood](https://join.robinhood.com/ansonj14), etc.
     - Are you beating the market? (pick a symbol like SPY, show if your lifetime return beats it)
 - Support for buying for $0
 - Implement transfer > withdraw to withdraw your total profit
-- Implement transfer > dividend (split into pending buys)
-- Implement transfer > interest (split into pending buys)
+- Implement transfer > interest (direct to profit)
 - An about screen with ASCII art
 - Implement customizable settings, stored in the database
     - Sell threshold, and almost-ready threshold

@@ -133,4 +133,7 @@ private let migrations: [Int : String] = [
     7: """
     ALTER TABLE transfers RENAME COLUMN source TO type;
     """,
+    8: """
+    ALTER TABLE transfers ADD COLUMN source TEXT;
+    """,
 ]

@@ -20,8 +20,8 @@ struct TransferFlow: Flow {
             // TODO: Implement
             print("Withdrawal flow goes here.")
         case "v":
-            // TODO: Implement
-            print("Recording dividend flow goes here.")
+            runDividendFlow()
+            return
         case "i":
             // TODO: Implement
             print("Recording interest flow goes here.")
@@ -48,6 +48,29 @@ struct TransferFlow: Flow {
             DatabaseIO.recordDeposit(path: configFile.databasePath(),
                                      amount: amount,
                                      date: date)
+        }
+        print()
+    }
+    
+    private func runDividendFlow() {
+        let symbol = Prompt.readString(withMessage: "What symbol paid a dividend?")
+        
+        let amount_string = Prompt.readString(withMessage: "How much ($)?")
+        guard let amount = Double(amount_string) else {
+            Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(amount_string)' to a double.")
+            return
+        }
+        
+        let date = Prompt.readDateString()
+        let dateStringForConfirmation = Formatting.friendlyDateString(forDatabaseDateString: date)
+        
+        let confirmationMessage = "Record dividend of \(Formatting.string(forCurrency: amount)) from \(symbol) on \(dateStringForConfirmation)?"
+        let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
+        if confirmed {
+            DatabaseIO.recordDividend(path: configFile.databasePath(),
+                                      amount: amount,
+                                      date: date,
+                                      symbol: symbol)
         }
         print()
     }

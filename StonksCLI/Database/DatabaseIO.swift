@@ -2,7 +2,10 @@ import FMDB
 
 struct DatabaseKeys {
     static let settings_version = "version"
+    
     static let transfers_type_deposit = "deposit"
+    static let transfers_type_dividend = "dividend"
+    
     static let stats_profitNotTransferred = "profit_not_transferred"
 }
 
@@ -424,6 +427,37 @@ struct DatabaseIO {
         }
         guard db.commit() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording deposit")
+        }
+    }
+    
+    static func recordDividend(path: String,
+                               amount: Double,
+                               date: String,
+                               symbol: String)
+    {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record a dividend")
+        }
+        guard db.beginTransaction() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while recording dividend")
+        }
+        do {
+            // Record dividend
+            let values: [Any] = [
+                date,
+                amount,
+                DatabaseKeys.transfers_type_dividend,
+                symbol
+            ]
+            try db.executeUpdate("INSERT INTO transfers (date, amount, type, source) VALUES (?, ?, ?, ?);", values: values)
+            // Add dividend to profit
+            try addToProfitNotTransferred(amount, inOpenDatabase: db)
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "recording dividend")
+        }
+        guard db.commit() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording dividend")
         }
     }
 }
