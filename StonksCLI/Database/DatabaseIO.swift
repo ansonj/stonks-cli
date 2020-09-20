@@ -145,7 +145,7 @@ struct DatabaseIO {
             try db.executeUpdate("UPDATE transactions SET sell_date = ?, sell_price = ?, revenue = ?, return_percentage = ?, profit = ?, held_days = ? WHERE trxn_id = ?;", values: values)
             
             // Record profit
-            let currentProfitNotTransferred = profitNotTransferred(fromDatabase: db)
+            let currentProfitNotTransferred = try profitNotTransferred(fromOpenDatabase: db)
             let newProfit = currentProfitNotTransferred + profit
             try db.executeUpdate("UPDATE stats_and_totals SET value = ? WHERE key = ?;", values: [newProfit, DatabaseKeys.stats_profitNotTransferred])
             
@@ -213,23 +213,24 @@ struct DatabaseIO {
     
     static func profitNotTransferred(fromPath path: String) -> Double {
         let db = FMDatabase(path: path)
-        return profitNotTransferred(fromDatabase: db)
-    }
-    
-    private static func profitNotTransferred(fromDatabase db: FMDatabase) -> Double {
         guard db.open() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get total profit not transferred")
         }
         let profit: Double
         do {
-            let results = try db.executeQuery("SELECT value FROM stats_and_totals WHERE key = ?;", values: [DatabaseKeys.stats_profitNotTransferred])
-            guard results.next() else {
-                Prompt.exitStonks(withMessage: "Couldn't get next row in totalProfitNotTransferred()")
-            }
-            profit = results.double(forColumn: "value")
+            profit = try profitNotTransferred(fromOpenDatabase: db)
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "fetching total profit not transferred")
         }
+        return profit
+    }
+    
+    private static func profitNotTransferred(fromOpenDatabase db: FMDatabase) throws -> Double {
+        let results = try db.executeQuery("SELECT value FROM stats_and_totals WHERE key = ?;", values: [DatabaseKeys.stats_profitNotTransferred])
+        guard results.next() else {
+            Prompt.exitStonks(withMessage: "Couldn't get next row in totalProfitNotTransferred()")
+        }
+        let profit = results.double(forColumn: "value")
         return profit
     }
     
