@@ -143,21 +143,25 @@ struct DatabaseIO {
                 trxnId
             ]
             try db.executeUpdate("UPDATE transactions SET sell_date = ?, sell_price = ?, revenue = ?, return_percentage = ?, profit = ?, held_days = ? WHERE trxn_id = ?;", values: values)
+            
             // Record profit
             let currentProfitNotTransferred = profitNotTransferred(fromDatabase: db)
             let newProfit = currentProfitNotTransferred + profit
             try db.executeUpdate("UPDATE stats_and_totals SET value = ? WHERE key = ?;", values: [newProfit, DatabaseKeys.stats_profitNotTransferred])
+            
             // Redistribute investment
             let splits = reinvestmentSplits(fromDatabase: db)
+            // If we lost money, we can only reinvest what we got back
+            let reinvestmentAmount = min(investment, revenue)
             if splits.map({ $0.ticker }).contains(ticker) {
                 // If the sell was of a stock that we are actively investing in, just carry over the amount directly
                 let pending = pendingBuys(fromDatabase: db)
                 let existingPendingAmount = pending.filter({ $0.ticker == ticker }).first!.amount
-                let newPendingAmount = existingPendingAmount + investment
+                let newPendingAmount = existingPendingAmount + reinvestmentAmount
                 try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [newPendingAmount, ticker])
             } else {
                 // If the sell was of something that's not in our splits, redistribute the amount evenly
-                try executeReinvestmentSplit(inDatabase: db, amount: investment)
+                try executeReinvestmentSplit(inDatabase: db, amount: reinvestmentAmount)
             }
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "recording sell")
