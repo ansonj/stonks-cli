@@ -130,4 +130,7 @@ private let migrations: [Int : String] = [
     6: """
     INSERT INTO stats_and_totals VALUES ("\(DatabaseKeys.stats_profitNotTransferred)", 0);
     """,
+    7: """
+    ALTER TABLE transfers RENAME COLUMN source TO type;
+    """,
 ]

@@ -2,7 +2,7 @@ import FMDB
 
 struct DatabaseKeys {
     static let settings_version = "version"
-    static let transfers_source_deposit = "deposit"
+    static let transfers_type_deposit = "deposit"
     static let stats_profitNotTransferred = "profit_not_transferred"
 }
 
@@ -351,9 +351,9 @@ struct DatabaseIO {
             let values: [Any] = [
                 date,
                 amount,
-                DatabaseKeys.transfers_source_deposit
+                DatabaseKeys.transfers_type_deposit
             ]
-            try db.executeUpdate("INSERT INTO transfers (date, amount, source) VALUES (?, ?, ?)", values: values)
+            try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?)", values: values)
             try executeReinvestmentSplit(inDatabase: db, amount: amount)
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "recording deposit")
