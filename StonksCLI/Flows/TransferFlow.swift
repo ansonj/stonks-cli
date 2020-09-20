@@ -33,7 +33,7 @@ struct TransferFlow: Flow {
     }
     
     private func runDepositFlow() {
-        let amount_string = Prompt.readString(withMessage: "How much?")
+        let amount_string = Prompt.readString(withMessage: "How much ($)?")
         guard let amount = Double(amount_string) else {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(amount_string)' to a double.")
             return

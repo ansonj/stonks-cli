@@ -56,7 +56,7 @@ struct SellFlow: Flow {
         // TODO: Deduplicate this calculation with the one in MainFlow.swift?
         let targetPrice = transaction.costBasis * (1 + sellThreshold)
         print("You need to sell at \(Formatting.string(forCurrency: targetPrice)) or better to make a \(Formatting.string(forPercentage: sellThreshold)) return.")
-        let sellPrice_string = Prompt.readString(withMessage: "What was the average selling price per share?")
+        let sellPrice_string = Prompt.readString(withMessage: "What was the average selling price per share ($)?")
         guard let sellPrice = Double(sellPrice_string) else {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(sellPrice_string)' to a double.")
             return
