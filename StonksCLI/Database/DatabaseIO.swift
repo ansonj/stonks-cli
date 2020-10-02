@@ -323,7 +323,7 @@ struct DatabaseIO {
         var databaseSplits = [String : Double]()
         var rowCount = 0
         do {
-            let results = try db.executeQuery("SELECT ticker, weight FROM reinvestment_splits;", values: nil)
+            let results = try db.executeQuery("SELECT ticker, weight FROM reinvestment_splits WHERE weight > 0;", values: nil)
             while results.next() {
                 rowCount += 1
                 let ticker = results.string(forColumn: "ticker") ?? Utilities.errorString
