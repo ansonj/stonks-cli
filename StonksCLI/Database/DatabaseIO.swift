@@ -157,7 +157,7 @@ struct DatabaseIO {
             if splits.map({ $0.ticker }).contains(ticker) {
                 // If the sell was of a stock that we are actively investing in, just carry over the amount directly
                 let pending = pendingBuys(fromDatabase: db)
-                let existingPendingAmount = pending.filter({ $0.ticker == ticker }).first!.amount
+                let existingPendingAmount = pending.filter({ $0.ticker == ticker }).first?.amount ?? 0
                 let newPendingAmount = existingPendingAmount + reinvestmentAmount
                 try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [newPendingAmount, ticker])
             } else {
