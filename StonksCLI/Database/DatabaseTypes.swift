@@ -7,6 +7,10 @@ struct ActiveBuyTransaction {
     let shares: Double
     let buyDate: Date
     let costBasis: Double
+    
+    var age: Int {
+        Utilities.daysBetween(buyDate, and: Date())
+    }
 }
 
 struct PendingBuy {

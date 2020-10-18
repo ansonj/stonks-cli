@@ -138,7 +138,7 @@ class ActiveDisplayRow {
         self.currentValue = currentPrice * trxn.shares
         self.currentReturnPercentage = (currentValue - investment) / investment
         self.profit = currentValue - investment
-        self.age = Utilities.daysBetween(trxn.buyDate, and: Date())
+        self.age = trxn.age
         self.averageReturnPercentage = 0 // Will be filled in later
     }
 }
