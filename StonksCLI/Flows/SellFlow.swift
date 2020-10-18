@@ -13,7 +13,7 @@ struct SellFlow: Flow {
                 oldestActiveTransactions.append(trxn)
             }
         }
-        let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: oldestActiveTransactions)
+        let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: oldestActiveTransactions, markSellableRows: false)
         let table = Table.renderTable(withHeaders: headers, rows: rows)
         print(table)
         

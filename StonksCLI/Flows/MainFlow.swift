@@ -58,7 +58,7 @@ struct MainFlow: Flow {
     private func printActiveTable() {
         let displayRows = FlowUtilities.activeTransactionDisplayRows(fromPath: configFile.databasePath(), usingPriceCache: priceCache)
         
-        let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: displayRows)
+        let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: displayRows, markSellableRows: true)
         let table = Table.renderTable(withHeaders: headers,
                                       rows: rows)
         print(table)
