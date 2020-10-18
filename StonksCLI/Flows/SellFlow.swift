@@ -40,7 +40,8 @@ struct SellFlow: Flow {
             return
         }
         
-        let confirmedCorrectSale = Prompt.readBoolean(withMessage: "Selling \(Formatting.string(forDouble: transaction.shares)) shares of \(transaction.ticker), correct?")
+        let shareCount = Formatting.string(forDouble: transaction.shares)
+        let confirmedCorrectSale = Prompt.readBoolean(withMessage: "Selling \(shareCount) shares of \(transaction.ticker), correct?")
         guard confirmedCorrectSale else {
             return
         }
@@ -55,6 +56,7 @@ struct SellFlow: Flow {
         
         // TODO: Deduplicate this calculation with the one in MainFlow.swift?
         let targetPrice = transaction.costBasis * (1 + sellThreshold)
+        print("You bought \(shareCount) shares at a cost basis of \(Formatting.string(forCurrency: transaction.costBasis)) on \(Formatting.friendlyDateString(forDate: transaction.buyDate)) (\(transaction.age) days ago).")
         print("You need to sell at \(Formatting.string(forCurrency: targetPrice)) or better to make a \(Formatting.string(forPercentage: sellThreshold)) return.")
         let sellPrice_string = Prompt.readString(withMessage: "What was the average selling price per share ($)?")
         guard let sellPrice = Double(sellPrice_string) else {
@@ -66,7 +68,7 @@ struct SellFlow: Flow {
         let profit = revenue - transaction.investment
         let returnPercentage = profit / transaction.investment
         
-        let confirmationMessage = "Sell \(Formatting.string(forDouble: transaction.shares)) shares of \(transaction.ticker) on \(Formatting.friendlyDateString(forDate: sellDate)) at \(Formatting.string(forCurrency: sellPrice)), for a return of \(Formatting.string(forPercentage: returnPercentage))?"
+        let confirmationMessage = "Sell \(shareCount) shares of \(transaction.ticker) on \(Formatting.friendlyDateString(forDate: sellDate)) at \(Formatting.string(forCurrency: sellPrice)), producing revenue of \(Formatting.string(forCurrency: revenue)) and a return of \(Formatting.string(forPercentage: returnPercentage))?"
         let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
         
         if confirmed {
