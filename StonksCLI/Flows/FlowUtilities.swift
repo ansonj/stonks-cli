@@ -78,10 +78,18 @@ struct FlowUtilities {
             HeaderCell("Age", alignment: .right),
             HeaderCell("Avg. Return", alignment: .right),
         ]
+        var markedSymbols = Set<String>()
         let rows = displayRows.map { row -> [TableCell] in
             let currentReturnColor = colorPercentage(row.currentReturnPercentage)
             let currentProfitColor = colorProfit(row.profit)
             let avgReturnColor = colorPercentage(row.averageReturnPercentage)
+            let trxnIdDescription: String
+            if markedSymbols.contains(row.ticker) {
+                trxnIdDescription = row.trxnId.description
+            } else {
+                markedSymbols.insert(row.ticker)
+                trxnIdDescription = "> \(row.trxnId.description)"
+            }
             return [
                 TableCell(row.ticker, color: currentReturnColor),
                 TableCell(row.companyName),
@@ -91,7 +99,7 @@ struct FlowUtilities {
                 TableCell(Formatting.string(forCurrency: row.targetPrice)),
                 TableCell(Formatting.string(forCurrency: row.currentPrice), color: currentReturnColor),
                 TableCell(Formatting.string(forPercentage: row.currentReturnPercentage), color: currentReturnColor),
-                TableCell(row.trxnId.description, color: currentReturnColor),
+                TableCell(trxnIdDescription, color: currentReturnColor),
                 TableCell(Formatting.string(forCurrency: row.profit), color: currentProfitColor),
                 TableCell(row.age.description),
                 TableCell(Formatting.string(forPercentage: row.averageReturnPercentage), color: avgReturnColor)
