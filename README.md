@@ -21,6 +21,7 @@ Join [Robinhood](https://join.robinhood.com/ansonj14), etc.
 - Some kind of version number support
     - If this is ever going to be public-facing, people need a way to know what version they're running.
 - A completed `README.md` with usage instructions
+- Print current total average return, just for fun
 - Clean up `TODO`s
 - Implement caching of prices/names in the database
 - Implement a stats view
