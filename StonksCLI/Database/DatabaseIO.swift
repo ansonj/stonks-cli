@@ -220,6 +220,13 @@ struct DatabaseIO {
         return (investment: investment, revenue: revenue)
     }
     
+    static func buyingPower(fromPath path: String) -> Double {
+        let transferBalance = DatabaseIO.transferBalance(fromPath: path)
+        let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: path)
+        let buyingPower = transferBalance - totalInvestment + totalRevenue
+        return buyingPower
+    }
+    
     static func profitNotTransferred(fromPath path: String) -> Double {
         let db = FMDatabase(path: path)
         guard db.open() else {

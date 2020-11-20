@@ -72,15 +72,15 @@ struct MainFlow: Flow {
         let databasePath = configFile.databasePath()
         let transferBalance = DatabaseIO.transferBalance(fromPath: databasePath)
         let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: databasePath)
-        let deducedBuyingPower = transferBalance - totalInvestment + totalRevenue
+        let buyingPower = DatabaseIO.buyingPower(fromPath: databasePath)
         let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: databasePath)
         let totalPendingBuys = DatabaseIO.totalPendingBuys(fromPath: databasePath)
-        let shouldBeZero = deducedBuyingPower - profitNotTransferred - totalPendingBuys
+        let shouldBeZero = buyingPower - profitNotTransferred - totalPendingBuys
         
         let transferBalance_string = Formatting.string(forCurrency: transferBalance)
         let totalInvestment_string = Formatting.string(forCurrency: totalInvestment)
         let totalRevenue_string = Formatting.string(forCurrency: totalRevenue)
-        let buyingPower_string = Formatting.string(forCurrency: deducedBuyingPower)
+        let buyingPower_string = Formatting.string(forCurrency: buyingPower)
         print("Transfer balance - buys + revenue = buying power")
         print("\t", transferBalance_string, "-", totalInvestment_string, "+", totalRevenue_string, "=", buyingPower_string)
         let profitNotTransferred_string = Formatting.string(forCurrency: profitNotTransferred)
