@@ -224,20 +224,9 @@ struct DatabaseIO {
     // MARK: - Pending buys and splits
     
     static func pendingBuys(fromPath path: String) -> [PendingBuy] {
-        let reinvestmentSplits = DatabaseIO.reinvestmentSplits(fromPath: path)
         let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
 
-        let cashReadyForReinvestment = DatabaseIO.totalPendingBuys(fromPath: path)
-        let cashTiedUpInExistingInvestments = activeTransactions.map(\.investment).reduce(0, +)
-        let totalPortfolioSize = cashReadyForReinvestment + cashTiedUpInExistingInvestments
-        
-        var portfolioGoal = [String: Double]()
-        for portfolioMember in reinvestmentSplits {
-            let goalAmount = portfolioMember.percentage * totalPortfolioSize
-            portfolioGoal[portfolioMember.ticker] = goalAmount
-        }
-            
-        var pendingAmounts = portfolioGoal
+        var pendingAmounts = portfolioGoals(fromPath: path)
         for active in activeTransactions {
             if pendingAmounts.keys.contains(active.ticker) {
                 pendingAmounts[active.ticker, default: 0] -= active.investment
@@ -255,6 +244,23 @@ struct DatabaseIO {
             pendingBuys.append(pb)
         }
         return pendingBuys
+    }
+    
+    static func portfolioGoals(fromPath path: String) -> [String: Double] {
+        let reinvestmentSplits = DatabaseIO.reinvestmentSplits(fromPath: path)
+        let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
+
+        let cashReadyForReinvestment = DatabaseIO.totalPendingBuys(fromPath: path)
+        let cashTiedUpInExistingInvestments = activeTransactions.map(\.investment).reduce(0, +)
+        let totalPortfolioSize = cashReadyForReinvestment + cashTiedUpInExistingInvestments
+        
+        var portfolioGoals = [String: Double]()
+        for portfolioMember in reinvestmentSplits {
+            let goalAmount = portfolioMember.percentage * totalPortfolioSize
+            portfolioGoals[portfolioMember.ticker] = goalAmount
+        }
+        
+        return portfolioGoals
     }
     
     static func reinvestmentSplits(fromPath path: String) -> [Split] {
