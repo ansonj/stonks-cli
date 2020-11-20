@@ -83,7 +83,7 @@ struct MainFlow: Flow {
         let totalPendingBuys_string = Formatting.string(forCurrency: totalPendingBuys)
         let shouldBeZero_string = Formatting.string(forCurrency: shouldBeZero)
         let indicator = shouldBeZero.isBasicallyZero ? "\u{2705}" : "\u{274C}"
-        print("Buying power - profit not transferred - pending buys = zero")
+        print("Buying power - profit not transferred - cash ready for reinvestment = zero")
         print("\t", buyingPower_string, "-", profitNotTransferred_string, "-", totalPendingBuys_string, "=", shouldBeZero_string, indicator)
         // TODO: Once per execution, print an explanation of a red indicator means, and what to do about it (and pause before continuing)
         print()
