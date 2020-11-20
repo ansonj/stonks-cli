@@ -136,4 +136,7 @@ private let migrations: [Int : String] = [
     8: """
     ALTER TABLE transfers ADD COLUMN source TEXT;
     """,
+    9: """
+    DROP TABLE pending_buys;
+    """,
 ]
