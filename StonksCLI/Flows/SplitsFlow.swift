@@ -50,9 +50,13 @@ struct SplitsFlow: Flow {
         
         let symbolsFromTransactions = Set<String>(activeTransactions.map(\.ticker))
         let symbolsFromSplits = Set<String>(splits.map(\.ticker))
+        let allSymbols = symbolsFromTransactions.union(symbolsFromSplits)
         
-        var portfolioDisplayRows = symbolsFromTransactions.union(symbolsFromSplits).map { PortfolioDisplayRow(symbol: $0) }
+        priceCache.primeCache(forTickers: allSymbols)
+        
+        var portfolioDisplayRows = allSymbols.map { PortfolioDisplayRow(symbol: $0) }
         for row in portfolioDisplayRows {
+            row.companyName = priceCache.info(forTicker: row.symbol).companyName
             row.goalPortfolioPercentage = splits.first(where: { $0.ticker == row.symbol })?.percentage ?? 0
             row.currentAmount = activeTransactions.filter({ $0.ticker == row.symbol }).map(\.investment).reduce(0, +)
             row.currentPortfolioPercentage = row.currentAmount / totalActiveFunds
@@ -67,6 +71,7 @@ struct SplitsFlow: Flow {
             HeaderCell("Goal $", alignment: .right),
             HeaderCell("Current %", alignment: .right),
             HeaderCell("Current $", alignment: .right),
+            HeaderCell("Company Name", alignment: .left)
         ]
         let rows = portfolioDisplayRows.map {
             [
@@ -74,7 +79,8 @@ struct SplitsFlow: Flow {
                 TableCell(Formatting.string(forPercentage: $0.goalPortfolioPercentage)),
                 TableCell(Formatting.string(forCurrency: $0.goalAmount)),
                 TableCell(Formatting.string(forPercentage: $0.currentPortfolioPercentage)),
-                TableCell(Formatting.string(forCurrency: $0.currentAmount))
+                TableCell(Formatting.string(forCurrency: $0.currentAmount)),
+                TableCell($0.companyName)
             ]
         }
         print(Table.renderTable(withHeaders: headers, rows: rows))
@@ -98,6 +104,7 @@ private struct SplitDisplayRow {
 
 private class PortfolioDisplayRow {
     let symbol: String
+    var companyName: String = ""
     var currentPortfolioPercentage: Double = 0
     var goalPortfolioPercentage: Double = 0
     var currentAmount: Double = 0
