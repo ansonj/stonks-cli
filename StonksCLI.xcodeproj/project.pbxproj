@@ -28,7 +28,6 @@
 		A3FFA12524F0D475003228BF /* SplitsFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12424F0D475003228BF /* SplitsFlow.swift */; };
 		A3FFA12724F1A0BB003228BF /* TransferFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12624F1A0BB003228BF /* TransferFlow.swift */; };
 		A3FFA12924F1B75B003228BF /* SellFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12824F1B75B003228BF /* SellFlow.swift */; };
-		A3FFA12B24F1C1D0003228BF /* ResetPendingBuysFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12A24F1C1D0003228BF /* ResetPendingBuysFlow.swift */; };
 		A3FFA12D24F204C4003228BF /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA12C24F204C4003228BF /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,7 +65,6 @@
 		A3FFA12424F0D475003228BF /* SplitsFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitsFlow.swift; sourceTree = "<group>"; };
 		A3FFA12624F1A0BB003228BF /* TransferFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferFlow.swift; sourceTree = "<group>"; };
 		A3FFA12824F1B75B003228BF /* SellFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellFlow.swift; sourceTree = "<group>"; };
-		A3FFA12A24F1C1D0003228BF /* ResetPendingBuysFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPendingBuysFlow.swift; sourceTree = "<group>"; };
 		A3FFA12C24F204C4003228BF /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,7 +120,6 @@
 				A3FFA12824F1B75B003228BF /* SellFlow.swift */,
 				A3FFA12624F1A0BB003228BF /* TransferFlow.swift */,
 				A3FFA12424F0D475003228BF /* SplitsFlow.swift */,
-				A3FFA12A24F1C1D0003228BF /* ResetPendingBuysFlow.swift */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -237,7 +234,6 @@
 				A3FFA12024EF2D0D003228BF /* Table.swift in Sources */,
 				A3FFA10224E172DC003228BF /* IEXCloudAPI.swift in Sources */,
 				A3FFA10F24E8765C003228BF /* MainFlow.swift in Sources */,
-				A3FFA12B24F1C1D0003228BF /* ResetPendingBuysFlow.swift in Sources */,
 				A3FFA0FC24E02407003228BF /* SetupFlow.swift in Sources */,
 				A3FFA10B24E56E26003228BF /* DatabaseFileManager.swift in Sources */,
 				A3FFA11B24EE093D003228BF /* PriceCache.swift in Sources */,
