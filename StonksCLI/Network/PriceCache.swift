@@ -43,11 +43,6 @@ class InMemoryPriceCache: PriceCache {
         if !storage.keys.contains(ticker) {
             primeCache(forTickers: Set<String>([ticker]))
         }
-        let errorInfo = StockInfo(ticker: Utilities.errorString,
-                                  companyName: Utilities.errorString,
-                                  price: 0,
-                                  todaysChangePercentage: 0,
-                                  timestamp: Date(timeIntervalSince1970: 0))
-        return storage[ticker] ?? errorInfo
+        return storage[ticker] ?? StockInfo.errorInfo
     }
 }
