@@ -11,6 +11,7 @@ protocol PriceCache {
 
 class InMemoryPriceCache: PriceCache {
     let stockInfoProvider: StockInfoProvider
+    let cryptoInfoProvider = BlockchainAPI.self
     
     var storage: [String : StockInfo] = [:]
     
@@ -32,9 +33,15 @@ class InMemoryPriceCache: PriceCache {
             return
         }
         Logger.log("Fetching latest prices...")
-        let freshData = stockInfoProvider.fetchInfoSynchronously(forTickers: tickersToFetch)
-        freshData.forEach { info in
+        
+        // TODO: Could split this out into a separate protocol or something, but for now, I just want Bitcoin support.
+        let traditionalSymbols = tickersToFetch.subtracting(Set<String>([BlockchainAPI.bitcoinSymbol]))
+        stockInfoProvider.fetchInfoSynchronously(forTickers: traditionalSymbols).forEach { info in
             storage[info.ticker] = info
+        }
+        if tickersToFetch.contains(BlockchainAPI.bitcoinSymbol) {
+            let bitcoinInfo = BlockchainAPI.bitcoinStockInfo()
+            storage[bitcoinInfo.ticker] = bitcoinInfo
         }
         print()
     }
