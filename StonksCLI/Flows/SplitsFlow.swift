@@ -73,13 +73,16 @@ struct SplitsFlow: Flow {
             HeaderCell("Current $", alignment: .right),
             HeaderCell("Company Name", alignment: .left)
         ]
+        let placeholder = "--"
+        let formatPercentage = { p -> String in p == 0 ? placeholder : Formatting.string(forPercentage: p) }
+        let formatCurrency = { c -> String in c == 0 ? placeholder : Formatting.string(forCurrency: c) }
         let rows = portfolioDisplayRows.map {
             [
                 TableCell($0.symbol),
-                TableCell(Formatting.string(forPercentage: $0.goalPortfolioPercentage)),
-                TableCell(Formatting.string(forCurrency: $0.goalAmount)),
-                TableCell(Formatting.string(forPercentage: $0.currentPortfolioPercentage)),
-                TableCell(Formatting.string(forCurrency: $0.currentAmount)),
+                TableCell(formatPercentage($0.goalPortfolioPercentage)),
+                TableCell(formatCurrency($0.goalAmount)),
+                TableCell(formatPercentage($0.currentPortfolioPercentage)),
+                TableCell(formatCurrency($0.currentAmount)),
                 TableCell($0.companyName)
             ]
         }
