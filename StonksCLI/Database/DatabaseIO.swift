@@ -233,7 +233,7 @@ struct DatabaseIO {
             }
         }
         for pending in pendingAmounts.keys {
-            if pendingAmounts[pending, default: 0] <= 0 {
+            if pendingAmounts[pending, default: 0] <= 0.01 {
                 pendingAmounts.removeValue(forKey: pending)
             }
         }
