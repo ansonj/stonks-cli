@@ -1,6 +1,8 @@
 import Foundation
 
 struct Formatting {
+    // MARK: - Currency
+    
     private static let currencyFormatter = { () -> NumberFormatter in
         let fmt = NumberFormatter()
         fmt.numberStyle = .currency
@@ -9,6 +11,8 @@ struct Formatting {
     static func string(forCurrency c: Double) -> String {
         return currencyFormatter.string(from: NSNumber(value: c)) ?? "$?.??"
     }
+    
+    // MARK: - Percentage
     
     private static let percentageFormatter = { () -> NumberFormatter in
         let fmt = NumberFormatter()
@@ -21,6 +25,8 @@ struct Formatting {
         return percentageFormatter.string(from: NSNumber(value: p)) ?? "?.??%"
     }
     
+    // MARK: - Doubles
+    
     private static let doubleFormatter = { () -> NumberFormatter in
         let fmt = NumberFormatter()
         fmt.numberStyle = .decimal
@@ -31,6 +37,8 @@ struct Formatting {
     static func string(forDouble d: Double) -> String {
         return doubleFormatter.string(from: NSNumber(value: d)) ?? "?.??????"
     }
+    
+    // MARK: - Dates
     
     private static let friendlyDateFormatter = { () -> DateFormatter in
         let fmt = DateFormatter()
