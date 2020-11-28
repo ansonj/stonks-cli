@@ -33,7 +33,7 @@ struct SplitsFlow: Flow {
             [
                 TableCell($0.ticker),
                 TableCell(Formatting.string(forPercentage: $0.percentage)),
-                TableCell(Formatting.string(forDouble: $0.weight)),
+                TableCell(Formatting.string(forNormalDouble: $0.weight)),
                 TableCell($0.companyName)
             ]
         }
