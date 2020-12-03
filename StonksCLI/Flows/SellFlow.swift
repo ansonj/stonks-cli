@@ -13,7 +13,10 @@ struct SellFlow: Flow {
                 oldestActiveTransactions.append(trxn)
             }
         }
-        let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: oldestActiveTransactions, markSellableRows: false)
+        let reinvestmentSymbols = DatabaseIO.reinvestmentSplits(fromPath: configFile.databasePath()).map { $0.ticker }
+        let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: oldestActiveTransactions,
+                                                                markSellableRows: false,
+                                                                reinvestmentSymbols: reinvestmentSymbols)
         let table = Table.renderTable(withHeaders: headers, rows: rows)
         print(table)
         

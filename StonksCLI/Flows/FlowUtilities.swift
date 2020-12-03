@@ -43,7 +43,7 @@ struct FlowUtilities {
         return displayRows
     }
     
-    static func tableHeadersAndRows(forDisplayRows displayRows: [ActiveDisplayRow], markSellableRows: Bool) -> (headers: [HeaderCell], rows: [[TableCell]]) {
+    static func tableHeadersAndRows(forDisplayRows displayRows: [ActiveDisplayRow], markSellableRows: Bool, reinvestmentSymbols: [String]) -> (headers: [HeaderCell], rows: [[TableCell]]) {
         let colorPercentage = { (p: Double) -> TerminalTextColor in
             if p < 0 {
                 return .red
@@ -84,12 +84,22 @@ struct FlowUtilities {
             let currentReturnColor = colorPercentage(row.currentReturnPercentage)
             let currentProfitColor = colorProfit(row.profit)
             let avgReturnColor = colorPercentage(row.averageReturnPercentage)
-            let trxnIdDescription: String
+            let glyph: String?
             if !markSellableRows || markedSymbols.contains(row.ticker) {
-                trxnIdDescription = row.trxnId.description
+                glyph = nil
             } else {
                 markedSymbols.insert(row.ticker)
-                trxnIdDescription = "> \(row.trxnId.description)"
+                if reinvestmentSymbols.contains(row.ticker) {
+                    glyph = ">"
+                } else {
+                    glyph = "X"
+                }
+            }
+            let trxnIdDescription: String
+            if let glyph = glyph {
+                trxnIdDescription = glyph + " " + row.trxnId.description
+            } else {
+                trxnIdDescription = row.trxnId.description
             }
             return [
                 TableCell(trxnIdDescription, color: currentReturnColor),
