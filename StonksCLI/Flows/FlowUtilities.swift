@@ -65,6 +65,7 @@ struct FlowUtilities {
         }
         
         let headers = [
+            HeaderCell("ID #", alignment: .right),
             HeaderCell("Symbol", alignment: .left),
             HeaderCell("Company Name", alignment: .left),
             HeaderCell("Investment", alignment: .right),
@@ -91,6 +92,7 @@ struct FlowUtilities {
                 trxnIdDescription = "> \(row.trxnId.description)"
             }
             return [
+                TableCell(trxnIdDescription, color: currentReturnColor),
                 TableCell(row.ticker, color: currentReturnColor),
                 TableCell(row.companyName),
                 TableCell(Formatting.string(forCurrency: row.investment)),
