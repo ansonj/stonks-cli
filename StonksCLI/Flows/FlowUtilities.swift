@@ -94,7 +94,7 @@ struct FlowUtilities {
                 TableCell(row.ticker, color: currentReturnColor),
                 TableCell(row.companyName),
                 TableCell(Formatting.string(forCurrency: row.investment)),
-                TableCell(Formatting.string(forDouble: row.shares)),
+                TableCell(Formatting.string(forNormalDouble: row.shares)),
                 TableCell(Formatting.string(forCurrency: row.costBasis)),
                 TableCell(Formatting.string(forCurrency: row.targetPrice)),
                 TableCell(Formatting.string(forCurrency: row.currentPrice), color: currentReturnColor),

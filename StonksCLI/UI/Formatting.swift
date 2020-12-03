@@ -1,6 +1,8 @@
 import Foundation
 
 struct Formatting {
+    // MARK: - Currency
+    
     private static let currencyFormatter = { () -> NumberFormatter in
         let fmt = NumberFormatter()
         fmt.numberStyle = .currency
@@ -9,6 +11,8 @@ struct Formatting {
     static func string(forCurrency c: Double) -> String {
         return currencyFormatter.string(from: NSNumber(value: c)) ?? "$?.??"
     }
+    
+    // MARK: - Percentage
     
     private static let percentageFormatter = { () -> NumberFormatter in
         let fmt = NumberFormatter()
@@ -21,16 +25,32 @@ struct Formatting {
         return percentageFormatter.string(from: NSNumber(value: p)) ?? "?.??%"
     }
     
-    private static let doubleFormatter = { () -> NumberFormatter in
+    // MARK: - Doubles
+    
+    private static let normalDoubleLength = 6
+    private static let normalDoubleFormatter = { () -> NumberFormatter in
         let fmt = NumberFormatter()
         fmt.numberStyle = .decimal
-        fmt.minimumFractionDigits = 6
-        fmt.maximumFractionDigits = 6
+        fmt.minimumFractionDigits = normalDoubleLength
+        fmt.maximumFractionDigits = normalDoubleLength
         return fmt
     }()
-    static func string(forDouble d: Double) -> String {
-        return doubleFormatter.string(from: NSNumber(value: d)) ?? "?.??????"
+    static func string(forNormalDouble d: Double) -> String {
+        return normalDoubleFormatter.string(from: NSNumber(value: d)) ?? "?.\(String(repeating: "?", count: normalDoubleLength))"
     }
+    private static let longDoubleLength = 8
+    private static let longDoubleFormatter = { () -> NumberFormatter in
+        let fmt = NumberFormatter()
+        fmt.numberStyle = .decimal
+        fmt.minimumFractionDigits = longDoubleLength
+        fmt.maximumFractionDigits = longDoubleLength
+        return fmt
+    }()
+    static func string(forLongDouble d: Double) -> String {
+        return longDoubleFormatter.string(from: NSNumber(value: d)) ?? "?.\(String(repeating: "?", count: longDoubleLength))"
+    }
+    
+    // MARK: - Dates
     
     private static let friendlyDateFormatter = { () -> DateFormatter in
         let fmt = DateFormatter()

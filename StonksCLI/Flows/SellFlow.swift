@@ -40,7 +40,13 @@ struct SellFlow: Flow {
             return
         }
         
-        let shareCount = Formatting.string(forDouble: transaction.shares)
+        let shareCount: String
+        // TODO: Not great to have another hardcoded dependency on .bitcoinSymbol here
+        if transaction.ticker == BlockchainAPI.bitcoinSymbol {
+            shareCount = Formatting.string(forLongDouble: transaction.shares)
+        } else {
+            shareCount = Formatting.string(forNormalDouble: transaction.shares)
+        }
         let confirmedCorrectSale = Prompt.readBoolean(withMessage: "Selling \(shareCount) shares of \(transaction.ticker), correct?")
         guard confirmedCorrectSale else {
             return

@@ -23,6 +23,7 @@ Join [Robinhood](https://join.robinhood.com/ansonj14), etc.
 - A completed `README.md` with usage instructions
 - Print current total average return, just for fun
 - Clean up `TODO`s
+- Figure out what actually happens if the API returns the error info
 - Implement caching of prices/names in the database
 - Implement a stats view
     - Fastest to reach 5% (or whatever your sell threshold is)
