@@ -73,6 +73,7 @@ struct MainFlow: Flow {
         let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: databasePath)
         let buyingPower = DatabaseIO.buyingPower(fromPath: databasePath)
         let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: databasePath)
+        // TODO: Rename these variables so they make sense with the new portfolio autobalancer
         let totalPendingBuys = DatabaseIO.totalPendingBuys(fromPath: databasePath)
         let shouldBeZero = buyingPower - profitNotTransferred - totalPendingBuys
         
