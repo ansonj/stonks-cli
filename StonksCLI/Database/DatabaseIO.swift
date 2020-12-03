@@ -238,9 +238,14 @@ struct DatabaseIO {
             }
         }
         
+        let buyingPower = DatabaseIO.buyingPower(fromPath: path)
+        let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: path)
+        let maxAllowablePurchase = buyingPower - profitNotTransferred
+        
         var pendingBuys = [PendingBuy]()
         for (symbol, amount) in pendingAmounts {
-            let pb = PendingBuy(ticker: symbol, amount: amount)
+            let allowableAmount = min(amount, maxAllowablePurchase)
+            let pb = PendingBuy(ticker: symbol, amount: allowableAmount)
             pendingBuys.append(pb)
         }
         return pendingBuys
