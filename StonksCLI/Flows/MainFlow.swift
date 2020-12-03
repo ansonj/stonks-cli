@@ -14,8 +14,7 @@ struct MainFlow: Flow {
             print("    (b)uy")
             print("    (s)ell")
             print("    (t)ransfer")
-            print("    view (r)einvestment splits")
-            print("    reset (p)ending buys")
+            print("    view (p)ortfolio goals")
             print("    (q)uit")
             print()
             let promptString: String
@@ -41,12 +40,9 @@ struct MainFlow: Flow {
             case "t":
                 let transfer = TransferFlow(configFile: configFile)
                 transfer.run()
-            case "r":
+            case "p":
                 let splits = SplitsFlow(configFile: configFile)
                 splits.run()
-            case "p":
-                let reset = ResetPendingBuysFlow(configFile: configFile)
-                reset.run()
             case "q":
                 exit(0)
             default:
@@ -72,22 +68,22 @@ struct MainFlow: Flow {
         let databasePath = configFile.databasePath()
         let transferBalance = DatabaseIO.transferBalance(fromPath: databasePath)
         let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: databasePath)
-        let deducedBuyingPower = transferBalance - totalInvestment + totalRevenue
+        let buyingPower = DatabaseIO.buyingPower(fromPath: databasePath)
         let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: databasePath)
         let totalPendingBuys = DatabaseIO.totalPendingBuys(fromPath: databasePath)
-        let shouldBeZero = deducedBuyingPower - profitNotTransferred - totalPendingBuys
+        let shouldBeZero = buyingPower - profitNotTransferred - totalPendingBuys
         
         let transferBalance_string = Formatting.string(forCurrency: transferBalance)
         let totalInvestment_string = Formatting.string(forCurrency: totalInvestment)
         let totalRevenue_string = Formatting.string(forCurrency: totalRevenue)
-        let buyingPower_string = Formatting.string(forCurrency: deducedBuyingPower)
+        let buyingPower_string = Formatting.string(forCurrency: buyingPower)
         print("Transfer balance - buys + revenue = buying power")
         print("\t", transferBalance_string, "-", totalInvestment_string, "+", totalRevenue_string, "=", buyingPower_string)
         let profitNotTransferred_string = Formatting.string(forCurrency: profitNotTransferred)
         let totalPendingBuys_string = Formatting.string(forCurrency: totalPendingBuys)
         let shouldBeZero_string = Formatting.string(forCurrency: shouldBeZero)
         let indicator = shouldBeZero.isBasicallyZero ? "\u{2705}" : "\u{274C}"
-        print("Buying power - profit not transferred - pending buys = zero")
+        print("Buying power - profit not transferred - cash ready for reinvestment = zero")
         print("\t", buyingPower_string, "-", profitNotTransferred_string, "-", totalPendingBuys_string, "=", shouldBeZero_string, indicator)
         // TODO: Once per execution, print an explanation of a red indicator means, and what to do about it (and pause before continuing)
         print()

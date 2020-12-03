@@ -34,27 +34,6 @@ struct DatabaseIO {
                 investment / shares
             ]
             try db.executeUpdate("INSERT INTO transactions (ticker, investment, shares, buy_date, cost_basis) VALUES (?, ?, ?, ?, ?)", values: values)
-            
-            // Update the pending buys to account for the buy
-            let currentPendingBuys = pendingBuys(fromDatabase: db)
-            // TODO: Maybe later, auto-update pending buys by pulling out the spent amount evenly by percentage from the other pending buys
-            if currentPendingBuys.map({ $0.ticker }).contains(ticker) {
-                let pendingAmount = currentPendingBuys.filter({ $0.ticker == ticker }).first!.amount
-                if investment > pendingAmount && !((investment - pendingAmount).isBasicallyZero) {
-                    print("You bought \(Formatting.string(forCurrency: investment)), but only \(Formatting.string(forCurrency: pendingAmount)) was pending.")
-                    print("This will invalidate your checksum.")
-                    print("Use the reset option from the main menu, or edit your pending buys manually.")
-                    Prompt.pauseThenContinue()
-                }
-                let updatedPendingAmount = (pendingAmount - investment).roundToZeroIfLessThanOneCent
-                try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [updatedPendingAmount, ticker])
-                try deleteEmptyPendingBuys(fromDatabase: db)
-            } else {
-                print("You bought something that wasn't in your pending buys.")
-                print("This will invalidate your checksum.")
-                print("Use the reset option from the main menu, or edit your pending buys manually.")
-                Prompt.pauseThenContinue()
-            }
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "recording buy")
         }
@@ -149,21 +128,6 @@ struct DatabaseIO {
             
             // Record profit
             try addToProfitNotTransferred(profit, inOpenDatabase: db)
-            
-            // Redistribute investment
-            let splits = reinvestmentSplits(fromDatabase: db)
-            // If we lost money, we can only reinvest what we got back
-            let reinvestmentAmount = min(investment, revenue)
-            if splits.map({ $0.ticker }).contains(ticker) {
-                // If the sell was of a stock that we are actively investing in, just carry over the amount directly
-                let pending = pendingBuys(fromDatabase: db)
-                let existingPendingAmount = pending.filter({ $0.ticker == ticker }).first?.amount ?? 0
-                let newPendingAmount = existingPendingAmount + reinvestmentAmount
-                try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [newPendingAmount, ticker])
-            } else {
-                // If the sell was of something that's not in our splits, redistribute the amount evenly
-                try executeReinvestmentSplit(inDatabase: db, amount: reinvestmentAmount)
-            }
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "recording sell")
         }
@@ -220,6 +184,13 @@ struct DatabaseIO {
         return (investment: investment, revenue: revenue)
     }
     
+    static func buyingPower(fromPath path: String) -> Double {
+        let transferBalance = DatabaseIO.transferBalance(fromPath: path)
+        let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: path)
+        let buyingPower = transferBalance - totalInvestment + totalRevenue
+        return buyingPower
+    }
+    
     static func profitNotTransferred(fromPath path: String) -> Double {
         let db = FMDatabase(path: path)
         guard db.open() else {
@@ -244,71 +215,52 @@ struct DatabaseIO {
     }
     
     static func totalPendingBuys(fromPath path: String) -> Double {
-        let db = FMDatabase(path: path)
-        guard db.open() else {
-            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get total pending buys")
-        }
-        let pendingBuyTotal: Double
-        do {
-            let results = try db.executeQuery("SELECT SUM(amount) AS amount FROM pending_buys;", values: nil)
-            guard results.next() else {
-                Prompt.exitStonks(withMessage: "Couldn't get next row in totalPendingBuys()")
-            }
-            pendingBuyTotal = results.double(forColumn: "amount")
-        } catch let error {
-            DatabaseUtilities.exitWithError(error, duringActivity: "fetching total pending buys")
-        }
-        return pendingBuyTotal
+        let buyingPower = DatabaseIO.buyingPower(fromPath: path)
+        let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: path)
+        let totalPendingBuys = buyingPower - profitNotTransferred
+        return totalPendingBuys
     }
     
     // MARK: - Pending buys and splits
     
     static func pendingBuys(fromPath path: String) -> [PendingBuy] {
-        let db = FMDatabase(path: path)
-        guard db.open() else {
-            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to fetch pending buys")
-        }
-        return pendingBuys(fromDatabase: db)
-    }
-    
-    // TODO: This should really return a [String : Double].
-    private static func pendingBuys(fromDatabase db: FMDatabase) -> [PendingBuy] {
-        var buys = [PendingBuy]()
-        do {
-            let results = try db.executeQuery("SELECT ticker, amount FROM pending_buys;", values: nil)
-            while results.next() {
-                let ticker = results.string(forColumn: "ticker") ?? Utilities.errorString
-                let amount = results.double(forColumn: "amount")
-                buys.append(PendingBuy(ticker: ticker, amount: amount))
+        let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
+
+        var pendingAmounts = portfolioGoals(fromPath: path)
+        for active in activeTransactions {
+            if pendingAmounts.keys.contains(active.ticker) {
+                pendingAmounts[active.ticker, default: 0] -= active.investment
             }
-        } catch let error {
-            DatabaseUtilities.exitWithError(error, duringActivity: "fetching pending buys")
         }
-        return buys
+        for pending in pendingAmounts.keys {
+            if pendingAmounts[pending, default: 0] <= 0.01 {
+                pendingAmounts.removeValue(forKey: pending)
+            }
+        }
+        
+        var pendingBuys = [PendingBuy]()
+        for (symbol, amount) in pendingAmounts {
+            let pb = PendingBuy(ticker: symbol, amount: amount)
+            pendingBuys.append(pb)
+        }
+        return pendingBuys
     }
     
-    static func resetPendingBuys(inPath path: String) {
-        let transferBalance = DatabaseIO.transferBalance(fromPath: path)
-        let (totalInvestment, totalRevenue) = DatabaseIO.totalInvestmentAndRevenue(fromPath: path)
-        let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: path)
-        let availableBuyingPower = (transferBalance - totalInvestment + totalRevenue - profitNotTransferred).roundToZeroIfLessThanOneCent
+    static func portfolioGoals(fromPath path: String) -> [String: Double] {
+        let reinvestmentSplits = DatabaseIO.reinvestmentSplits(fromPath: path)
+        let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
+
+        let cashReadyForReinvestment = DatabaseIO.totalPendingBuys(fromPath: path)
+        let cashTiedUpInExistingInvestments = activeTransactions.map(\.investment).reduce(0, +)
+        let totalPortfolioSize = cashReadyForReinvestment + cashTiedUpInExistingInvestments
         
-        let db = FMDatabase(path: path)
-        guard db.open() else {
-            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to reset pending buys")
+        var portfolioGoals = [String: Double]()
+        for portfolioMember in reinvestmentSplits {
+            let goalAmount = portfolioMember.percentage * totalPortfolioSize
+            portfolioGoals[portfolioMember.ticker] = goalAmount
         }
-        guard db.beginTransaction() else {
-            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while resetting pending buys")
-        }
-        do {
-            try db.executeUpdate("DELETE FROM pending_buys;", values: nil)
-            try executeReinvestmentSplit(inDatabase: db, amount: availableBuyingPower)
-        } catch let error {
-            DatabaseUtilities.exitWithError(error, duringActivity: "resetting pending buys")
-        }
-        guard db.commit() else {
-            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while resetting pending buys")
-        }
+        
+        return portfolioGoals
     }
     
     static func reinvestmentSplits(fromPath path: String) -> [Split] {
@@ -344,36 +296,6 @@ struct DatabaseIO {
             Prompt.exitStonks(withMessage: "Double-check your splits. You may have duplicate symbols.")
         }
         return completedSplits
-    }
-    
-    private static func executeReinvestmentSplit(inDatabase db: FMDatabase, amount: Double) throws {
-        let splits = reinvestmentSplits(fromDatabase: db)
-        
-        // TODO: There is probably a cleaner and Swift-ier way to write all this, but this will do for now.
-        let currentPendingBuys = pendingBuys(fromDatabase: db)
-        var pendingBuyDictionary = [String : Double]()
-        currentPendingBuys.forEach { buy in
-            pendingBuyDictionary[buy.ticker] = buy.amount
-        }
-        guard pendingBuyDictionary.count == currentPendingBuys.count else {
-            Prompt.exitStonks(withMessage: "Your pending buys have duplicate symbols. Please resolve this manually.")
-        }
-        
-        try splits.forEach { split in
-            let symbol = split.ticker
-            let amountToAdd = amount * split.percentage
-            if pendingBuyDictionary.keys.contains(symbol) {
-                let newAmount = pendingBuyDictionary[symbol, default: 0] + amountToAdd
-                try db.executeUpdate("UPDATE pending_buys SET amount = ? WHERE ticker = ?;", values: [newAmount, symbol])
-            } else {
-                try db.executeUpdate("INSERT INTO pending_buys (ticker, amount) VALUES (?, ?);", values: [symbol, amountToAdd])
-            }
-        }
-        try deleteEmptyPendingBuys(fromDatabase: db)
-    }
-    
-    private static func deleteEmptyPendingBuys(fromDatabase db: FMDatabase) throws {
-        try db.executeUpdate("DELETE FROM pending_buys WHERE amount < ?", values: [0.01])
     }
     
     static func addDefaultSplits(toPath path: String) {
@@ -421,7 +343,6 @@ struct DatabaseIO {
                 DatabaseKeys.transfers_type_deposit
             ]
             try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?)", values: values)
-            try executeReinvestmentSplit(inDatabase: db, amount: amount)
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "recording deposit")
         }
