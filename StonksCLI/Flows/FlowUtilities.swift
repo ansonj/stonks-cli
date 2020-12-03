@@ -84,19 +84,17 @@ struct FlowUtilities {
             let currentReturnColor = colorPercentage(row.currentReturnPercentage)
             let currentProfitColor = colorProfit(row.profit)
             let avgReturnColor = colorPercentage(row.averageReturnPercentage)
-            let glyph: String?
-            if !markSellableRows || markedSymbols.contains(row.ticker) {
-                glyph = nil
-            } else {
-                markedSymbols.insert(row.ticker)
-                if reinvestmentSymbols.contains(row.ticker) {
-                    glyph = ">"
-                } else {
+            var glyph: String? = nil
+            if !markedSymbols.contains(row.ticker) {
+                if !reinvestmentSymbols.contains(row.ticker) {
                     glyph = "X"
+                } else if markSellableRows {
+                    glyph = ">"
                 }
             }
             let trxnIdDescription: String
             if let glyph = glyph {
+                markedSymbols.insert(row.ticker)
                 trxnIdDescription = glyph + " " + row.trxnId.description
             } else {
                 trxnIdDescription = row.trxnId.description
