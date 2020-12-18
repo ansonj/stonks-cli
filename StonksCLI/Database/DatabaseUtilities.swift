@@ -20,6 +20,11 @@ struct DatabaseUtilities {
         return dateFormatter.string(from: date)
     }
     
+    static func subsequentYearMonth(forYearMonth yearMonth: String) -> String {
+        // FIXME: Implement
+        return "2020-12"
+    }
+    
     // MARK: Exiting
     
     static func exitWithError(fromDatabase db: FMDatabase, duringActivity activity: String) -> Never {

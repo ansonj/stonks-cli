@@ -23,3 +23,20 @@ struct Split {
     let weight: Double
     let percentage: Double
 }
+
+struct StatementEntry {
+    enum Activity {
+        case buy
+        case sell
+        case crypto
+        case ach
+    }
+    
+    let trxnId: Int
+    let symbol: String
+    let activity: Activity
+    let date: Date
+    let shares: Double
+    let costBasis: Double
+    let amount: Double
+}

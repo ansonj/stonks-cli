@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A3676917258A551F00043E8A /* StatementsFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3676916258A551F00043E8A /* StatementsFlow.swift */; };
 		A37275FB256B2911006D93BF /* BlockchainAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37275FA256B2911006D93BF /* BlockchainAPI.swift */; };
 		A387DB232505543600183BC5 /* FlowUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A387DB222505543600183BC5 /* FlowUtilities.swift */; };
 		A3FFA0F124E022BE003228BF /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3FFA0F024E022BE003228BF /* main.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A3676916258A551F00043E8A /* StatementsFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementsFlow.swift; sourceTree = "<group>"; };
 		A37275FA256B2911006D93BF /* BlockchainAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockchainAPI.swift; sourceTree = "<group>"; };
 		A387DB222505543600183BC5 /* FlowUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowUtilities.swift; sourceTree = "<group>"; };
 		A3FFA0ED24E022BE003228BF /* StonksCLI */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = StonksCLI; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +124,7 @@
 				A3FFA12824F1B75B003228BF /* SellFlow.swift */,
 				A3FFA12624F1A0BB003228BF /* TransferFlow.swift */,
 				A3FFA12424F0D475003228BF /* SplitsFlow.swift */,
+				A3676916258A551F00043E8A /* StatementsFlow.swift */,
 			);
 			path = Flows;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 				A3FFA11B24EE093D003228BF /* PriceCache.swift in Sources */,
 				A3FFA10D24E85504003228BF /* Logger.swift in Sources */,
 				A3FFA12924F1B75B003228BF /* SellFlow.swift in Sources */,
+				A3676917258A551F00043E8A /* StatementsFlow.swift in Sources */,
 				A3FFA11324E8819E003228BF /* DatabaseIO.swift in Sources */,
 				A3FFA11924EE00DC003228BF /* DatabaseTypes.swift in Sources */,
 			);
