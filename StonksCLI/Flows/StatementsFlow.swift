@@ -7,8 +7,34 @@ struct StatementsFlow: Flow {
         // 2020-07 is used in honor of the month in which I started investing
         let yearMonthString = Prompt.readString(withMessage: "What month would you like to reconcile (e.g., '2020-07')?")
         let statementEntries = DatabaseIO.allStatementEntries(fromPath: configFile.databasePath(), forMonth: yearMonthString)
+        print()
         
-        print(statementEntries)
+        let headers = [
+            HeaderCell("ID #", alignment: .right),
+            HeaderCell("Symbol", alignment: .left),
+            HeaderCell("Activity", alignment: .left),
+            HeaderCell("Date", alignment: .right),
+            HeaderCell("Qty", alignment: .right),
+            HeaderCell("Price", alignment: .right),
+            HeaderCell("Debit", alignment: .right),
+            HeaderCell("Credit", alignment: .right)
+        ]
+        let rows = statementEntries.map { row -> [TableCell] in
+            return [
+                TableCell(row.trxnId.description),
+                TableCell(row.symbol),
+                TableCell(row.activity.description),
+                TableCell(Formatting.shortDateString(forDate: row.date)),
+                TableCell(row.activity == .crypto ? Formatting.string(forLongDouble: row.shares) : Formatting.string(forNormalDouble: row.shares)),
+                TableCell(Formatting.string(forCurrency: row.costBasis)),
+                TableCell(row.amount < 0 ? Formatting.string(forCurrency: row.amount * -1) : ""),
+                TableCell(row.amount > 0 ? Formatting.string(forCurrency: row.amount) : "")
+            ]
+        }
+        let table = Table.renderTable(withHeaders: headers, rows: rows)
+        print(table)
+        print()
+        
         Prompt.pauseThenContinue()
         
         // FIXME: Implement the rest of this flow

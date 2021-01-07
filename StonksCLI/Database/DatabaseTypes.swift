@@ -30,6 +30,15 @@ struct StatementEntry {
         case sell
         case crypto
         case ach
+        
+        var description: String {
+            switch self {
+            case .buy:    return "Buy"
+            case .sell:   return "Sell"
+            case .crypto: return "Crypto"
+            case .ach:    return "ACH"
+            }
+        }
     }
     
     let trxnId: Int
