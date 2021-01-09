@@ -134,8 +134,29 @@ struct DatabaseIO {
     }
     
     private static func statementEntriesFromClosedSells(fromDatabase db: FMDatabase, forMonth yearMonth: String) throws -> [StatementEntry] {
-        // FIXME: Grab sells // same, mark as .coin
-        return []
+        let nextYearMonth = DatabaseUtilities.subsequentYearMonth(forYearMonth: yearMonth)
+        
+        var entries = [StatementEntry]()
+        
+        let results = try db.executeQuery("SELECT trxn_id, ticker, shares, sell_date, sell_price, revenue FROM transactions WHERE sell_date NOT NULL AND sell_date > ? AND sell_date < ?", values: [yearMonth, nextYearMonth])
+        while results.next() {
+            let trxnId = results.long(forColumn: "trxn_id")
+            let ticker = results.string(forColumn: "ticker") ?? Utilities.errorString
+            let shares = results.double(forColumn: "shares")
+            let sellDate = results.string(forColumn: "sell_date") ?? Utilities.errorString
+            let sellPrice = results.double(forColumn: "sell_price")
+            let revenue = results.double(forColumn: "revenue")
+            let activity: StatementEntry.Activity = ticker == BlockchainAPI.bitcoinSymbol ? .crypto : .sell
+            let entry = StatementEntry(trxnId: trxnId,
+                                       symbol: ticker,
+                                       activity: activity,
+                                       date: DatabaseUtilities.date(fromString: sellDate),
+                                       shares: shares,
+                                       costBasis: sellPrice,
+                                       amount: revenue)
+            entries.append(entry)
+        }
+        return entries
     }
     
     private static func statementEntriesFromTransfers(fromDatabse db: FMDatabase, forMonth yearMonth: String) throws -> [StatementEntry] {
