@@ -41,11 +41,11 @@ struct StatementEntry {
         }
     }
     
-    let trxnId: Int
+    let trxnId: Int?
     let symbol: String
     let activity: Activity
     let date: Date
-    let shares: Double
-    let costBasis: Double
+    let shares: Double?
+    let costBasis: Double?
     let amount: Double
 }

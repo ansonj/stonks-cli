@@ -20,13 +20,24 @@ struct StatementsFlow: Flow {
             HeaderCell("Credit", alignment: .right)
         ]
         let rows = statementEntries.map { row -> [TableCell] in
+            let sharesDescription: String
+            if let rowShares = row.shares {
+                if row.activity == .crypto {
+                    sharesDescription = Formatting.string(forLongDouble: rowShares)
+                } else {
+                    sharesDescription = Formatting.string(forNormalDouble: rowShares)
+                }
+            } else {
+                sharesDescription = ""
+            }
+            let costBasisDescription: String = row.costBasis.map(Formatting.string(forCurrency:)) ?? ""
             return [
-                TableCell(row.trxnId.description),
+                TableCell(row.trxnId?.description ?? ""),
                 TableCell(row.symbol),
                 TableCell(row.activity.description),
                 TableCell(Formatting.shortDateString(forDate: row.date)),
-                TableCell(row.activity == .crypto ? Formatting.string(forLongDouble: row.shares) : Formatting.string(forNormalDouble: row.shares)),
-                TableCell(Formatting.string(forCurrency: row.costBasis)),
+                TableCell(sharesDescription),
+                TableCell(costBasisDescription),
                 TableCell(row.amount < 0 ? Formatting.string(forCurrency: row.amount * -1) : ""),
                 TableCell(row.amount > 0 ? Formatting.string(forCurrency: row.amount) : "")
             ]
