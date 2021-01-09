@@ -36,7 +36,7 @@ class StatementEntry {
             switch self {
             case .buy:          return "Buy"
             case .sell:         return "Sell"
-            case .crypto:       return "Crypto"
+            case .crypto:       return "COIN"
             case .ach:          return "ACH"
             case .cashDividend: return "CDIV"
             }
