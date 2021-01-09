@@ -21,37 +21,46 @@ struct StatementsFlow: Flow {
             HeaderCell("Rec #", alignment: .right),
             HeaderCell("Cleared", alignment: .left)
         ]
-        let rows = statementEntries.map { row -> [TableCell] in
-            let sharesDescription: String
-            if let rowShares = row.shares {
-                if row.activity == .crypto {
-                    sharesDescription = Formatting.string(forLongDouble: rowShares)
+        
+        while true {
+            let rows = statementEntries.map { row -> [TableCell] in
+                let sharesDescription: String
+                if let rowShares = row.shares {
+                    if row.activity == .crypto {
+                        sharesDescription = Formatting.string(forLongDouble: rowShares)
+                    } else {
+                        sharesDescription = Formatting.string(forNormalDouble: rowShares)
+                    }
                 } else {
-                    sharesDescription = Formatting.string(forNormalDouble: rowShares)
+                    sharesDescription = ""
                 }
-            } else {
-                sharesDescription = ""
+                let costBasisDescription: String = row.costBasis.map(Formatting.string(forCurrency:)) ?? ""
+                return [
+                    TableCell(row.trxnId?.description ?? ""),
+                    TableCell(row.symbol),
+                    TableCell(row.activity.description),
+                    TableCell(Formatting.shortDateString(forDate: row.date)),
+                    TableCell(sharesDescription),
+                    TableCell(costBasisDescription),
+                    TableCell(row.amount < 0 ? Formatting.string(forCurrency: row.amount * -1) : ""),
+                    TableCell(row.amount > 0 ? Formatting.string(forCurrency: row.amount) : ""),
+                    TableCell(row.reconciliationId.description),
+                    TableCell(row.reconciled ? "X" : "")
+                ]
             }
-            let costBasisDescription: String = row.costBasis.map(Formatting.string(forCurrency:)) ?? ""
-            return [
-                TableCell(row.trxnId?.description ?? ""),
-                TableCell(row.symbol),
-                TableCell(row.activity.description),
-                TableCell(Formatting.shortDateString(forDate: row.date)),
-                TableCell(sharesDescription),
-                TableCell(costBasisDescription),
-                TableCell(row.amount < 0 ? Formatting.string(forCurrency: row.amount * -1) : ""),
-                TableCell(row.amount > 0 ? Formatting.string(forCurrency: row.amount) : ""),
-                TableCell(row.reconciliationId.description),
-                TableCell(row.reconciled ? "X" : "")
-            ]
+            let table = Table.renderTable(withHeaders: headers, rows: rows)
+            print(table)
+            print()
+            
+            let inputString = Prompt.readString(withMessage: "Enter Rec # to mark as cleared/uncleared, or 0 to exit.")
+            guard let recId = Int(inputString), recId > 0 else {
+                break
+            }
+            let index = recId - 1
+            guard index < statementEntries.count else {
+                continue
+            }
+            statementEntries[index].reconciled.toggle()
         }
-        let table = Table.renderTable(withHeaders: headers, rows: rows)
-        print(table)
-        print()
-        
-        Prompt.pauseThenContinue()
-        
-        // FIXME: Implement the rest of this flow
     }
 }
