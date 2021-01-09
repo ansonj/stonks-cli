@@ -50,6 +50,8 @@ struct StatementsFlow: Flow {
             }
             let table = Table.renderTable(withHeaders: headers, rows: rows)
             print(table)
+            let clearedCount = statementEntries.filter({ $0.reconciled }).count
+            print("Cleared ", clearedCount, "/", statementEntries.count, (clearedCount == statementEntries.count ? " \u{2705}" : ""))
             print()
             
             let inputString = Prompt.readString(withMessage: "Enter Rec # to mark as cleared/uncleared, or 0 to exit.")
