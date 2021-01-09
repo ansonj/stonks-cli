@@ -3,10 +3,12 @@ import FMDB
 struct DatabaseKeys {
     static let settings_version = "version"
     
-    static let transfers_type_deposit = "deposit"
-    static let transfers_type_dividend = "dividend"
-    
     static let stats_profitNotTransferred = "profit_not_transferred"
+}
+
+private enum DatabaseTransferType: String {
+    case deposit = "deposit"
+    case dividend = "dividend"
 }
 
 struct DatabaseIO {
@@ -414,7 +416,7 @@ struct DatabaseIO {
             let values: [Any] = [
                 date,
                 amount,
-                DatabaseKeys.transfers_type_deposit
+                DatabaseTransferType.deposit.rawValue
             ]
             try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?)", values: values)
         } catch let error {
@@ -442,7 +444,7 @@ struct DatabaseIO {
             let values: [Any] = [
                 date,
                 amount,
-                DatabaseKeys.transfers_type_dividend,
+                DatabaseTransferType.dividend.rawValue,
                 symbol
             ]
             try db.executeUpdate("INSERT INTO transfers (date, amount, type, source) VALUES (?, ?, ?, ?);", values: values)
