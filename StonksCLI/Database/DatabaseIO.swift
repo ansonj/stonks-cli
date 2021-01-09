@@ -112,6 +112,9 @@ struct DatabaseIO {
             DatabaseUtilities.exitWithError(error, duringActivity: "fetching statement entries")
         }
         entries.sort(by: { $0.date < $1.date })
+        for (index, entry) in entries.enumerated() {
+            entry.reconciliationId = index + 1
+        }
         return entries
     }
     

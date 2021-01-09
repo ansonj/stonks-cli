@@ -24,7 +24,7 @@ struct Split {
     let percentage: Double
 }
 
-struct StatementEntry {
+class StatementEntry {
     enum Activity {
         case buy
         case sell
@@ -50,4 +50,17 @@ struct StatementEntry {
     let shares: Double?
     let costBasis: Double?
     let amount: Double
+    
+    var reconciliationId: Int = 0
+    var reconciled: Bool = false
+    
+    init(trxnId: Int?, symbol: String, activity: Activity, date: Date, shares: Double?, costBasis: Double?, amount: Double) {
+        self.trxnId = trxnId
+        self.symbol = symbol
+        self.activity = activity
+        self.date = date
+        self.shares = shares
+        self.costBasis = costBasis
+        self.amount = amount
+    }
 }

@@ -17,7 +17,9 @@ struct StatementsFlow: Flow {
             HeaderCell("Qty", alignment: .right),
             HeaderCell("Price", alignment: .right),
             HeaderCell("Debit", alignment: .right),
-            HeaderCell("Credit", alignment: .right)
+            HeaderCell("Credit", alignment: .right),
+            HeaderCell("Rec #", alignment: .right),
+            HeaderCell("Cleared", alignment: .left)
         ]
         let rows = statementEntries.map { row -> [TableCell] in
             let sharesDescription: String
@@ -39,7 +41,9 @@ struct StatementsFlow: Flow {
                 TableCell(sharesDescription),
                 TableCell(costBasisDescription),
                 TableCell(row.amount < 0 ? Formatting.string(forCurrency: row.amount * -1) : ""),
-                TableCell(row.amount > 0 ? Formatting.string(forCurrency: row.amount) : "")
+                TableCell(row.amount > 0 ? Formatting.string(forCurrency: row.amount) : ""),
+                TableCell(row.reconciliationId.description),
+                TableCell(row.reconciled ? "X" : "")
             ]
         }
         let table = Table.renderTable(withHeaders: headers, rows: rows)
