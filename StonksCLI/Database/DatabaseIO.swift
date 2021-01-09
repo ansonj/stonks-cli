@@ -9,6 +9,7 @@ struct DatabaseKeys {
 private enum DatabaseTransferType: String {
     case deposit = "deposit"
     case dividend = "dividend"
+    case withdrawal = "withdrawal"
 }
 
 struct DatabaseIO {
@@ -162,8 +163,35 @@ struct DatabaseIO {
     }
     
     private static func statementEntriesFromTransfers(fromDatabse db: FMDatabase, forMonth yearMonth: String) throws -> [StatementEntry] {
-        // FIXME: Grab deposits, withdrawals? Dividends?
-        return []
+        let nextYearMonth = DatabaseUtilities.subsequentYearMonth(forYearMonth: yearMonth)
+        
+        var entries = [StatementEntry]()
+        
+        let results = try db.executeQuery("SELECT date, amount, type, source FROM transfers WHERE date > ? AND date < ?", values: [yearMonth, nextYearMonth])
+        while results.next() {
+            let symbol = results.string(forColumn: "source") ?? ""
+            let rawType = results.string(forColumn: "type") ?? "<null>"
+            guard let type = DatabaseTransferType(rawValue: rawType) else {
+                Prompt.exitStonks(withMessage: "Found unrecognized transfer type of '\(rawType)'")
+            }
+            let activity: StatementEntry.Activity
+            switch type {
+            case .deposit:    activity = .ach
+            case .dividend:   activity = .cashDividend
+            case .withdrawal: activity = .ach
+            }
+            let date = DatabaseUtilities.date(fromString: results.string(forColumn: "date") ?? Utilities.errorString)
+            let amount = results.double(forColumn: "amount")
+            let entry = StatementEntry(trxnId: nil,
+                                       symbol: symbol,
+                                       activity: activity,
+                                       date: date,
+                                       shares: nil,
+                                       costBasis: nil,
+                                       amount: amount)
+            entries.append(entry)
+        }
+        return entries
     }
     
     static func recordSell(path: String,

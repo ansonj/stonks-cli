@@ -30,13 +30,15 @@ struct StatementEntry {
         case sell
         case crypto
         case ach
+        case cashDividend
         
         var description: String {
             switch self {
-            case .buy:    return "Buy"
-            case .sell:   return "Sell"
-            case .crypto: return "Crypto"
-            case .ach:    return "ACH"
+            case .buy:          return "Buy"
+            case .sell:         return "Sell"
+            case .crypto:       return "Crypto"
+            case .ach:          return "ACH"
+            case .cashDividend: return "CDIV"
             }
         }
     }
