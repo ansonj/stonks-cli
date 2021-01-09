@@ -108,6 +108,7 @@ struct DatabaseIO {
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "fetching statement entries")
         }
+        entries.sort(by: { $0.date < $1.date })
         return entries
     }
     
