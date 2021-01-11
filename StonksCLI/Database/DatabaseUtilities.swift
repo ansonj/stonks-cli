@@ -20,6 +20,23 @@ struct DatabaseUtilities {
         return dateFormatter.string(from: date)
     }
     
+    static func subsequentYearMonth(forYearMonth yearMonth: String) -> String {
+        let errorString = "ERROR"
+        let separator: Character = "-"
+        
+        let components = yearMonth.split(separator: separator)
+        guard components.count == 2,
+              let year = Int(components[0]),
+              let month = Int(components[1])
+        else { return errorString }
+        
+        let newMonth = month >= 12 ? 1 : month + 1
+        let newYear = newMonth == 1 ? year + 1 : year
+        
+        let newYearMonth = newYear.description + separator.description + (newMonth < 10 ? "0" : "") + newMonth.description
+        return newYearMonth
+    }
+    
     // MARK: Exiting
     
     static func exitWithError(fromDatabase db: FMDatabase, duringActivity activity: String) -> Never {

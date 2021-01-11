@@ -3,10 +3,13 @@ import FMDB
 struct DatabaseKeys {
     static let settings_version = "version"
     
-    static let transfers_type_deposit = "deposit"
-    static let transfers_type_dividend = "dividend"
-    
     static let stats_profitNotTransferred = "profit_not_transferred"
+}
+
+private enum DatabaseTransferType: String {
+    case deposit = "deposit"
+    case dividend = "dividend"
+    case withdrawal = "withdrawal"
 }
 
 struct DatabaseIO {
@@ -93,6 +96,105 @@ struct DatabaseIO {
                                                   buyDate: DatabaseUtilities.date(fromString: date),
                                                   costBasis: costBasis)
         return newTransaction
+    }
+    
+    static func allStatementEntries(fromPath path: String, forMonth yearMonth: String) -> [StatementEntry] {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get statement entries")
+        }
+        var entries = [StatementEntry]()
+        do {
+            entries += try statementEntriesFromActiveBuys(fromDatabase: db, forMonth: yearMonth)
+            entries += try statementEntriesFromClosedSells(fromDatabase: db, forMonth: yearMonth)
+            entries += try statementEntriesFromTransfers(fromDatabse: db, forMonth: yearMonth)
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "fetching statement entries")
+        }
+        entries.sort(by: { $0.date < $1.date })
+        for (index, entry) in entries.enumerated() {
+            entry.reconciliationId = index + 1
+        }
+        return entries
+    }
+    
+    private static func statementEntriesFromActiveBuys(fromDatabase db: FMDatabase, forMonth yearMonth: String) throws -> [StatementEntry] {
+        let nextYearMonth = DatabaseUtilities.subsequentYearMonth(forYearMonth: yearMonth)
+        
+        var entries = [StatementEntry]()
+        
+        let results = try db.executeQuery("SELECT trxn_id, ticker, investment, shares, buy_date, cost_basis FROM transactions WHERE buy_date > ? AND buy_date < ?", values: [yearMonth, nextYearMonth])
+        while results.next() {
+            let trxn = activeTransaction(fromResultSet: results)
+            let activity: StatementEntry.Activity = trxn.ticker == BlockchainAPI.bitcoinSymbol ? .crypto : .buy
+            let entry = StatementEntry(trxnId: trxn.trxnId,
+                                       symbol: trxn.ticker,
+                                       activity: activity,
+                                       date: trxn.buyDate,
+                                       shares: trxn.shares,
+                                       costBasis: trxn.costBasis,
+                                       amount: trxn.investment * -1)
+            entries.append(entry)
+        }
+        return entries
+    }
+    
+    private static func statementEntriesFromClosedSells(fromDatabase db: FMDatabase, forMonth yearMonth: String) throws -> [StatementEntry] {
+        let nextYearMonth = DatabaseUtilities.subsequentYearMonth(forYearMonth: yearMonth)
+        
+        var entries = [StatementEntry]()
+        
+        let results = try db.executeQuery("SELECT trxn_id, ticker, shares, sell_date, sell_price, revenue FROM transactions WHERE sell_date NOT NULL AND sell_date > ? AND sell_date < ?", values: [yearMonth, nextYearMonth])
+        while results.next() {
+            let trxnId = results.long(forColumn: "trxn_id")
+            let ticker = results.string(forColumn: "ticker") ?? Utilities.errorString
+            let shares = results.double(forColumn: "shares")
+            let sellDate = results.string(forColumn: "sell_date") ?? Utilities.errorString
+            let sellPrice = results.double(forColumn: "sell_price")
+            let revenue = results.double(forColumn: "revenue")
+            let activity: StatementEntry.Activity = ticker == BlockchainAPI.bitcoinSymbol ? .crypto : .sell
+            let entry = StatementEntry(trxnId: trxnId,
+                                       symbol: ticker,
+                                       activity: activity,
+                                       date: DatabaseUtilities.date(fromString: sellDate),
+                                       shares: shares,
+                                       costBasis: sellPrice,
+                                       amount: revenue)
+            entries.append(entry)
+        }
+        return entries
+    }
+    
+    private static func statementEntriesFromTransfers(fromDatabse db: FMDatabase, forMonth yearMonth: String) throws -> [StatementEntry] {
+        let nextYearMonth = DatabaseUtilities.subsequentYearMonth(forYearMonth: yearMonth)
+        
+        var entries = [StatementEntry]()
+        
+        let results = try db.executeQuery("SELECT date, amount, type, source FROM transfers WHERE date > ? AND date < ?", values: [yearMonth, nextYearMonth])
+        while results.next() {
+            let symbol = results.string(forColumn: "source") ?? ""
+            let rawType = results.string(forColumn: "type") ?? "<null>"
+            guard let type = DatabaseTransferType(rawValue: rawType) else {
+                Prompt.exitStonks(withMessage: "Found unrecognized transfer type of '\(rawType)'")
+            }
+            let activity: StatementEntry.Activity
+            switch type {
+            case .deposit:    activity = .ach
+            case .dividend:   activity = .cashDividend
+            case .withdrawal: activity = .ach
+            }
+            let date = DatabaseUtilities.date(fromString: results.string(forColumn: "date") ?? Utilities.errorString)
+            let amount = results.double(forColumn: "amount")
+            let entry = StatementEntry(trxnId: nil,
+                                       symbol: symbol,
+                                       activity: activity,
+                                       date: date,
+                                       shares: nil,
+                                       costBasis: nil,
+                                       amount: amount)
+            entries.append(entry)
+        }
+        return entries
     }
     
     static func recordSell(path: String,
@@ -345,7 +447,7 @@ struct DatabaseIO {
             let values: [Any] = [
                 date,
                 amount,
-                DatabaseKeys.transfers_type_deposit
+                DatabaseTransferType.deposit.rawValue
             ]
             try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?)", values: values)
         } catch let error {
@@ -373,7 +475,7 @@ struct DatabaseIO {
             let values: [Any] = [
                 date,
                 amount,
-                DatabaseKeys.transfers_type_dividend,
+                DatabaseTransferType.dividend.rawValue,
                 symbol
             ]
             try db.executeUpdate("INSERT INTO transfers (date, amount, type, source) VALUES (?, ?, ?, ?);", values: values)

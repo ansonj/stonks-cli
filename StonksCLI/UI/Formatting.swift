@@ -64,4 +64,13 @@ struct Formatting {
     static func friendlyDateString(forDate date: Date) -> String {
         return friendlyDateFormatter.string(from: date)
     }
+    
+    private static let shortDateFormatter = { () -> DateFormatter in
+        let fmt = DateFormatter()
+        fmt.dateFormat = "MM/dd/yyyy"
+        return fmt
+    }()
+    static func shortDateString(forDate date: Date) -> String {
+        return shortDateFormatter.string(from: date)
+    }
 }

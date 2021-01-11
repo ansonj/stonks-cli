@@ -15,6 +15,7 @@ struct MainFlow: Flow {
             print("    (s)ell")
             print("    (t)ransfer")
             print("    view (p)ortfolio goals")
+            print("    (r)econciliation view")
             print("    (q)uit")
             print()
             let promptString: String
@@ -43,6 +44,9 @@ struct MainFlow: Flow {
             case "p":
                 let splits = SplitsFlow(configFile: configFile)
                 splits.run()
+            case "r":
+                let statements = StatementsFlow(configFile: configFile)
+                statements.run()
             case "q":
                 exit(0)
             default:
