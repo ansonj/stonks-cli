@@ -31,14 +31,16 @@ class StatementEntry {
         case crypto
         case ach
         case cashDividend
+        case cashManagementInterest
         
         var description: String {
             switch self {
-            case .buy:          return "Buy"
-            case .sell:         return "Sell"
-            case .crypto:       return "COIN"
-            case .ach:          return "ACH"
-            case .cashDividend: return "CDIV"
+            case .buy:                    return "Buy"
+            case .sell:                   return "Sell"
+            case .crypto:                 return "COIN"
+            case .ach:                    return "ACH"
+            case .cashDividend:           return "CDIV"
+            case .cashManagementInterest: return "INT"
             }
         }
     }

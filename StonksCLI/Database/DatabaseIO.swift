@@ -9,6 +9,7 @@ struct DatabaseKeys {
 private enum DatabaseTransferType: String {
     case deposit = "deposit"
     case dividend = "dividend"
+    case interest = "interest"
     case withdrawal = "withdrawal"
 }
 
@@ -181,6 +182,7 @@ struct DatabaseIO {
             switch type {
             case .deposit:    activity = .ach
             case .dividend:   activity = .cashDividend
+            case .interest:   activity = .cashManagementInterest
             case .withdrawal: activity = .ach
             }
             let date = DatabaseUtilities.date(fromString: results.string(forColumn: "date") ?? Utilities.errorString)
@@ -486,6 +488,35 @@ struct DatabaseIO {
         }
         guard db.commit() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording dividend")
+        }
+    }
+    
+    static func recordInterest(path: String,
+                               amount: Double,
+                               date: String)
+    {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record interest")
+        }
+        guard db.beginTransaction() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while recording interest")
+        }
+        do {
+            // Record interest
+            let values: [Any] = [
+                date,
+                amount,
+                DatabaseTransferType.interest.rawValue
+            ]
+            try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?);", values: values)
+            // Add interest to profit
+            try addToProfitNotTransferred(amount, inOpenDatabase: db)
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "recording interest")
+        }
+        guard db.commit() else  {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording interest")
         }
     }
 }

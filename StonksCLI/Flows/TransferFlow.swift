@@ -23,8 +23,8 @@ struct TransferFlow: Flow {
             runDividendFlow()
             return
         case "i":
-            // TODO: Implement
-            print("Recording interest flow goes here.")
+            runInterestFlow()
+            return
         default:
             return
         }
@@ -71,6 +71,26 @@ struct TransferFlow: Flow {
                                       amount: amount,
                                       date: date,
                                       symbol: symbol)
+        }
+        print()
+    }
+    
+    private func runInterestFlow() {
+        let amount_string = Prompt.readString(withMessage: "How much cash management interest did you get ($)?")
+        guard let amount = Double(amount_string) else {
+            Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(amount_string)' to a double.")
+            return
+        }
+        
+        let date = Prompt.readDateString()
+        let dateStringForConfirmation = Formatting.friendlyDateString(forDatabaseDateString: date)
+        
+        let confirmationMessage = "Record cash management interest of \(Formatting.string(forCurrency: amount)) on \(dateStringForConfirmation)?"
+        let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
+        if confirmed {
+            DatabaseIO.recordInterest(path: configFile.databasePath(),
+                                      amount: amount,
+                                      date: date)
         }
         print()
     }
