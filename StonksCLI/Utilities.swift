@@ -20,12 +20,4 @@ extension Double {
     var isBasicallyZero: Bool {
         abs(self) < 0.01
     }
-    
-    var roundToZeroIfLessThanOneCent: Double {
-        if self < 0.01 {
-            return 0
-        } else {
-            return self
-        }
-    }
 }
