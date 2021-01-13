@@ -61,8 +61,7 @@ struct TransferFlow: Flow {
         let amount_string = Prompt.readString(withMessage: promptMessage)
         let withdrawalAmount: Double
         if amount_string == "" {
-            let roundedProfitNotTransferred = (profitNotTransferred * 100).rounded() / 100
-            withdrawalAmount = roundedProfitNotTransferred
+            withdrawalAmount = profitNotTransferred.roundedToNearestCent
         } else if let parsedAmount = Double(amount_string) {
             withdrawalAmount = parsedAmount
         } else {

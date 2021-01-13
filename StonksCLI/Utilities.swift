@@ -20,4 +20,8 @@ extension Double {
     var isBasicallyZero: Bool {
         abs(self) < 0.01
     }
+    
+    var roundedToNearestCent: Double {
+        (self * 100).rounded() / 100
+    }
 }

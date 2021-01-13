@@ -13,8 +13,7 @@ struct BuyFlow: Flow {
         if let pendingAmountForThisSymbol = pendingAmountForThisSymbol {
             let investment_string = Prompt.readString(withMessage: "How much to invest ($)? Leave blank for \(Formatting.string(forCurrency: pendingAmountForThisSymbol)).")
             if investment_string == "" {
-                let pendingAmountRounded = (pendingAmountForThisSymbol * 100).rounded() / 100
-                investment = pendingAmountRounded
+                investment = pendingAmountForThisSymbol.roundedToNearestCent
             } else if let parsedInvestment = Double(investment_string) {
                 investment = parsedInvestment
             } else {
