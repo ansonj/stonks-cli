@@ -464,6 +464,10 @@ struct DatabaseIO {
                                  amount: Double,
                                  date: String)
     {
+        let negativeAmount = -1 * amount
+        guard negativeAmount < 0 else {
+            Prompt.exitStonks(withMessage: "DatabaseIO can't withdraw a negative amount!")
+        }
         let db = FMDatabase(path: path)
         guard db.open() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record a withdrawal")
@@ -475,12 +479,12 @@ struct DatabaseIO {
             // Record withdrawal
             let values: [Any] = [
                 date,
-                amount,
+                negativeAmount,
                 DatabaseTransferType.withdrawal.rawValue
             ]
             try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?)", values: values)
             // Subtract from profit not transferred
-            try addToProfitNotTransferred(-1 * amount, inOpenDatabase: db)
+            try addToProfitNotTransferred(negativeAmount, inOpenDatabase: db)
         } catch let error {
             DatabaseUtilities.exitWithError(error, duringActivity: "recording withdrawal")
         }
