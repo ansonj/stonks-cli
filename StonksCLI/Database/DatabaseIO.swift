@@ -460,6 +460,35 @@ struct DatabaseIO {
         }
     }
     
+    static func recordWithdrawal(path: String,
+                                 amount: Double,
+                                 date: String)
+    {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record a withdrawal")
+        }
+        guard db.beginTransaction() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn start while recording withdrawal")
+        }
+        do {
+            // Record withdrawal
+            let values: [Any] = [
+                date,
+                amount,
+                DatabaseTransferType.withdrawal.rawValue
+            ]
+            try db.executeUpdate("INSERT INTO transfers (date, amount, type) VALUES (?, ?, ?)", values: values)
+            // Subtract from profit not transferred
+            try addToProfitNotTransferred(-1 * amount, inOpenDatabase: db)
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "recording withdrawal")
+        }
+        guard db.commit() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while recording withdrawal")
+        }
+    }
+    
     static func recordDividend(path: String,
                                amount: Double,
                                date: String,

@@ -17,8 +17,8 @@ struct TransferFlow: Flow {
             runDepositFlow()
             return
         case "w":
-            // TODO: Implement
-            print("Withdrawal flow goes here.")
+            runWithdrawalFlow()
+            return
         case "v":
             runDividendFlow()
             return
@@ -28,8 +28,6 @@ struct TransferFlow: Flow {
         default:
             return
         }
-        Prompt.pauseThenContinue()
-        print()
     }
     
     private func runDepositFlow() {
@@ -48,6 +46,44 @@ struct TransferFlow: Flow {
             DatabaseIO.recordDeposit(path: configFile.databasePath(),
                                      amount: amount,
                                      date: date)
+        }
+        print()
+    }
+    
+    private func runWithdrawalFlow() {
+        let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: configFile.databasePath())
+        let promptMessage: String
+        if profitNotTransferred <= 0 {
+            promptMessage = "Your current profit waiting to be transferred is \(Formatting.string(forCurrency: profitNotTransferred)). If you withdraw now, you'll be removing capital.\nWithdraw how much ($)?"
+        } else {
+            promptMessage = "Withdraw how much ($)? Leave blank for \(Formatting.string(forCurrency: profitNotTransferred)), your current profit waiting to be transferred."
+        }
+        let amount_string = Prompt.readString(withMessage: promptMessage)
+        let withdrawalAmount: Double
+        if amount_string == "" {
+            let roundedProfitNotTransferred = (profitNotTransferred * 100).rounded() / 100
+            withdrawalAmount = roundedProfitNotTransferred
+        } else if let parsedAmount = Double(amount_string) {
+            withdrawalAmount = parsedAmount
+        } else {
+            Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(amount_string)' to a double.")
+            return
+        }
+        let minimumWithdrawalAmount = 0.01
+        guard withdrawalAmount >= minimumWithdrawalAmount else {
+            Prompt.pauseThenContinue(withMessage: "You can't withdraw less than \(Formatting.string(forCurrency: minimumWithdrawalAmount)).")
+            return
+        }
+        
+        let date = Prompt.readDateString()
+        let dateStringForConfirmation = Formatting.friendlyDateString(forDatabaseDateString: date)
+        
+        let confirmationMessage = "Withdraw \(Formatting.string(forCurrency: withdrawalAmount)) on \(dateStringForConfirmation)?"
+        let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
+        if confirmed {
+            DatabaseIO.recordWithdrawal(path: configFile.databasePath(),
+                                        amount: withdrawalAmount,
+                                        date: date)
         }
         print()
     }
