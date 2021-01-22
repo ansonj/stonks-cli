@@ -30,3 +30,9 @@ enum Emoji: String {
     case greenCheckmark = "\u{2705}"
     case redX = "\u{274C}"
 }
+
+extension Bool {
+    var emoji: String {
+        return self ? Emoji.greenCheckmark.rawValue : Emoji.redX.rawValue
+    }
+}
