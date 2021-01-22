@@ -328,6 +328,8 @@ struct DatabaseIO {
     // MARK: - Pending buys and splits
     
     static func pendingBuys(fromPath path: String) -> [PendingBuy] {
+        let minimumPurchaseAmount = 1.00
+        
         let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
 
         var pendingAmounts = portfolioGoals(fromPath: path)
@@ -337,7 +339,7 @@ struct DatabaseIO {
             }
         }
         for pending in pendingAmounts.keys {
-            if pendingAmounts[pending, default: 0] <= 0.01 {
+            if pendingAmounts[pending, default: 0] < minimumPurchaseAmount {
                 pendingAmounts.removeValue(forKey: pending)
             }
         }
@@ -345,6 +347,9 @@ struct DatabaseIO {
         let buyingPower = DatabaseIO.buyingPower(fromPath: path)
         let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: path)
         let maxAllowablePurchase = buyingPower - profitNotTransferred
+        guard maxAllowablePurchase >= minimumPurchaseAmount else {
+            return []
+        }
         
         var pendingBuys = [PendingBuy]()
         for (symbol, amount) in pendingAmounts {
