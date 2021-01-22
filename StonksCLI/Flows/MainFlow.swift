@@ -94,6 +94,13 @@ struct MainFlow: Flow {
         print("Buying power - profit not transferred - cash ready for reinvestment = zero")
         print("\t", buyingPower_string, "-", profitNotTransferred_string, "-", totalPendingBuys_string, "=", shouldBeZero_string, indicator)
         // TODO: Once per execution, print an explanation of a red indicator means, and what to do about it (and pause before continuing)
+        // FIXME: Remove when done debugging
+        print()
+        let derivedPNT = DatabaseIO.derivedProfitNotTransferred(fromPath: databasePath)
+        print("Derived PNT:", Formatting.string(forCurrency: derivedPNT))
+        let diff = profitNotTransferred - derivedPNT
+        print("Recorded", profitNotTransferred, "versus derived", derivedPNT, "is a diff of", diff, (abs(diff) < 0.01).emoji)
+        ///////
         print()
     }
     

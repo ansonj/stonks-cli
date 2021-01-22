@@ -318,6 +318,39 @@ struct DatabaseIO {
         return profit
     }
     
+    static func derivedProfitNotTransferred(fromPath path: String) -> Double {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to get derived profit not transferred")
+        }
+        
+        let profitFromAllClosedSales: Double
+        let relevantTransfers = [DatabaseTransferType.dividend, .interest, .withdrawal].map { $0.rawValue }
+        let relevantTransfersDescription = relevantTransfers.joined(separator: ", ")
+        let totalRelevantTransfers: Double
+        do {
+            let profitResults = try db.executeQuery("SELECT SUM(profit) as profitSum FROM transactions;", values: nil)
+            guard profitResults.next() else {
+                Prompt.exitStonks(withMessage: "Couldn't get sum of profit from transactions in derivedProfitNotTransferred()")
+            }
+            profitFromAllClosedSales = profitResults.double(forColumn: "profitSum")
+            
+            let withdrawalResults = try db.executeQuery("SELECT SUM(amount) as transferSum FROM transfers WHERE type in (?, ?, ?)",
+                                                        values: relevantTransfers)
+            guard withdrawalResults.next() else {
+                Prompt.exitStonks(withMessage: "Couldn't get sum of \(relevantTransfersDescription) from transfers in derivedProfitNotTransferred()")
+            }
+            totalRelevantTransfers = withdrawalResults.double(forColumn: "transferSum")
+        } catch let error {
+            DatabaseUtilities.exitWithError(error, duringActivity: "fetching derived profit not transferred")
+        }
+        let derivedProfit = profitFromAllClosedSales + totalRelevantTransfers
+        // FIXME: Remove when done debugging
+        print("Profit =", profitFromAllClosedSales, "and transfers =", totalRelevantTransfers, "(\(relevantTransfersDescription))")
+        ///////
+        return derivedProfit
+    }
+    
     static func totalPendingBuys(fromPath path: String) -> Double {
         let buyingPower = DatabaseIO.buyingPower(fromPath: path)
         let profitNotTransferred = DatabaseIO.profitNotTransferred(fromPath: path)
