@@ -25,3 +25,8 @@ extension Double {
         (self * 100).rounded() / 100
     }
 }
+
+enum Emoji: String {
+    case greenCheckmark = "\u{2705}"
+    case redX = "\u{274C}"
+}
