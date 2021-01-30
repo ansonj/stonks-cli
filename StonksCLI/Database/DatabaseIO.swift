@@ -365,7 +365,10 @@ struct DatabaseIO {
         let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
 
         let cashReadyForReinvestment = DatabaseIO.totalPendingBuys(fromPath: path)
-        let cashTiedUpInExistingInvestments = activeTransactions.map(\.investment).reduce(0, +)
+        // Only include existing investments that are in our portfolio goals
+        let cashTiedUpInExistingInvestments = activeTransactions.filter({ reinvestmentSplits.map(\.ticker).contains($0.ticker) })
+                                                                .map(\.investment)
+                                                                .reduce(0, +)
         let totalPortfolioSize = cashReadyForReinvestment + cashTiedUpInExistingInvestments
         
         var portfolioGoals = [String: Double]()
