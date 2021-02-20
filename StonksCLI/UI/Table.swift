@@ -97,4 +97,18 @@ struct Table {
         
         return finalLines.joined(separator: "\n")
     }
+    
+    static func renderQuickTable(withRows rows: [[String]]) -> String {
+        let headers = [
+            HeaderCell("", alignment: .left),
+            HeaderCell("", alignment: .right)
+        ]
+        let tableRows = rows.map { (row: [String]) -> [TableCell] in
+            let left = TableCell(row[0])
+            let right = TableCell(row[1])
+            return [left, right]
+        }
+        let table = Table.renderTable(withHeaders: headers, rows: tableRows)
+        return table
+    }
 }

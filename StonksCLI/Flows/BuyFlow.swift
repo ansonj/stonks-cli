@@ -46,18 +46,14 @@ struct BuyFlow: Flow {
         let costBasis = investment / shares
         
         do {
-            let headers = [
-                HeaderCell("", alignment: .left),
-                HeaderCell("", alignment: .right)
-            ]
             let rows = [
-                [TableCell("Symbol"), TableCell(symbol)],
-                [TableCell("Shares"), TableCell(shares.description)],
-                [TableCell("Investment"), TableCell(Formatting.string(forCurrency: investment))],
-                [TableCell("Buy date"), TableCell(dateStringForConfirmation)],
-                [TableCell("Cost basis"), TableCell(Formatting.string(forCurrency: costBasis))]
+                ["Symbol", symbol],
+                ["Shares", shares.description],
+                ["Investment", Formatting.string(forCurrency: investment)],
+                ["Buy date", dateStringForConfirmation],
+                ["Cost basis", Formatting.string(forCurrency: costBasis)]
             ]
-            let table = Table.renderTable(withHeaders: headers, rows: rows)
+            let table = Table.renderQuickTable(withRows: rows)
             print(table)
         }
         let confirmed = Prompt.readBoolean(withMessage: "Record buy?")

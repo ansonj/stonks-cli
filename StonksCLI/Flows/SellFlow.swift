@@ -66,18 +66,14 @@ struct SellFlow: Flow {
         // TODO: Deduplicate this calculation with the one in MainFlow.swift?
         let targetPrice = transaction.costBasis * (1 + sellThreshold)
         do {
-            let headers = [
-                HeaderCell("", alignment: .left),
-                HeaderCell("", alignment: .right)
-            ]
             let rows = [
-                [TableCell("Shares"), TableCell(shareCount)],
-                [TableCell("Buy date"), TableCell(Formatting.friendlyDateString(forDate: transaction.buyDate))],
-                [TableCell("Age"), TableCell("\(transaction.age) days")],
-                [TableCell("Cost basis"), TableCell(Formatting.string(forCurrency: transaction.costBasis))],
-                [TableCell("+\(Formatting.string(forPercentage: sellThreshold)) target"), TableCell(Formatting.string(forCurrency: targetPrice))]
+                ["Shares", shareCount],
+                ["Buy date", Formatting.friendlyDateString(forDate: transaction.buyDate)],
+                ["Age", "\(transaction.age) days"],
+                ["Cost basis", Formatting.string(forCurrency: transaction.costBasis)],
+                ["+\(Formatting.string(forPercentage: sellThreshold)) target", Formatting.string(forCurrency: targetPrice)]
             ]
-            let table = Table.renderTable(withHeaders: headers, rows: rows)
+            let table = Table.renderQuickTable(withRows: rows)
             print(table)
         }
         let sellPrice_string = Prompt.readString(withMessage: "What was the average selling price per share ($)?")
@@ -91,20 +87,16 @@ struct SellFlow: Flow {
         let returnPercentage = profit / transaction.investment
         
         do {
-            let headers = [
-                HeaderCell("", alignment: .left),
-                HeaderCell("", alignment: .right)
-            ]
             let rows = [
-                [TableCell("Symbol"), TableCell(transaction.ticker)],
-                [TableCell("Shares"), TableCell(shareCount)],
-                [TableCell("Sell date"), TableCell(Formatting.friendlyDateString(forDate: sellDate))],
-                [TableCell("Sell price"), TableCell(Formatting.string(forCurrency: sellPrice))],
-                [TableCell("Revenue"), TableCell(Formatting.string(forCurrency: revenue))],
-                [TableCell("Profit ($)"), TableCell(Formatting.string(forCurrency: profit))],
-                [TableCell("Profit (%)"), TableCell(Formatting.string(forPercentage: returnPercentage))]
+                ["Symbol", transaction.ticker],
+                ["Shares", shareCount],
+                ["Sell date", Formatting.friendlyDateString(forDate: sellDate)],
+                ["Sell price", Formatting.string(forCurrency: sellPrice)],
+                ["Revenue", Formatting.string(forCurrency: revenue)],
+                ["Profit ($)", Formatting.string(forCurrency: profit)],
+                ["Profit (%)", Formatting.string(forPercentage: returnPercentage)]
             ]
-            let table = Table.renderTable(withHeaders: headers, rows: rows)
+            let table = Table.renderQuickTable(withRows: rows)
             print(table)
         }
         let confirmed = Prompt.readBoolean(withMessage: "Record sale?")
