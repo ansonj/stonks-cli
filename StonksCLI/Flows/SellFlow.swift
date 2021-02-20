@@ -77,7 +77,7 @@ struct SellFlow: Flow {
         let profit = revenue - transaction.investment
         let returnPercentage = profit / transaction.investment
         
-        let confirmationMessage = "Sell \(shareCount) shares of \(transaction.ticker) on \(Formatting.friendlyDateString(forDate: sellDate)) at \(Formatting.string(forCurrency: sellPrice)), producing revenue of \(Formatting.string(forCurrency: revenue)) and a return of \(Formatting.string(forPercentage: returnPercentage))?"
+        let confirmationMessage = "Sell \(shareCount) shares of \(transaction.ticker) on \(Formatting.friendlyDateString(forDate: sellDate)) at \(Formatting.string(forCurrency: sellPrice)), producing revenue of \(Formatting.string(forCurrency: revenue)) and a return of \(Formatting.string(forCurrency: profit)) (\(Formatting.string(forPercentage: returnPercentage)))?"
         let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
         
         if confirmed {
