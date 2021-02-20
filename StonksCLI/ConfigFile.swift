@@ -4,9 +4,16 @@ struct ConfigFile {
     // MARK: Initialization
     
     let configFileUrl: URL
+    let databasePathOverride: String?
     
-    init(configFileUrl: URL) {
+    init(configFileUrl: URL, databasePathOverride: String?) {
         self.configFileUrl = configFileUrl
+        if let databasePathOverride = databasePathOverride,
+           databasePathOverride != "" {
+            self.databasePathOverride = databasePathOverride
+        } else {
+            self.databasePathOverride = nil
+        }
         
         if !FileManager.default.isReadableFile(atPath: configFileUrl.path) {
             Prompt.confirmContinueOrAbort(withMessage: "Create config file at '\(configFileUrl)'?")
@@ -48,7 +55,11 @@ struct ConfigFile {
     
     private let k_databasePath = "databasePath"
     func databasePath() -> String {
-        return getString(forKey: k_databasePath)
+        if let databasePathOverride = databasePathOverride {
+            return databasePathOverride
+        } else {
+            return getString(forKey: k_databasePath)
+        }
     }
     func setDatabasePath(_ newValue: String) {
         setString(newValue, forKey: k_databasePath)
