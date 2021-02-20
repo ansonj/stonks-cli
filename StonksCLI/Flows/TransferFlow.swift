@@ -88,7 +88,7 @@ struct TransferFlow: Flow {
     }
     
     private func runDividendFlow() {
-        let symbol = Prompt.readString(withMessage: "What symbol paid a dividend?")
+        let symbol = Prompt.readSymbolString(withMessage: "What symbol paid a dividend?")
         
         let amount_string = Prompt.readString(withMessage: "How much ($)?")
         guard let amount = Double(amount_string) else {

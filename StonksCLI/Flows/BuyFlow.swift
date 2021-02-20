@@ -4,7 +4,7 @@ struct BuyFlow: Flow {
     let configFile: ConfigFile
     
     func run() {
-        let symbol = Prompt.readString(withMessage: "What ticker symbol?")
+        let symbol = Prompt.readSymbolString(withMessage: "What ticker symbol?")
         
         let pendingBuys = DatabaseIO.pendingBuys(fromPath: configFile.databasePath())
         let pendingAmountForThisSymbol = pendingBuys.first(where: { $0.ticker == symbol })?.amount

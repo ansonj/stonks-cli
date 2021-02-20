@@ -30,6 +30,11 @@ struct Prompt {
         return response
     }
     
+    static func readSymbolString(withMessage message: String) -> String {
+        let originalInput = readString(withMessage: message)
+        return originalInput.uppercased()
+    }
+    
     static func readDateString() -> String {
         var date = Prompt.readString(withMessage: "What date? Format as YYYY-MM-DD, or leave blank for today.")
         // TODO: Validate date input
