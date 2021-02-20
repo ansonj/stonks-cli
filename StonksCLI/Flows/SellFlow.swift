@@ -65,8 +65,21 @@ struct SellFlow: Flow {
         
         // TODO: Deduplicate this calculation with the one in MainFlow.swift?
         let targetPrice = transaction.costBasis * (1 + sellThreshold)
-        print("You bought \(shareCount) shares at a cost basis of \(Formatting.string(forCurrency: transaction.costBasis)) on \(Formatting.friendlyDateString(forDate: transaction.buyDate)) (\(transaction.age) days ago).")
-        print("You need to sell at \(Formatting.string(forCurrency: targetPrice)) or better to make a \(Formatting.string(forPercentage: sellThreshold)) return.")
+        do {
+            let headers = [
+                HeaderCell("", alignment: .left),
+                HeaderCell("", alignment: .right)
+            ]
+            let rows = [
+                [TableCell("Shares"), TableCell(shareCount)],
+                [TableCell("Buy date"), TableCell(Formatting.friendlyDateString(forDate: transaction.buyDate))],
+                [TableCell("Age"), TableCell("\(transaction.age) days")],
+                [TableCell("Cost basis"), TableCell(Formatting.string(forCurrency: transaction.costBasis))],
+                [TableCell("+\(Formatting.string(forPercentage: sellThreshold)) target"), TableCell(Formatting.string(forCurrency: targetPrice))]
+            ]
+            let table = Table.renderTable(withHeaders: headers, rows: rows)
+            print(table)
+        }
         let sellPrice_string = Prompt.readString(withMessage: "What was the average selling price per share ($)?")
         guard let sellPrice = Double(sellPrice_string) else {
             Prompt.pauseThenContinue(withMessage: "Couldn't convert '\(sellPrice_string)' to a double.")
@@ -77,8 +90,24 @@ struct SellFlow: Flow {
         let profit = revenue - transaction.investment
         let returnPercentage = profit / transaction.investment
         
-        let confirmationMessage = "Sell \(shareCount) shares of \(transaction.ticker) on \(Formatting.friendlyDateString(forDate: sellDate)) at \(Formatting.string(forCurrency: sellPrice)), producing revenue of \(Formatting.string(forCurrency: revenue)) and a return of \(Formatting.string(forCurrency: profit)) (\(Formatting.string(forPercentage: returnPercentage)))?"
-        let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
+        do {
+            let headers = [
+                HeaderCell("", alignment: .left),
+                HeaderCell("", alignment: .right)
+            ]
+            let rows = [
+                [TableCell("Symbol"), TableCell(transaction.ticker)],
+                [TableCell("Shares"), TableCell(shareCount)],
+                [TableCell("Sell date"), TableCell(Formatting.friendlyDateString(forDate: sellDate))],
+                [TableCell("Sell price"), TableCell(Formatting.string(forCurrency: sellPrice))],
+                [TableCell("Revenue"), TableCell(Formatting.string(forCurrency: revenue))],
+                [TableCell("Profit ($)"), TableCell(Formatting.string(forCurrency: profit))],
+                [TableCell("Profit (%)"), TableCell(Formatting.string(forPercentage: returnPercentage))]
+            ]
+            let table = Table.renderTable(withHeaders: headers, rows: rows)
+            print(table)
+        }
+        let confirmed = Prompt.readBoolean(withMessage: "Record sale?")
         
         if confirmed {
             DatabaseIO.recordSell(path: configFile.databasePath(),

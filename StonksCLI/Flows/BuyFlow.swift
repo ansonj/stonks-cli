@@ -45,8 +45,22 @@ struct BuyFlow: Flow {
         
         let costBasis = investment / shares
         
-        let confirmationMessage = "Record buy of \(shares) shares of \(symbol) for \(Formatting.string(forCurrency: investment)) on \(dateStringForConfirmation), for a cost basis of \(Formatting.string(forCurrency: costBasis))?"
-        let confirmed = Prompt.readBoolean(withMessage: confirmationMessage)
+        do {
+            let headers = [
+                HeaderCell("", alignment: .left),
+                HeaderCell("", alignment: .right)
+            ]
+            let rows = [
+                [TableCell("Symbol"), TableCell(symbol)],
+                [TableCell("Shares"), TableCell(shares.description)],
+                [TableCell("Investment"), TableCell(Formatting.string(forCurrency: investment))],
+                [TableCell("Buy date"), TableCell(dateStringForConfirmation)],
+                [TableCell("Cost basis"), TableCell(Formatting.string(forCurrency: costBasis))]
+            ]
+            let table = Table.renderTable(withHeaders: headers, rows: rows)
+            print(table)
+        }
+        let confirmed = Prompt.readBoolean(withMessage: "Record buy?")
         
         if confirmed {
             DatabaseIO.recordBuy(path: configFile.databasePath(),
