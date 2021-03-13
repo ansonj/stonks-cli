@@ -29,9 +29,13 @@ struct BuyFlow: Flow {
                 return
             }
         }
-        guard investment > 0 && !investment.isBasicallyZero else {
-            Prompt.pauseThenContinue(withMessage: "You can't invest $0.")
+        guard investment >= 0 else {
+            Prompt.pauseThenContinue(withMessage: "You can't invest negative dollars.")
             return
+        }
+        if investment.isBasicallyZero {
+            let confirmed = Prompt.readBoolean(withMessage: "So... you got \(symbol) for free?")
+            if !confirmed { return }
         }
         
         let date = Prompt.readDateString()
