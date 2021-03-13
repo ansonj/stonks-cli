@@ -12,7 +12,7 @@ struct SplitsFlow: Flow {
     }
     
     private func dumpSplits() {
-        let splits = DatabaseIO.reinvestmentSplits(fromPath: configFile.databasePath())
+        let splits = DatabaseIO.reinvestmentSplits(fromPath: configFile.databasePath(), includeCash: true)
         guard splits.count > 0 else {
             Prompt.exitStonks(withMessage: "Somehow, we snuck through to SplitsFlow with no splits defined.")
         }
@@ -45,8 +45,8 @@ struct SplitsFlow: Flow {
         let path = configFile.databasePath()
         let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
         let totalActiveFunds = activeTransactions.map(\.investment).reduce(0, +)
-        let splits = DatabaseIO.reinvestmentSplits(fromPath: path)
-        let portfolioGoals = DatabaseIO.portfolioGoals(fromPath: path)
+        let splits = DatabaseIO.reinvestmentSplits(fromPath: path, includeCash: true)
+        let portfolioGoals = DatabaseIO.portfolioGoals(fromPath: path, includeCash: true)
         
         let symbolsFromTransactions = Set<String>(activeTransactions.map(\.ticker))
         let symbolsFromSplits = Set<String>(splits.map(\.ticker))
@@ -58,7 +58,11 @@ struct SplitsFlow: Flow {
         for row in portfolioDisplayRows {
             row.companyName = priceCache.info(forTicker: row.symbol).companyName
             row.goalPortfolioPercentage = splits.first(where: { $0.ticker == row.symbol })?.percentage ?? 0
-            row.currentAmount = activeTransactions.filter({ $0.ticker == row.symbol }).map(\.investment).reduce(0, +)
+            if row.symbol == Split.cashSignifier {
+                row.currentAmount = DatabaseIO.totalPendingBuys(fromPath: path)
+            } else {
+                row.currentAmount = activeTransactions.filter({ $0.ticker == row.symbol }).map(\.investment).reduce(0, +)
+            }
             row.currentPortfolioPercentage = row.currentAmount / totalActiveFunds
             row.goalAmount = portfolioGoals[row.symbol, default: 0]
         }

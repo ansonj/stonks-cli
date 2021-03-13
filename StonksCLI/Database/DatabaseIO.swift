@@ -332,7 +332,7 @@ struct DatabaseIO {
         
         let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
 
-        var pendingAmounts = portfolioGoals(fromPath: path)
+        var pendingAmounts = portfolioGoals(fromPath: path, includeCash: false)
         for active in activeTransactions {
             if pendingAmounts.keys.contains(active.ticker) {
                 pendingAmounts[active.ticker, default: 0] -= active.investment
@@ -360,8 +360,8 @@ struct DatabaseIO {
         return pendingBuys
     }
     
-    static func portfolioGoals(fromPath path: String) -> [String: Double] {
-        let reinvestmentSplits = DatabaseIO.reinvestmentSplits(fromPath: path)
+    static func portfolioGoals(fromPath path: String, includeCash: Bool) -> [String: Double] {
+        let reinvestmentSplits = DatabaseIO.reinvestmentSplits(fromPath: path, includeCash: includeCash)
         let activeTransactions = DatabaseIO.activeTransactions(fromPath: path)
 
         let cashReadyForReinvestment = DatabaseIO.totalPendingBuys(fromPath: path)
@@ -380,15 +380,15 @@ struct DatabaseIO {
         return portfolioGoals
     }
     
-    static func reinvestmentSplits(fromPath path: String) -> [Split] {
+    static func reinvestmentSplits(fromPath path: String, includeCash: Bool) -> [Split] {
         let db = FMDatabase(path: path)
         guard db.open() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to fetch splits")
         }
-        return reinvestmentSplits(fromDatabase: db)
+        return reinvestmentSplits(fromDatabase: db, includeCash: includeCash)
     }
     
-    private static func reinvestmentSplits(fromDatabase db: FMDatabase) -> [Split] {
+    private static func reinvestmentSplits(fromDatabase db: FMDatabase, includeCash: Bool) -> [Split] {
         var databaseSplits = [String : Double]()
         var rowCount = 0
         do {
@@ -412,7 +412,11 @@ struct DatabaseIO {
         guard completedSplits.count == rowCount else {
             Prompt.exitStonks(withMessage: "Double-check your splits. You may have duplicate symbols.")
         }
-        return completedSplits
+        if includeCash {
+            return completedSplits
+        } else {
+            return completedSplits.filter { $0.ticker != Split.cashSignifier }
+        }
     }
     
     static func addDefaultSplits(toPath path: String) {

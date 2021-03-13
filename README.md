@@ -16,6 +16,8 @@ Stonks is not...
 
 Join [Robinhood](https://join.robinhood.com/ansonj14), etc.
 
+Use `$` in portfolio goals to set aside a portion of your capital to keep in cash.
+
 ## Possible future features
 
 - Some kind of version number support

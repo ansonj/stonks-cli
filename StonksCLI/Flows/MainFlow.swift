@@ -58,7 +58,7 @@ struct MainFlow: Flow {
     private func printActiveTable() {
         let displayRows = FlowUtilities.activeTransactionDisplayRows(fromPath: configFile.databasePath(), usingPriceCache: priceCache)
         
-        let reinvestmentSymbols = DatabaseIO.reinvestmentSplits(fromPath: configFile.databasePath()).map { $0.ticker }
+        let reinvestmentSymbols = DatabaseIO.reinvestmentSplits(fromPath: configFile.databasePath(), includeCash: false).map { $0.ticker }
         let (headers, rows) = FlowUtilities.tableHeadersAndRows(forDisplayRows: displayRows,
                                                                 markSellableRows: true,
                                                                 reinvestmentSymbols: reinvestmentSymbols)

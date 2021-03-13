@@ -19,6 +19,8 @@ struct PendingBuy {
 }
 
 struct Split {
+    static var cashSignifier = "$"
+    
     let ticker: String
     let weight: Double
     let percentage: Double

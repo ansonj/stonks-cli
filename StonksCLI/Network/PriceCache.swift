@@ -19,6 +19,12 @@ class InMemoryPriceCache: PriceCache {
     
     init(stockInfoProvider: StockInfoProvider) {
         self.stockInfoProvider = stockInfoProvider
+        
+        self.storage[Split.cashSignifier] = StockInfo(ticker: Split.cashSignifier,
+                                                      companyName: "\(Logger.stonksGlyph) Uninvested cash",
+                                                      price: 0,
+                                                      todaysChangePercentage: 0,
+                                                      timestamp: Date.distantFuture)
     }
     
     func primeCache(forTickers tickers: Set<String>) {
