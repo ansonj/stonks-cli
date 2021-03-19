@@ -102,7 +102,16 @@ struct ConfigFile {
         }
         print("No IEX Cloud API token found.")
         print("Create an account if needed: https://iexcloud.io/cloud-login#/register")
-        let newKey = Prompt.readString(withMessage: "Enter your API token:")
+        let keyIsValid = { (key: String) -> Bool in
+            key.count > 0 && key.contains("pk_")
+        }
+        var newKey = ""
+        repeat {
+            newKey = Prompt.readString(withMessage: "Enter your API token:")
+            if !keyIsValid(newKey) {
+                print("API token '\(newKey)' does not appear valid.")
+            }
+        } while !keyIsValid(newKey)
         setIexCloudApiKey(newKey)
     }
     
@@ -110,10 +119,13 @@ struct ConfigFile {
         if databasePath() != "" {
             return
         }
-        print("No database path found.")
+        print("No database path found in config file at '\(configFileUrl.path)'.")
         var weGotAValidPath = false
         while !weGotAValidPath {
             let newPath = Prompt.readString(withMessage: "Enter path to new or existing database:")
+            if newPath.count == 0 {
+                continue
+            }
             let newPathHomeDirReplaced = newPath.replacingOccurrences(of: "~",
                                                                       with: FileManager.default.homeDirectoryForCurrentUser.path)
             print("Does this look correct?")
