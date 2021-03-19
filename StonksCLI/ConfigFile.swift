@@ -22,6 +22,12 @@ struct ConfigFile {
                 Prompt.exitStonks(withMessage: "Couldn't prepare empty JSON data.")
             }
             do {
+                let configFileDirectory = configFileUrl.deletingLastPathComponent()
+                try FileManager.default.createDirectory(at: configFileDirectory, withIntermediateDirectories: true, attributes: nil)
+            } catch let directoryCreationError {
+                Prompt.exitStonks(withMessage: "Error creating directory for config file: \(directoryCreationError)")
+            }
+            do {
                 try emptyJsonData.write(to: configFileUrl, options: .atomic)
             } catch let writingError {
                 Prompt.exitStonks(withMessage: "Error writing empty JSON data: \(writingError)")
