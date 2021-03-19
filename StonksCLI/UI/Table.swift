@@ -6,7 +6,7 @@ enum TableCellAlignment {
 }
 
 enum TerminalTextColor: Int {
-    // https://github.com/mtynior/ColorizeSwift/blob/master/Source/ColorizeSwift.swift
+    // https://github.com/mtynior/ColorizeSwift/blob/master/Sources/ColorizeSwift/ColorizeSwift.swift
     case black = 0
     case red = 31
     case green = 32
