@@ -94,9 +94,9 @@ struct ConfigFile {
         if iexCloudApiKey() != "" {
             return
         }
-        print("No IEX Cloud API key found.")
+        print("No IEX Cloud API token found.")
         print("Create an account if needed: https://iexcloud.io/cloud-login#/register")
-        let newKey = Prompt.readString(withMessage: "Enter your API key:")
+        let newKey = Prompt.readString(withMessage: "Enter your API token:")
         setIexCloudApiKey(newKey)
     }
     
