@@ -22,6 +22,7 @@ struct DatabaseIO {
                           date: String)
     {
         let db = FMDatabase(path: path)
+        // TODO: Prevent console spam: `volume does not support data protection, stripping SQLITE_OPEN_FILEPROTECTION_* flags`
         guard db.open() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening database to record a buy")
         }

@@ -21,7 +21,7 @@ Stonks is not...
 
 ## Installation and setup
 
-1. Build and extract the executable. You can run the tool from Xcode itself (Cmd+R), but the output has colored text that only appears when running from a terminal.
+1. Build and extract the executable. You can run the tool from Xcode itself (Cmd+R), but the output has colored text that only appears when running from a terminal. Also, Xcode adds some sqlite logging messages that I have not yet been able to prevent. 
     1. Open the Xcode project.
     1. Choose Project > Archive.
     1. Open the Archives list if it doesn't open already (Window > Organizer, choose StonksCLI > Archives).
