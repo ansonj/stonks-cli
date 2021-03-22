@@ -95,12 +95,16 @@ struct DatabaseFileManager {
     }
     
     private static func checkForDemoDatabaseAndFillIfNeeded(atPath path: String) {
-        guard path.hasSuffix("demo.sqlite"),
+        guard databasePathIsDemo(path),
               !DatabaseIO.databaseContainsTransfersOrActivity(atPath: path)
         else {
             return
         }
         DatabaseIO.addDemoTransfersAndActivity(toPath: path)
+    }
+    
+    private static func databasePathIsDemo(_ path: String) -> Bool {
+        return path.hasSuffix("demo.sqlite")
     }
 }
 
