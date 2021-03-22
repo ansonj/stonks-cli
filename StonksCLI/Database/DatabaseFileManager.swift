@@ -6,6 +6,7 @@ struct DatabaseFileManager {
         createDatabaseIfNeeded(atPath: path)
         runDatabaseMigrationsIfNeeded(atPath: path)
         verifySplitsExist(atPath: path)
+        checkForDemoDatabaseAndFillIfNeeded(atPath: path)
     }
     
     private static func createDatabaseIfNeeded(atPath path: String) {
@@ -91,6 +92,15 @@ struct DatabaseFileManager {
             Prompt.pauseThenContinue()
             print()
         }
+    }
+    
+    private static func checkForDemoDatabaseAndFillIfNeeded(atPath path: String) {
+        guard path.hasSuffix("demo.sqlite"),
+              !DatabaseIO.databaseContainsTransfersOrActivity(atPath: path)
+        else {
+            return
+        }
+        DatabaseIO.addDemoTransfersAndActivity(toPath: path)
     }
 }
 

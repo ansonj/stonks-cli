@@ -416,6 +416,8 @@ struct DatabaseIO {
         return completedSplits
     }
     
+    // MARK: - Demo / sample values
+    
     static func addDefaultSplits(toPath path: String) {
         let db = FMDatabase(path: path)
         guard db.open() else {
@@ -439,6 +441,37 @@ struct DatabaseIO {
         guard db.commit() else {
             DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "trxn commit while adding default splits")
         }
+    }
+    
+    static func databaseContainsTransfersOrActivity(atPath path: String) -> Bool {
+        let db = FMDatabase(path: path)
+        guard db.open() else {
+            DatabaseUtilities.exitWithError(fromDatabase: db, duringActivity: "opening databases to check for transfers or activity")
+        }
+        
+        let countFromTable = { (tableName: String) -> Int in
+            var count = 0
+            guard let results = try? db.executeQuery("SELECT COUNT(*) AS count FROM \(tableName)", values: nil) else {
+                return 0
+            }
+            if results.next() {
+                count = Int(results.int(forColumn: "count"))
+            }
+            return count
+        }
+        
+        return countFromTable("transactions") > 0 || countFromTable("transfers") > 0
+    }
+    
+    static func addDemoTransfersAndActivity(toPath path: String) {
+        let secondsInOneWeek: Double = 1 * 7 * 24 * 60 * 60
+        let twoWeeksAgo = DatabaseUtilities.string(fromDate: Date(timeIntervalSinceNow: -2 * secondsInOneWeek))
+        let oneWeekAgo  = DatabaseUtilities.string(fromDate: Date(timeIntervalSinceNow: -1 * secondsInOneWeek))
+        
+        recordDeposit(path: path, amount: 1_000, date: twoWeeksAgo)
+        recordBuy(path: path, ticker: "AAPL", investment: 100, shares: 0.75, date: twoWeeksAgo)
+        recordBuy(path: path, ticker: "MSFT", investment: 200, shares: 1, date: twoWeeksAgo)
+        recordBuy(path: path, ticker: "AAPL", investment: 100, shares: 1.2, date: oneWeekAgo)
     }
     
     // MARK: - Transfers
