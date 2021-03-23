@@ -23,9 +23,9 @@ Stonks is not...
 
 1. Build and extract the executable. You can run the tool from Xcode itself (Cmd+R), but the output has colored text that only appears when running from a terminal. Also, Xcode adds some sqlite logging messages that I have not yet been able to prevent. 
     1. Open the Xcode project.
-    1. Choose Project > Archive.
+    1. Choose Product > Archive.
     1. Open the Archives list if it doesn't open already (Window > Organizer, choose StonksCLI > Archives).
-    1. Click Distribute Content, choose Build Products, and save it somewhere.
+    1. Click Distribute Content, choose Built Products, and save it somewhere.
     1. Inside the saved folder, navigate to `Products/usr/local/bin`.
     1. Move the `StonksCLI` binary somewhere so it's in your `$PATH`, or somewhere where you can run it easily.
 1. If you're planning to enter real transactions, then set up a brokerage account for yourself, such as with [Robinhood](https://join.robinhood.com/ansonj14) or [Fidelity](https://www.fidelity.com).
