@@ -10,6 +10,7 @@ struct MainFlow: Flow {
             printActiveTable()
             printBuyingPowerChecksum()
             printPendingBuys()
+            printProfitNotTransferred()
             print("Main menu")
             print("    (b)uy")
             print("    (s)ell")
@@ -126,6 +127,15 @@ struct MainFlow: Flow {
         }
         print("Pending buys:")
         print(Table.renderTable(withHeaders: headers, rows: rows))
+        print()
+    }
+    
+    private func printProfitNotTransferred() {
+        let profit = DatabaseIO.profitNotTransferred(fromPath: configFile.databasePath())
+        guard profit > 0 else {
+            return
+        }
+        print("Profit ready to withdraw:", Formatting.string(forCurrency: profit))
         print()
     }
 }
