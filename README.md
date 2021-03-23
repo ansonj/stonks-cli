@@ -28,7 +28,7 @@ Stonks is not...
     1. Click Distribute Content, choose Build Products, and save it somewhere.
     1. Inside the saved folder, navigate to `Products/usr/local/bin`.
     1. Move the `StonksCLI` binary somewhere so it's in your `$PATH`, or somewhere where you can run it easily.
-1. Set up a brokerage account for yourself, such as with [Robinhood](https://join.robinhood.com/ansonj14) or [Fidelity](https://www.fidelity.com).
+1. If you're planning to enter real transactions, then set up a brokerage account for yourself, such as with [Robinhood](https://join.robinhood.com/ansonj14) or [Fidelity](https://www.fidelity.com).
     1. Stonks is designed to be a mirror of your entire account history, so it's easiest to use with new accounts or with accounts containing only a few trades.
     1. Ensure that your account is set up to use a FIFO cost basis.
 1. Stonks uses the free IEX Cloud API to provide price data, so you'll need to [register for an IEX Cloud account](https://iexcloud.io/cloud-login#/register) and then [retrieve your "publishable" API token](https://iexcloud.io/console/tokens). Stonks does not make a large number of API calls, so API usage incurred by an individual using Stonks should be well within IEX Cloud's free credit limits.
